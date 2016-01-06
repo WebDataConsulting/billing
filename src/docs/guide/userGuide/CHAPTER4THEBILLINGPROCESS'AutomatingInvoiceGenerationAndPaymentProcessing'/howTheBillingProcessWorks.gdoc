@@ -1,0 +1,7 @@
+*j*Billing is a powerful billing system, designed to help you save time as you will only need to configure it once. After that, you can let it automatically generate your invoices, and perhaps process payments for these invoices. You won't have to think about your billing, or do anything else but create purchase orders for new sales, and monitor that everything is going as you expect. It is very flexible, and its configuration can easily be modified and adjusted as you get to know the system, and as your company grows. 
+
+The billing process is at the very core of *j*Billing. To configure this critical process, it is important to understand how it operates and to know its different parameters and options.
+
+The billing administrator of your company will configure *j*Billing and schedule the billing process to run periodically. The period for this schedule can be of any length of time (weekly, monthly, etc). Alternatively, the administrator can, at any time, manually set a date for the next billing process, overruling the date automatically calculated by the system.
+
+In addition to generating invoices, the billing process will attempt, (should you select the option) to process payments cleared by credit cards and direct debit by communicating with a payment processor, which will proceed with the payment the moment an invoice is generated. This additional step of processing payments immediately after the generating of invoices is called: Automatic Payment Processing. 

@@ -1,0 +1,61 @@
+Although the billing period defines how *often* invoices are generated, it has nothing to do with how *many* invoices are generated. Whether an invoice is created or not depends exclusively on what purchase orders a customer has. 
+
+For example: let's say that you have a weekly billing period, and a monthly, pre-paid purchase order. In this example, the billing period next run date is set to January 1st. 
+
+* The purchase order is created with an 'Active Since' date of January 1st.
+
+* On January 1st, the billing process runs. Since the billing period is set as weekly, the period of the run is from January 1 to January 7. It generates one invoice for the purchase order, but since this is a monthly purchase order, the invoice will cover the period January 1 to January 31.
+
+!weekbillingperiod.png!
+
+* On January 8, the billing process runs again. This time for the period of January 8 to January 14. The purchase order does not hold billable time during this period. When you look at the purchase order's details, you will find that the 'Next day to invoice' field, is set to February 1. Therefore, no new invoices are generated for this purchase order. 
+
+!weekbillingperiod2.png!
+
+* On January 15 and 22 the billing process runs, with the same result as the previous run. There will be no new invoices. 
+
+!weekbillingperiod3.png!
+
+!weekbillingperiod4.png!
+
+* Only on January 29 does the billing run generate a new invoice. This is because the billing period covers from January 29 to February 5. Since the purchase order has billable time starting on February 1, it will produce a new invoice. This new invoice will be for the purchase order period of February 1 - 28/29.
+
+!weekbillingperiod5.png!
+ 
+The billing process will generate one invoice per customer (to see the exception to this rule, please refer to the Due Dates section of this guide). 
+
+What happens if the customer has *many* purchase orders with billable time? 
+
+The process will still generate only one invoice, which contains all the items belonging to all applicable purchase orders.
+ 
+Let's take the previous example for the month of January. We are going to add a bi-weekly order, starting on Janaury 4. The bi-weekly purchase order is recurring. 
+
+On January 1, the weekly billing process runs, but this time it finds two purchase orders that fall within its time range. It finds the monthly purchase order, and the bi-weekly purchase order. As previously stated, the monthly purchase order will generate onto an invoice with a period from January 1 - 31. The bi-weekly order will generate onto the same invoice with a period from January 4 - 17.
+
+!weekbillingperiod6.png!
+
+The result is a single invoice with two lines. One line for the monthly purchase order, and one line for the bi-weekly purchase order. 
+
+In this scenario, when the billing process runs again from January 8 to 14, no invoice is generated for this customer. The reason for this is because neither of the purchase orders have a period that falls within the billing process dates. 
+
+!weekbillingperiod7.png!
+
+The next time you would see an invoice for this customer would be when the billing process runs from the 15 to 21. The reason for this is because the products on the bi-weekly purchase order are billed every 14 days. The last time this purchase order was billed was from January 4 - 17, which means that the 18 to 31 are the dates covered for the next period. As a result, the billing process 'sees' the bi-weekly order, and will generate an invoice for it. 
+
+!weekbillingperiod8.png!
+
+h2. Purchase Order's Periods Included in Invoices
+
+The billing process will normally include one period of the purchase order when it generates a new invoice. In the previous example, it included one month. However, *j*Billing's rule is that the billing process will include as many periods from the purchase order as it can fit in the billing period. 
+
+Let's take another look at the previous example, but this time, we are going to extend the billing period from one week to two months. This will create more 'room' to include more periods from the purchase order. This time, when the process runs on January 1st, it generates one invoice from the purchase order, but with two months worth of charges instead of one. This happens because the period of the run now includes from January 1 to February 28. The run can fit two of the purchase order periods (two times one month) within its scope.
+
+!twomonthbilling.png!
+
+Here's a different example: *Trend* has a customer that has been advertising since January 1st. However, there was a misunderstanding, and the purchase order wasn't created. On March 1st, the error is discovered and the purchase order is finally created, *but* with an 'Active Since' backdated to January 1st. This is a pre-paid monthly purchase order for a total of $100. When the billing process runs on March 15, the invoice for this customer is for a total of $300. 
+
+Here's why:
+
+* The billing run takes place on March 15; its period is weekly so the time span runs from March 15 to March 21.
+* The billing process takes this purchase order and starts including periods from it, in an invoice, until it has no more billable time left *before* March 21.
+* After adding three periods (months) to the invoice, the 'Next day to invoice' becomes April 1st. The process does not add any further periods to this invoice, since the 'Next day to invoice' date is now *past* the end of the billing run scope (March 21). 

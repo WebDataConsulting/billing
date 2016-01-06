@@ -1,0 +1,186 @@
+userGuide: 
+  title: jBilling User Guide
+  introductionUserGuide:
+    title: Introduction
+    jBillingBinaryInstallationInstructions: jBilling Binary Installation Instructions
+    navigatingJBilling: Navigating jBilling
+    navigatingJBilling: Navigating jBilling
+    filters: Filters
+    lists: Lists
+    CVSDownload: CVS Download
+    internationalization: Internationalization
+    web-ApplicationLoadBalancing: Web-Application Load Balancing
+  CHAPTER1PRODUCTS'YourCatalogOfGoodsAndServices': 
+    title: CHAPTER 1 PRODUCTS 'Your Catalog of Goods and Services'
+    productManagement: Product Management
+    productCategories: Product Categories
+    products: Products
+    pricingModels: Pricing Models
+    historicalRatesForProducts: Historical Rates for Products
+  CHAPTER2USERS: 
+    title: CHAPTER 2 USERS
+    customersAndOtherTypesOfUsers: Customers and Other Types of Users
+    newUsers: New Users
+    dynamicBalance: Dynamic Balance
+    customContactFields: Custom Contact Fields
+    metaFields: Meta Fields
+    enumerations: Enumerations
+    inspectCustomer: Inspect Customer
+    usersFAQ: Users FAQ
+  CHAPTER3PURCHASEORDERS'KeepingSubscriptionsAndOtherPurchasesWellOrganized': 
+    title: CHAPTER 3 PURCHASE ORDERS 'Keeping Subscriptions and other Purchases Well Organized'
+    overviewChapter3: Overview
+    creatingOrders: Creating Orders
+    pro-Rating: Pro-Rating
+    creditForEarlyCancellation: Credit for Early Cancellation
+    browsingPurchaseOrders: Browsing Purchase Orders
+    managingPurchaseOrders: Managing Purchase Orders
+  CHAPTER4THEBILLINGPROCESS'AutomatingInvoiceGenerationAndPaymentProcessing': 
+    title: CHAPTER 4 THE BILLING PROCESS 'Automating Invoice Generation and Payment Processing'
+    howTheBillingProcessWorks: How the Billing Process Works
+    theBillingPeriod: The Billing Period
+    selectingPurchaseOrders: Selecting Purchase Orders
+    selectingTheRightBillingPeriod: Selecting the Right Billing Period
+    invoicesCarriedOverToOtherInvoices: Invoices Carried Over to Other Invoices
+    dueDates: Due Dates
+    automaticPaymentProcessing: Automatic Payment Processing
+    configurationOfTheBillingProcess: Configuration of the Billing Process
+    numberOfRetries: Number of Retries
+    maximumPeriodsToInvoice: Maximum Periods to Invoice
+    applyOverPaymentsToInvoices: Apply Over Payments to Invoices
+    viewingTheProcessResults: Viewing the Process Results
+    reviewThatYourBillingProcessWillRunAsPlanned: Review that Your Billing Process will Run as Planned
+    alternativeBillingProcess: Alternative Billing Process
+  CHAPTER5INVOICES: 
+    title: CHAPTER 5 INVOICES
+    overviewChapter5: Overview
+    TheRelationshipBetweenPurchaseOrdersAndInvoices:  The Relationship Between Purchase Orders and Invoices
+    creatingInvoices: Creating Invoices
+    statusAndBalanceOfAnInvoice: Status and Balance of an Invoice
+    modifyingAnInvoice: Modifying an Invoice
+    deletingAnInvoice: Deleting an Invoice
+    theInvoiceDetailsScreen: The Invoice Details Screen
+    numbering: Numbering
+  CHAPTER6MEDIATION: 
+    title: CHAPTER 6 MEDIATION
+    overviewChapter6: Overview
+    addingMediationEventsToOrders: Adding Mediation Events to Orders
+    configureAMediationRun: Configure a Mediation Run
+    runMediation: Run Mediation
+  CHAPTER7GETTINGYOURINVOICEPAID: 
+    title: CHAPTER 7 GETTING YOUR INVOICE PAID
+    payingInvoices: Paying Invoices
+    typesOfPayments: Types of Payments
+    statusAndBalanceOfAPayment: Status and Balance of a Payment
+    thePaymentDetailsScreen: The Payment Details Screen
+    deleting,ModifyingAndLinkingAPayment: 
+      title: Deleting, Modifying and Linking a Payment
+      refunds: Refunds
+    automaticInsertionOfTaxes: Automatic Insertion of Taxes
+  CHAPTER8PLANS: 
+    title: CHAPTER 8 PLANS
+    overviewChapter8: Overview
+    creatingAPlan: Creating a Plan
+    plansInAPurchaseOrder: Plans in a Purchase Order
+    editingAndDeletingAPlan: Editing and Deleting a Plan
+    historicalRatesForPlans: Historical Rates for Plans
+  CHAPTER9NOTIFICATIONS'LettingYourCustomer'sKnowAboutBillingEvents': 
+    title: CHAPTER 9 NOTIFICATIONS 'Letting Your Customer's Know About Billing Events'
+    introductionToJBilling'sNotifications: Introduction to jBilling's Notifications
+    writingYourOwnText: Writing Your Own Text
+    emailDeliveryParameters: Email Delivery Parameters
+    selfDeliveryPaperInvoices: Self Delivery Paper Invoices
+    customer'sNotesOnInvoices: Customer's Notes on Invoices
+    purchaseOrdersAboutToExpire: Purchase Orders About to Expire
+    invoiceReminders: Invoice Reminders
+    creditCardExpiry: Credit Card Expiry
+  CHAPTER10CONFIGURATION'SettingParametersToSuitYourBusinessRules': 
+    title: CHAPTER 10 CONFIGURATION 'Setting Parameters to Suit Your Business Rules'
+    overviewChapter10: Overview
+    branding: Branding
+    ageing: Ageing
+    billingProcess: Billing Process
+    blacklist: Blacklist
+    company: Company
+    currencies: 
+      title: Currencies
+      historicalRatesForCurrencies: Historical Rates for Currencies
+    email: Email
+    invoiceDisplay: Invoice Display
+    mediation: Mediation
+    notifcation: Notifcation
+    orderPeriods: Order Periods
+    plugIns: Plug Ins
+    roles: Roles
+    rateCards: Rate Cards
+  CHAPTER11SUBACCOUNTS'GroupingCustomers': 
+    title: CHAPTER 11 SUB ACCOUNTS 'Grouping Customers'
+    introductionChapter11: Introduction
+    whenToUseSubAccounts: When to Use Sub Accounts
+    creatingAParent-ChildrenAccount: Creating a Parent-Children Account
+    theDifferencesBetweenSub-AccountsAndCommonAccounts: The Differences Between Sub-Accounts and Common Accounts
+    howToSetUpADistributorAccount: How to Set Up a Distributor Account
+    sub-AccountCustomerManagement: Sub-Account Customer Management
+  CHAPTER12BLACKLIST'FilterPaymentRequests': 
+    title: CHAPTER 12 BLACKLIST 'Filter Payment Requests'
+    overviewChapter12: Overview
+    activatingTheBlacklist: Activating the Blacklist
+    blacklistPreferenceSetup: Blacklist Preference Setup
+    blacklistMatches: Blacklist Matches
+    batchUpload: Batch Upload
+    CVSFormat: CVS Format
+  CHAPTER13REPORTS: 
+    title: CHAPTER 13 REPORTS
+    overviewChapter13: Overview
+    interpretingTheResults: Interpreting the Results
+  CHAPTER14SECURITY: 
+    title: CHAPTER 14 SECURITY
+    overviewChapter14: Overview
+    creditCards: Credit Cards
+    passwordManagement: Password Management
+    securingJBillingWithSSL: Securing jBilling with SSL
+    rolesChapter14: Roles
+    usersWithMultipleRoles: Users with Multiple Roles
+    userImpersonation: User Impersonation
+  APPENDIXAPREFERENCES: 
+    title: APPENDIX A PREFERENCES
+    overviewAppendix: Overview
+  API: 
+    title: API
+    useLogsToLearnAPI: Use Logs to Learn API
+integrationGuide: 
+  title: jBilling Integration Guide
+  introductionIntegrationGuide: Introduction
+  theNeedForIntegration: The Need for Integration
+  jBillingIntegrationRequirements: jBilling Integration Requirements
+  preparingJBillingForIntegration: 
+    title: Preparing jBilling for Integration
+    configuringAndUsingARemotingMethod: Configuring and Using a Remoting Method
+    securingIntegrationAccess: Securing Integration Access
+    settingUpJBillingToAcceptExternalCalls: Setting up jBilling to accept external calls
+  connectingToJBilling: 
+    title: Connecting to jBilling
+    SOAP: SOAP
+    hessian-Burlap: Hessian-Burlap
+    springHTTPInvoker: Spring HTTP Invoker
+  integratingJBillingToYourApplication: 
+    title: Integrating jBilling to your Application
+    overview: Overview
+    theJBillingClientAPI: The jBilling Client API
+    integrationWithNon-JavaApplications: Integration with non-Java Applications
+  anIntegrationTutorial: 
+    title: An Integration Tutorial
+    overviewAIT: Overview
+    theTrendWebsite: The Trend Website
+    conclusion: Conclusion
+  clientAPIReference: 
+    title: Client API Reference
+    dataStructures-ObjectClasses: Data Structures - Object Classes
+    APIServiceCalls: API Service Calls
+  appendixA: 
+    title: Appendix A
+    constantsReference: Constants Reference
+  appendixB: 
+    title: Appendix B
+    howToUseTheJBilling3LogsForIntegration: How to use the jBilling 3 Logs for integration
+

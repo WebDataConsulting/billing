@@ -1,0 +1,3 @@
+The batch upload feature allows externally generated comma-separated values (CSV) blacklist files to be uploaded through the GUI. It can either add to or replace existing uploaded blacklist entries.
+
+It will not modify blacklist entries that were created by the add/remove link or because customers have had their status become 'suspended' or higher. To get to the Batch Upload screen, click on Configuration, then Blacklist.

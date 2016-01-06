@@ -1,0 +1,15 @@
+Preference type 43 needs to be set to indicate the id of the payment filter plug-in. See 'Appendix A' for information on adding preferences. The plug-in id is the number next to the class name of the configured plug-in.
+
+If the id of the PaymentFilterTask plug-in is 460 and the next preference id will be 100, the SQL would be something like this:
+
+INSERT INTO PREFERENCE (ID, TYPE_ID, TABLE_ID, FOREIGN_ID, INT_VALUE,
+
+STR_VALUE, FLOAT_VALUE)
+
+VALUES (100, 43, 5, 1, 460, NULL, NULL)
+
+h3. Blacklist Suspended Customer Plug-In Setup
+
+If you would like customers that are moved into the 'suspended' status or higher from a lower status to have their details automatically blacklisted, the following plug-in needs to simply be added through the Plug-In screen (Configuration, then Plug-ins):
+
+@com.sapienter.jbilling.server.payment.blacklist.tasks.BlacklistUserStatusTask@

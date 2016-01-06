@@ -1,0 +1,21 @@
+As a general rule, you should organize your customers as parent-children when the child account is identified as the end user of your services, and the parent account is identified as the one who receives (and pays) the invoice. 
+
+Let's take a look at this scenario in a different way. If the customer using your services is different than the customer paying for them, there's a good change you will need to use sub-accounts.
+
+This general rule applies to many practical situations that can initially look quite different from one another, yet they share the same account structure. Let's review some common examples:
+
+*A large account, with multiple locations:*
+
+Your customer is an organization that has multiple locations or branches. Each of these locations is subscribed to your services in a fairly independent way. Still, you are to send one invoice to the head office, where it is going to be received and paid. This invoice will clearly state all the charges for each of the locations.
+
+*An organization with many users:*
+
+For example: a mobile phone company selling to businesses. 
+
+A typical client will be a company with many employees. Some of these employees will receive a cell phone paid by the company. This company will need to receive one single invoice per period with the details of the charges related to each of its employees. Therefore, the company will be represented as a parent account, and each employee as a child account.
+
+*A reseller of your services:*
+
+A reseller will buy your services and resell them to its customers. The reseller will take care of billing these customers using their own terms. You will have to invoice the reseller for all the services that have been resold. 
+
+You can set up this situation with the reseller being a parent account, and each of the end users as a child account. The end user will not receive an invoice, the reseller will. The invoice will detail which end users are included and with which services.

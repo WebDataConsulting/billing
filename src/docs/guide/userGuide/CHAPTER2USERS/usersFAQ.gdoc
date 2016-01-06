@@ -1,0 +1,39 @@
+* How do I generate a list of all the invoices belonging to a particular customer?
+
+Click on the customer whose invoices you wish you view. Then, click on the 'Show all invoices' link, located in the Account pane on the right hand side of your screen.
+
+!showallinvoices.png!
+
+A list of all invoices for that customer will appear.
+
+* How do I generate a list of all the purchase orders belonging to a particular customer?
+
+Click on the customer whose purchase orders you wish to view. Then, click on the 'Show all orders' link, located in the Payment Info pane on the right hand side of your screen. 
+
+!showallorders.png!
+
+A list of all orders for that customer will appear: 
+
+!listoforders.png!
+
+* How can I view the latest invoice generated for a particular customer?
+
+Click on the customer whose information you wish to view. Click on the 'Last Invoiced Date' link.
+
+!latestinvoice.png!
+
+The latest invoice generated will appear on the right hand side of the screen. 
+
+* How can my staff write comments regarding a customer's file and communicate together without the customer having access to this information?
+
+Click on the customer you wish to add a note for. Click on the 'Edit' button. Scroll down to the bottom of the screen. You will see a large box titled: Notes. Enter your text. 
+
+!notes.png!
+
+When you are finished, click the 'Save Changes' button. Your note will appear in the pane on the right, beneath the customer's name.
+
+!thisisanote.png!
+
+{note}
+Please Note: this is only possible if you have *not* configured customer notes to appear on the invoice.
+{note}

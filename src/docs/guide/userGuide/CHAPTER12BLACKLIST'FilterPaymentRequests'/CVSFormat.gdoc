@@ -1,0 +1,39 @@
+Each line of the CSV file corresponds with one blacklist entry. It is assumed there is no column name header line present. The columns are as follows:
+
+TYPE, FIRST_NAME, LAST_NAME, ADDRESS_1, ADDRESS_2, CITY, STATE_PROVINCE, POSTAL_CODE, COUNTRY_CODE, PHONE_COUNTRY_CODE, PHONE_AREA_CODE, PHONE_NUMBER, IP_ADDRESS, CC_NUMBER, USER_ID
+
+The type field is an integer that indicates what blacklist entry type the line belongs to.
+
+Valid values are:
+
+ {table}
+*Type Number*|*Type Name*|*Fields*
+1 | USER_ID | USER_ID
+2 | NAME | FIRST_NAME, LAST_NAME
+3 | CC_NUMBER | CC_NUMBER
+4 | ADDRESS | ADDRESS_1, ADDRESS_2, CITY, STATE_PROVINCE, POSTAL_CODE, COUNTRY_CODE
+5 | IP_ADDRESS | IP_ADDRESS
+6 | PHONE_NUMBER | PHONE_COUNTRY_CODE, PHONE_AREA_CODE, PHONE_NUMBER
+ {table}
+
+At least one field is required for each line type. 
+
+h3. Example
+
+The following is an example of a valid CSV file:
+
+@1,,,,,,,,,,,,,,1006@
+
+@2,Joe,Bloggs,,,,,,,,,,,,@
+
+@4,,,321 Main Rd.,,Vancouver,BC,V6B2E2,CA,,,,,,@
+
+@6,,,,,,,,,61,02,55554321,,,@
+
+@3,,,,,,,,,,,,,5105105105105100,@
+
+@5,,,,,,,,,,,,123.123.123.123,,@
+
+h2. Failed Payments
+
+When a payment is failed by the blacklist filter (credit card for example), the payment authorization record will state that credit card (or other ID) is blacklisted.

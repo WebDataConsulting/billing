@@ -1,0 +1,35 @@
+At the very core of *j*Billing, there are modules with most of the business logic code. These modules have been organized following a 'Plug-In' architecture. This means that a module can be easily replaced by another one, thus altering the behaviour of *j*Billing. They are called 'Plug-Ins' because they can be swapped without having to deal with the source code: you don't need a programmer to make changes. 
+
+Plug-ins are Java classes, that is why the names follow the Java naming conventions. There are a number of plug-ins available by default with the standard *j*Billing. The details of each of these plug-ins, such as their parameters, are out of the scope of this guide. You will only need this information when you want to extend or modify, or create your own. 
+
+It is possible to add, remove and change a plug-in by clicking on Configuration, and then Plug-Ins, which is located in the sidebar on the left hand side of your screen. A pane with all the available plug-ins will appear. 
+
+!configurationplugin.png!
+
+To view the plug-ins' details, simply click on the plug in you wish to view. Its details will appear at the top right hand side of your screen.
+
+!addnewplugin.png!
+
+Each plug-in has three fields:
+
+*ID:* This is an internal unique number that helps to identify this plug-in. This is largely for internal use in *j*Billing, but might be useful to you at times. For example: the 'router' plug-in that allows you to assign a payment processor to a user, needs to know about other plug-ins. It does so by taking the IDs of those plug-ins as its parameters.
+
+*Type:* This is the Java class name that will be used by *j*Billing when a plug-in of this category is needed. For example: when *j*Billing needs to send a notification, it will look into your configuration to determine which plug-in belongs to the notification category.
+
+*Processing order:* Sometimes you will have more than one plug-in for the same category. Let's look at an example with payment processors. You have two accounts with two difference payment gateways. You can add them both as plug-ins, but you need to give one the processing order '1' and the other one a '2'. *They cannot have the same processing order, otherwise an error will happen*. The system will *always* start by using the plug-in with processing order '1'. If that gateway is unavailable, it will try the next one (this is normally called 'fail over strategy'). You can have any number of payment processors configured this way.
+
+Additionally, a plug-in can have parameters. Not all do, but it is not unusual if they do have some. A parameter gives the plug-in some additional information on how to behave, and makes the plug-in more easily reusable.
+
+For example: the 'PaperInvoiceNotificationTask' is responsible for generating a PDF invoice. It takes one parameter: 'design' with the name of the file that has you paper invoice design. You can create a new design and simply change this parameter to start using it. This way, it is easy to have many designs available and change the active one at any time.
+
+h3. Changing the Plug-Ins Configuration
+
+To add a new plug-in, click on the category of your desired plug-in and click on the 'Add New' button. This will take you to the Add new plug-in screen. You will have to select the class name of the plug-in you want to add from the drop-down list. If there are also parameters available, you will have to enter the mandatory information.
+
+It is also possible to edit the plug-in. Click on the plug-in you wish to edit, and click on the 'Edit Plug-In' button.
+
+!editplugin.png!
+
+Deleting a plug-in or parameter is equally as easy. Click on the plug-in you wish to delete and click on the 'Delete Plug-In' button. 
+
+!deleteplugin.png!

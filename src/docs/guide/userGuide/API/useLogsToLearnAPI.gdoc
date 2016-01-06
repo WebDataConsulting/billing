@@ -1,0 +1,42 @@
+For developers, it is helpful to gain an understanding of what the API looks like while jBilling is running, from what actions are being performed on the GUI. The purpose of this section of the user guide is: in order to understand how to use the API, you have the ability to teach yourself how it works, by viewing the data that is passed to it. 
+
+You can teach yourself how to use the API, by going to the GUI and 'tailing' the log through git bash. If you keep an eye on the entries, you will see how aspects like, a user, purchase order, etc, are created. It is important to note that the API isn't affected by before or after actions. It simply picks up the information when something is done on the GUI, like clicking on the 'save' button.
+
+To view the demo logs:
+
+{note}
+Please Note: this example pertains to the jBilling demo server. You will have to adjust the location of the file to reflect your server.
+{note}
+
+Open the git bash window, enter: ssh jbilling@demo.jbilling.com, and press the 'enter' key.
+
+!gitbash.png!
+
+The git bash window will request a password. Enter your password, and then press the 'enter' key.
+
+!gitbashpassword.png!
+
+Enter: cd jbilling-3.0-enterprise-demo/logs/ 
+
+!jbillinglog.png!
+
+After you press the 'enter' key again, you will want to 'tail' the log: tailf jbilling.log.
+
+!gittaillog.png!
+
+You have now successfully gained access to jBilling's demo site API. 
+
+Login to jBilling. Every time the API is called, there is a log entry in the log file. Therefore, every time something is done with the GUI that involves the API, you should see a log appear. 
+
+Create a customer in jBilling. 
+
+!customerlogsave.png!
+
+When you click on the 'save changes' button this means that the GUI will call the API to let it know that there is a new customer. The GUI will visually tell the user, 'the customer has been saved', however the action will also be tracked in the log file. 
+
+There are many lines in the server, and there is one that says: API log - call to createUser. It tells you all the parameters that the GUI sends through the server to the API. When there is another call, creation of a user for example, it returns the value of the new user.
+
+!customeraddlog.png!
+
+
+ 

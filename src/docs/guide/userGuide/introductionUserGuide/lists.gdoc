@@ -1,0 +1,21 @@
+Within each section of the system, information is displayed in a list format. From here you can either search through the list to find what you are looking for, or you can use filters to help narrow down your search. 
+
+{note}
+Please Note: for more information on filters, see the next section of this guide.
+{note}
+
+A few examples of lists:
+
+The Customer List
+
+!listscustomerlist.png!
+
+The Invoices List
+
+!listsinvoiceslist.png!
+
+The Purchase Orders List
+
+!listsorderslist.png!
+
+To access and work with a particular item from any list, click on it. The information will be displayed on the right. 

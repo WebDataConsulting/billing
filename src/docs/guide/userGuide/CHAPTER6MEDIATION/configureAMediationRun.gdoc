@@ -1,0 +1,31 @@
+This chapter will use *Trend* as an example to show you how to set up and run Mediation in *j*Billing. 
+
+Mediation needs to be configured before you can use it. As described above, the mediation process needs to translate information. It also needs to know what information to rate, in order to update the records in *j*Billing. 
+
+Click on Configuration and then Mediation to open the Mediation Configurations screen.
+
+*Trend* uses the Getting Started Mediation (Id: 180) Plug-In: 
+
+!mediationconfiguration.png!
+
+The Mediation Reader Plug-In must also be set up. 
+
+To access this Plug-In, click on Plug-Ins, Mediation Reader, and then Separator file reader. *Trend* has already set this Plug-In up with two parameters. A format_file and a suffix. The values attached are actually files that you can access from within the *j*Billing installation files. 
+
+!separatorfilereader.png!
+
+*mediation-sample.csv*
+
+To find this file, go to your *j*Billing install directory, click on the *j*Billing file, then Resources, and then Mediation. Within this folder, you will see the two files that are listed under the values in the Separator file reader Plug-In: mediation-format.xml and mediation-sample.csv.
+
+Let's take a look at the mediation-sample file:
+
+!mediationsamplecsv.png!
+
+This is how a mediation file should be set up. For more information on how to set up a CVS file, please see Chapter 12: Blacklist. Your company may have hundreds and thousands of events, but this example only has 5.
+
+!formatmediation.png!
+
+As you can see by looking at this text, this document tells you what the format of the fields in the CVS spreadsheet are. 
+
+Together, these two files give *j*Billing items to relate to in the rules engine. 

@@ -1,0 +1,79 @@
+h1. Overview
+
+*j*Billing will send emails to customers on your behalf for many reasons. Emailing invoices, reminders, failure to receive a payment, and balance overdue, are only a few examples.
+
+In order to set up this functionality, you require a mail server. When the notifications engine of *j*billing needs to send an email, it will connect to your mail server, using the email delivery parameters you have configured. You can use a mail server from your ISP provider, or set up your own mail server. If you are running *j*Billing from a company that is hosting the system for you, they could potentially include a default mail server for you to use as well. 
+
+Your best option, in our opinion, is to run your own mail server. However, no matter what you decide, reviewing and configuring the email delivery parameters will save you and your customers some confusion.
+
+*Why You Shouldn't Use the Default Parameters:*
+
+Each email delivery parameter has a default value. If you do not specify any parameters, the system will still attempt to send emails using those defaults. Depending on the version of *j*Billing you are running, and where it is that *j*Billing is running, these defaults values can vary greatly.
+
+When the system sends an email using just the default parameters, the client who receives it can get confused. A typical scenario of default values would be at the top of the email: "From: admin@jBilling.com". Should the customer wish to reply, the reply will be sent back to: admin@jBilling.com. Therefore, you will not receive that reply.
+
+If you do not configure a mail server, all emails might just fail to be delivered, or the mail server of the hosting company using *j*Billing is going to be used. If an email sent to one of your customers bounces back, it will bounce back to the hosting server, *not to you*. If this happens, there is no way for you to find out that a customer has not received your notification. Also, your clients will be able to see in the email's properties that the email they just received was not sent by your company but by the hosting company.
+
+h2. How to Configure the Email Delivery Plug-in
+
+In order to set up your Email Delivery Parameters, you need to delete an existing plug-in, and replace it with another. 
+
+To do this, access the configuration area of the system, and then click on Plug-ins, located in the menu on the left hand side of the screen. 
+
+Select: Notifications (category 7)
+
+!category7.png!
+
+From the plug-in list, delete the following: com.sapienter.jbilling.server.notification.task.TestNotificationTask. To delete the plug-in, select it, and then click on the 'Delete Plug-in' button. The plug-in will be removed from the list. 
+
+!deleteplugin2.png!
+
+You now need to add a plug-in. Click on the 'Add New' button. 
+
+The plug-in you want to add is called: com.sapienter.jbilling.server.pluggableTask.BasicEmailNotificationTask. 
+
+!updatedplugin.png!
+
+The order number should be the same as the plug-in you deleted previously (this number is typically: 1).
+
+There are several parameters that you will need to enter in order to configure this plug-in. Some fields are not mandatory, and it really depends on what your mail server is set up with. The following are definitions for the most commonly used parameters:
+
+*from_name:*
+
+This is the name that will appear in your client's 'From' address field at the top of their email.
+
+*reply_to:*
+
+If a customer receiving and email clicks on 'Reply' they will be replying to the address specified in this field.
+
+*bcc_to:*
+
+Here you can enter an email address that will receive a copy of every single email that the system sends to your customers. You can use this to monitor what is being sent to your customers, or to have an archive of all the communication done by *j*Billing to your customers. 
+
+*ssl_auth* and *tls* Overview:
+
+These fields pertain to security. The question they ask is: are you going to use secure communication with the mail server or not? These fields should be 'True', provided that the mail server you are using supports this functionality. If your mail server does, and you want to use these features, then you will need to enter the word: True into the fields. If you don't require the use of these fields, or your mail server doesn't support the security functionality, then you will need to enter the word: False.
+
+*ssl_auth*
+
+If true, the plug-in requires the SMTP servers to use SSL authentication
+
+*tls*
+
+If true, enables the use of the STARTTLS command (if supported by the server) to switch the connection to a TLS-protected connection before issuing any login commands. Note that an appropriate trust store must be configured so that the client will trust the server's certificate. Defaults to false.
+
+The other parameters are specific to the mail server. You will need to contact your Internet Service Provider (ISP) or your network system administrator for the correct values.
+
+The Mail Plug-in, by default, uses 'AUTH' command to authenticate the 'username' and 'password' provided. 
+
+The following is a sample of how the fictitious company, Trend configured their Email Delivery Parameters:
+
+* from_name: Trend Billing Department
+* reply_to: billing@trend.com
+* from: billing@trend.com
+* username: trend
+* password: vanilla
+* smtp_server: smpt.trend.com
+* port: 25
+
+

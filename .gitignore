@@ -1,0 +1,13 @@
+/.classpath
+/.idea/
+/.project
+/.settings/
+/activemq-data/
+/jB4_1_1-grailsPlugins.iml
+/jB4_1_1.iml
+/logs/
+/out/
+/resources/
+/target/
+/test-reports/
+/test-target/

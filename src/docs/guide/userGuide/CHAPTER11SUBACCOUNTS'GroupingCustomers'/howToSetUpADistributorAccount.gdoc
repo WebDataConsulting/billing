@@ -1,0 +1,36 @@
+Many companies employ distributors: an agent who supplies products and services to businesses who sell to consumers. jBilling is capable of handling these types of situations by creating a parent - child hierarchy between the distributor and their customers as well as through the creation of a distributor specific plan.
+
+In order to set up a Distributor in jBilling, you first need to create the Distributor as a parent account. The only difference between setting up a regular customer and setting up a parent account is that you need to select the 'Allow Sub-Accounts' field. This will let the system know that you will be adding children accounts to this parent (in this case Distributor) account.
+
+!allowsubaccounts.png!
+
+Once you have saved your Distributor parent, you can create its children account(s) by clicking the 'Add Sub-Account' button, which is now available at the bottom of the Distributor parent information pane.
+
+!addsubaccount2.png!
+
+These sub-accounts, or children accounts are the customers that the Distributor will provide billing information to, once they have received the invoice from your company. The most important thing to remember when adding these children accounts is to ensure that the 'Use Parent Pricing' field is selected.
+
+!useparentpricing.png!
+
+Selecting this field will indicate to the system that you want the child account to take on the same rates that the distributor carries for particular products. In order to achieve this, you will also need to create a plan that contains all products that are categorized at a Distributor rate.
+
+!distributorplan.png!
+
+When the Distributor Plan is complete, you will need to create a purchase order with it, for the parent (Distributor) account.
+
+!distributorpurchaseorder.png!
+
+Purchase orders will be generated for the children (customer) accounts as they use goods and services. When the billing process runs, a single invoice will automatically be generated under the distributor (parent) account. This invoice will separate the list of all products and services used by the children (customer) account. However, since you have indicated that the child account should receive Distributor rates (the 'Use Parent Pricing' field), and you have set up a purchase order for the Distributor with the Distributor Plan, you will notice that the products for the children (customer) accounts reflect the Distributor rate.
+
+!customerpurchaseorder.png!
+
+Let's take a look at an example:
+
+Distributor Wilson & Smith signs up with your company. Wilson & Smith have ten customers, who all buy your goods and services. 
+
+You would set Wilson & Smith up as a Parent account, meaning that the 'Allow Sub-Accounts' field has been selected. You would then create the ten individual customer accounts as sub-accounts, who belong to Wilson & Smith. This can be done by selecting the 'Add Sub-Accounts' button, found at the bottom of Wilson & Smith's customer information pane. When you are creating the ten customer accounts, you need to make sure that the 'Use Parent Pricing' field is selected for each one.
+
+Once you have added all ten customers as sub-accounts to Wilson & Smith, you need to create a plan, specific to the rates that Wilson  & Smith will charge their ten customers. When this plan has been saved, you then need to create a recurring purchase order using the Wilson & Smith plan. 
+
+In this example, 
+

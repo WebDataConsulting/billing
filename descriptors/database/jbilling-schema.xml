@@ -1,0 +1,2276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-1">
+        <createTable tableName="ach">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ach_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="aba_routing" type="java.sql.Types.VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_account" type="java.sql.Types.VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_type" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_name" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_name" type="java.sql.Types.VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="gateway_key" type="java.sql.Types.VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-2">
+        <createTable tableName="ageing_entity_step">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ageing_entity_step_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="status_id" type="java.sql.Types.INTEGER"/>
+            <column name="days" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-3">
+        <createTable tableName="base_user">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="base_user_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="password" type="java.sql.Types.VARCHAR(40)"/>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language_id" type="java.sql.Types.INTEGER"/>
+            <column name="status_id" type="java.sql.Types.INTEGER"/>
+            <column defaultValueNumeric="1" name="subscriber_status" type="java.sql.Types.INTEGER"/>
+            <column name="currency_id" type="java.sql.Types.INTEGER"/>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_status_change" type="java.sql.Types.TIMESTAMP"/>
+            <column name="last_login" type="java.sql.Types.TIMESTAMP"/>
+            <column name="user_name" type="java.sql.Types.VARCHAR(50)"/>
+            <column defaultValueNumeric="0" name="failed_attempts" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-4">
+        <createTable tableName="billing_process">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="billing_process_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="billing_date" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_unit_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_value" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_review" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paper_invoice_batch_id" type="java.sql.Types.INTEGER"/>
+            <column defaultValueNumeric="0" name="retries_to_do" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-5">
+        <createTable tableName="billing_process_configuration">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="billing_process_config_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="next_run_date" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="generate_report" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retries" type="java.sql.Types.INTEGER"/>
+            <column name="days_for_retry" type="java.sql.Types.INTEGER"/>
+            <column name="days_for_report" type="java.sql.Types.INTEGER"/>
+            <column name="review_status" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_unit_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_value" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_date_unit_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_date_value" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="df_fm" type="java.sql.Types.INTEGER"/>
+            <column defaultValueNumeric="1" name="only_recurring" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_date_process" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="auto_payment" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="maximum_periods" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="auto_payment_application" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-6">
+        <createTable tableName="blacklist">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="blacklist_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_card" type="java.sql.Types.INTEGER"/>
+            <column name="credit_card_id" type="java.sql.Types.INTEGER"/>
+            <column name="contact_id" type="java.sql.Types.INTEGER"/>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-7">
+        <createTable tableName="breadcrumb">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="breadcrumb_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="controller" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="java.sql.Types.VARCHAR(255)"/>
+            <column name="name" type="java.sql.Types.VARCHAR(255)"/>
+            <column name="object_id" type="java.sql.Types.INTEGER"/>
+            <column name="version" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="java.sql.Types.VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-9">
+        <createTable tableName="contact">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="contact_pkey"/>
+            </column>
+            <column name="organization_name" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="street_addres1" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="street_addres2" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="city" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="state_province" type="java.sql.Types.VARCHAR(30)"/>
+            <column name="postal_code" type="java.sql.Types.VARCHAR(15)"/>
+            <column name="country_code" type="java.sql.Types.VARCHAR(2)"/>
+            <column name="last_name" type="java.sql.Types.VARCHAR(30)"/>
+            <column name="first_name" type="java.sql.Types.VARCHAR(30)"/>
+            <column name="person_initial" type="java.sql.Types.VARCHAR(5)"/>
+            <column name="person_title" type="java.sql.Types.VARCHAR(40)"/>
+            <column name="phone_country_code" type="java.sql.Types.INTEGER"/>
+            <column name="phone_area_code" type="java.sql.Types.INTEGER"/>
+            <column name="phone_phone_number" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="fax_country_code" type="java.sql.Types.INTEGER"/>
+            <column name="fax_area_code" type="java.sql.Types.INTEGER"/>
+            <column name="fax_phone_number" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="email" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="notification_include" type="java.sql.Types.INTEGER"/>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-10">
+        <createTable tableName="contact_map">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="contact_map_pkey"/>
+            </column>
+            <column name="contact_id" type="java.sql.Types.INTEGER"/>
+            <column name="type_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="table_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-11">
+        <createTable tableName="contact_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="contact_type_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="is_primary" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-12">
+        <createTable tableName="country">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="country_pkey"/>
+            </column>
+            <column name="code" type="java.sql.Types.VARCHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-13">
+        <createTable tableName="credit_card">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="credit_card_pkey"/>
+            </column>
+            <column name="cc_number" type="java.sql.Types.VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cc_number_plain" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="cc_expiry" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(150)"/>
+            <column name="cc_type" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="gateway_key" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-14">
+        <createTable tableName="currency">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="currency_pkey"/>
+            </column>
+            <column name="symbol" type="java.sql.Types.VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="java.sql.Types.VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_code" type="java.sql.Types.VARCHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-15">
+        <createTable tableName="currency_entity_map">
+            <column name="currency_id" type="java.sql.Types.INTEGER"/>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-16">
+        <createTable tableName="currency_exchange">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="currency_exchange_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="currency_id" type="java.sql.Types.INTEGER"/>
+            <column name="rate" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueDate="1970-01-01" name="valid_since" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-17">
+        <createTable tableName="customer">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="customer_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="partner_id" type="java.sql.Types.INTEGER"/>
+            <column name="referral_fee_paid" type="java.sql.Types.INTEGER"/>
+            <column name="invoice_delivery_method_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="java.sql.Types.VARCHAR(1000)"/>
+            <column name="auto_payment_type" type="java.sql.Types.INTEGER"/>
+            <column name="due_date_unit_id" type="java.sql.Types.INTEGER"/>
+            <column name="due_date_value" type="java.sql.Types.INTEGER"/>
+            <column name="df_fm" type="java.sql.Types.INTEGER"/>
+            <column name="parent_id" type="java.sql.Types.INTEGER"/>
+            <column name="is_parent" type="java.sql.Types.INTEGER"/>
+            <column defaultValueNumeric="0" name="exclude_aging" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_child" type="java.sql.Types.INTEGER"/>
+            <column name="current_order_id" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance_type" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dynamic_balance" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="credit_limit" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="auto_recharge" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="use_parent_pricing" type="java.sql.Types.BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-18">
+        <createTable tableName="customer_meta_field_map">
+            <column name="customer_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-20">
+        <createTable tableName="entity">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="entity_pkey"/>
+            </column>
+            <column name="external_id" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="description" type="java.sql.Types.VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-21">
+        <createTable tableName="entity_delivery_method_map">
+            <column name="method_id" type="java.sql.Types.INTEGER"/>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-22">
+        <createTable tableName="entity_payment_method_map">
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="payment_method_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-23">
+        <createTable tableName="entity_report_map">
+            <column name="report_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-24">
+        <createTable tableName="enumeration">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="enumeration_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-25">
+        <createTable tableName="enumeration_values">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="enumeration_values_pkey"/>
+            </column>
+            <column name="enumeration_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-26">
+        <createTable tableName="event_log">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="event_log_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="table_id" type="java.sql.Types.INTEGER"/>
+            <column name="foreign_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level_field" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="module_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_num" type="java.sql.Types.INTEGER"/>
+            <column name="old_str" type="java.sql.Types.VARCHAR(1000)"/>
+            <column name="old_date" type="java.sql.Types.TIMESTAMP"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="affected_user_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-27">
+        <createTable tableName="event_log_message">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="event_log_message_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-28">
+        <createTable tableName="event_log_module">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="event_log_module_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-29">
+        <createTable tableName="filter">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="filter_pkey"/>
+            </column>
+            <column name="filter_set_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="constraint_type" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="field" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="template" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visible" type="java.sql.Types.BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="integer_value" type="java.sql.Types.INTEGER"/>
+            <column name="string_value" type="java.sql.Types.VARCHAR(255)"/>
+            <column name="start_date_value" type="java.sql.Types.TIMESTAMP"/>
+            <column name="end_date_value" type="java.sql.Types.TIMESTAMP"/>
+            <column name="version" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="boolean_value" type="java.sql.Types.BOOLEAN"/>
+            <column name="decimal_value" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="decimal_high_value" type="java.sql.Types.NUMERIC(22,10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-30">
+        <createTable tableName="filter_set">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="filter_set_pkey"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-31">
+        <createTable tableName="filter_set_filter">
+            <column name="filter_set_filters_id" type="java.sql.Types.INTEGER"/>
+            <column name="filter_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-32">
+        <createTable tableName="generic_status">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="generic_status_pkey"/>
+            </column>
+            <column name="dtype" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_value" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="can_login" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-33">
+        <createTable tableName="generic_status_type">
+            <column name="id" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="generic_status_type_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-34">
+        <createTable tableName="international_description">
+            <column name="table_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="psudo_column" type="java.sql.Types.VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="java.sql.Types.VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-35">
+        <createTable tableName="invoice">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="invoice_pkey"/>
+            </column>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="billing_process_id" type="java.sql.Types.INTEGER"/>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="delegated_invoice_id" type="java.sql.Types.INTEGER"/>
+            <column name="due_date" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="payment_attempts" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="status_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="carried_balance" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="in_process_payment" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_review" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paper_invoice_batch_id" type="java.sql.Types.INTEGER"/>
+            <column name="customer_notes" type="java.sql.Types.VARCHAR(1000)"/>
+            <column name="public_number" type="java.sql.Types.VARCHAR(40)"/>
+            <column name="last_reminder" type="java.sql.Types.DATE"/>
+            <column name="overdue_step" type="java.sql.Types.INTEGER"/>
+            <column name="create_timestamp" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-36">
+        <createTable tableName="invoice_delivery_method">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="invoice_delivery_method_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-37">
+        <createTable tableName="invoice_line">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="invoice_line_pkey"/>
+            </column>
+            <column name="invoice_id" type="java.sql.Types.INTEGER"/>
+            <column name="type_id" type="java.sql.Types.INTEGER"/>
+            <column name="amount" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="price" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="java.sql.Types.INTEGER"/>
+            <column name="description" type="java.sql.Types.VARCHAR(1000)"/>
+            <column name="source_user_id" type="java.sql.Types.INTEGER"/>
+            <column defaultValueNumeric="0" name="is_percentage" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-38">
+        <createTable tableName="invoice_line_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="invoice_line_type_pkey"/>
+            </column>
+            <column name="description" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_position" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-39">
+        <createTable tableName="invoice_meta_field_map">
+            <column name="invoice_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-40">
+        <createTable tableName="item">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="item_pkey"/>
+            </column>
+            <column name="internal_number" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="percentage" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="has_decimals" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="gl_code" type="java.sql.Types.VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-41">
+        <createTable tableName="item_meta_field_map">
+            <column name="item_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-43">
+        <createTable tableName="item_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="item_type_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="order_line_type_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="internal" type="java.sql.Types.BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-44">
+        <createTable tableName="item_type_exclude_map">
+            <column name="item_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-45">
+        <createTable tableName="item_type_map">
+            <column name="item_id" type="java.sql.Types.INTEGER"/>
+            <column name="type_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-46">
+        <createTable tableName="jbilling_seqs">
+            <column name="name" type="java.sql.Types.VARCHAR(255)"/>
+            <column name="next_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-47">
+        <createTable tableName="jbilling_table">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="jbilling_table_pkey"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-48">
+        <createTable tableName="language">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="language_pkey"/>
+            </column>
+            <column name="code" type="java.sql.Types.VARCHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-49">
+        <createTable tableName="list_meta_field_values">
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="list_value" type="java.sql.Types.VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-56">
+        <createTable tableName="meta_field_name">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="meta_field_name_pkey"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="entity_type" type="java.sql.Types.VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_type" type="java.sql.Types.VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_disabled" type="java.sql.Types.BOOLEAN"/>
+            <column name="is_mandatory" type="java.sql.Types.BOOLEAN"/>
+            <column name="display_order" type="java.sql.Types.INTEGER"/>
+            <column name="default_value_id" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="entity_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-57">
+        <createTable tableName="meta_field_value">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_name_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dtype" type="java.sql.Types.VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="boolean_value" type="java.sql.Types.BOOLEAN"/>
+            <column name="date_value" type="java.sql.Types.TIMESTAMP"/>
+            <column name="decimal_value" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="integer_value" type="java.sql.Types.INTEGER"/>
+            <column name="string_value" type="java.sql.Types.VARCHAR(1000)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-58">
+        <createTable tableName="notification_category">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notification_category_pk"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-59">
+        <createTable tableName="notification_message">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notifictn_msg_pkey"/>
+            </column>
+            <column name="type_id" type="java.sql.Types.INTEGER"/>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="use_flag" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-60">
+        <createTable tableName="notification_message_arch">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notifictn_msg_arch_pkey"/>
+            </column>
+            <column name="type_id" type="java.sql.Types.INTEGER"/>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="result_message" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-61">
+        <createTable tableName="notification_message_arch_line">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notifictn_msg_arch_line_pkey"/>
+            </column>
+            <column name="message_archive_id" type="java.sql.Types.INTEGER"/>
+            <column name="section" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="java.sql.Types.VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-62">
+        <createTable tableName="notification_message_line">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notifictn_msg_line_pkey"/>
+            </column>
+            <column name="message_section_id" type="java.sql.Types.INTEGER"/>
+            <column name="content" type="java.sql.Types.VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-63">
+        <createTable tableName="notification_message_section">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notifictn_msg_section_pkey"/>
+            </column>
+            <column name="message_id" type="java.sql.Types.INTEGER"/>
+            <column name="section" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-64">
+        <createTable tableName="notification_message_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notifictn_msg_type_pkey"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-65">
+        <createTable tableName="order_billing_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_billing_type_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-66">
+        <createTable tableName="order_line">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_line_pkey"/>
+            </column>
+            <column name="order_id" type="java.sql.Types.INTEGER"/>
+            <column name="item_id" type="java.sql.Types.INTEGER"/>
+            <column name="type_id" type="java.sql.Types.INTEGER"/>
+            <column name="amount" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="price" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="item_price" type="java.sql.Types.INTEGER"/>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="java.sql.Types.VARCHAR(1000)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="use_item" type="java.sql.Types.BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-67">
+        <createTable tableName="order_line_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_line_type_pkey"/>
+            </column>
+            <column name="editable" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-68">
+        <createTable tableName="order_meta_field_map">
+            <column name="order_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-69">
+        <createTable tableName="order_period">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_period_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="value" type="java.sql.Types.INTEGER"/>
+            <column name="unit_id" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-70">
+        <createTable tableName="order_process">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_process_pkey"/>
+            </column>
+            <column name="order_id" type="java.sql.Types.INTEGER"/>
+            <column name="invoice_id" type="java.sql.Types.INTEGER"/>
+            <column name="billing_process_id" type="java.sql.Types.INTEGER"/>
+            <column name="periods_included" type="java.sql.Types.INTEGER"/>
+            <column name="period_start" type="java.sql.Types.DATE"/>
+            <column name="period_end" type="java.sql.Types.DATE"/>
+            <column name="is_review" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="origin" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-71">
+        <createTable tableName="paper_invoice_batch">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="paper_invoice_batch_pkey"/>
+            </column>
+            <column name="total_invoices" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivery_date" type="java.sql.Types.DATE"/>
+            <column name="is_self_managed" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-72">
+        <createTable tableName="partner">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="partner_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="balance" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_payments" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_refunds" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_payouts" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="percentage_rate" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="referral_fee" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="fee_currency_id" type="java.sql.Types.INTEGER"/>
+            <column name="one_time" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_unit_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_value" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_payout_date" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_payout" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="automatic_process" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="related_clerk" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-73">
+        <createTable tableName="partner_meta_field_map">
+            <column name="partner_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-74">
+        <createTable tableName="partner_payout">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="partner_payout_pkey"/>
+            </column>
+            <column name="starting_date" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ending_date" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payments_amount" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="refunds_amount" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance_left" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_id" type="java.sql.Types.INTEGER"/>
+            <column name="partner_id" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-75">
+        <createTable tableName="partner_range">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="partner_range_pkey"/>
+            </column>
+            <column name="partner_id" type="java.sql.Types.INTEGER"/>
+            <column name="percentage_rate" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="referral_fee" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="range_from" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="range_to" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-76">
+        <createTable tableName="payment">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="attempt" type="java.sql.Types.INTEGER"/>
+            <column name="result_id" type="java.sql.Types.INTEGER"/>
+            <column name="amount" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_datetime" type="java.sql.Types.TIMESTAMP"/>
+            <column name="payment_date" type="java.sql.Types.DATE"/>
+            <column name="method_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_card_id" type="java.sql.Types.INTEGER"/>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_refund" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_preauth" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_id" type="java.sql.Types.INTEGER"/>
+            <column name="currency_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payout_id" type="java.sql.Types.INTEGER"/>
+            <column name="ach_id" type="java.sql.Types.INTEGER"/>
+            <column name="balance" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_period" type="java.sql.Types.INTEGER"/>
+            <column name="payment_notes" type="java.sql.Types.VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-77">
+        <createTable tableName="payment_authorization">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_authorization_pkey"/>
+            </column>
+            <column name="payment_id" type="java.sql.Types.INTEGER"/>
+            <column name="processor" type="java.sql.Types.VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code1" type="java.sql.Types.VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code2" type="java.sql.Types.VARCHAR(40)"/>
+            <column name="code3" type="java.sql.Types.VARCHAR(40)"/>
+            <column name="approval_code" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="avs" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="transaction_id" type="java.sql.Types.VARCHAR(40)"/>
+            <column name="md5" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="card_code" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="create_datetime" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="response_message" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-78">
+        <createTable tableName="payment_info_cheque">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_info_cheque_pkey"/>
+            </column>
+            <column name="payment_id" type="java.sql.Types.INTEGER"/>
+            <column name="bank" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="cheque_number" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="cheque_date" type="java.sql.Types.DATE"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-79">
+        <createTable tableName="payment_invoice">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_invoice_pkey"/>
+            </column>
+            <column name="payment_id" type="java.sql.Types.INTEGER"/>
+            <column name="invoice_id" type="java.sql.Types.INTEGER"/>
+            <column name="amount" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-80">
+        <createTable tableName="payment_meta_field_map">
+            <column name="payment_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meta_field_value_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-81">
+        <createTable tableName="payment_method">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_method_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-82">
+        <createTable tableName="payment_result">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_result_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-83">
+        <createTable tableName="period_unit">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="period_unit_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-92">
+        <createTable tableName="pluggable_task">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pluggable_task_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="java.sql.Types.INTEGER"/>
+            <column name="processing_order" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="java.sql.Types.VARCHAR(1000)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-93">
+        <createTable tableName="pluggable_task_parameter">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pluggable_task_parameter_pkey"/>
+            </column>
+            <column name="task_id" type="java.sql.Types.INTEGER"/>
+            <column name="name" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="int_value" type="java.sql.Types.INTEGER"/>
+            <column name="str_value" type="java.sql.Types.VARCHAR(500)"/>
+            <column name="float_value" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-94">
+        <createTable tableName="pluggable_task_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pluggable_task_type_pkey"/>
+            </column>
+            <column name="category_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="class_name" type="java.sql.Types.VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="min_parameters" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-95">
+        <createTable tableName="pluggable_task_type_category">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pluggable_task_type_cat_pkey"/>
+            </column>
+            <column name="interface_name" type="java.sql.Types.VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-96">
+        <createTable tableName="preference">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="preference_pkey"/>
+            </column>
+            <column name="type_id" type="java.sql.Types.INTEGER"/>
+            <column name="table_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="java.sql.Types.VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-97">
+        <createTable tableName="preference_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="preference_type_pkey"/>
+            </column>
+            <column name="def_value" type="java.sql.Types.VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-100">
+        <createTable tableName="process_run">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="process_run_pkey"/>
+            </column>
+            <column name="process_id" type="java.sql.Types.INTEGER"/>
+            <column name="run_date" type="java.sql.Types.DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="started" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="finished" type="java.sql.Types.TIMESTAMP"/>
+            <column name="payment_finished" type="java.sql.Types.TIMESTAMP"/>
+            <column name="invoices_generated" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-101">
+        <createTable tableName="process_run_total">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="process_run_total_pkey"/>
+            </column>
+            <column name="process_run_id" type="java.sql.Types.INTEGER"/>
+            <column name="currency_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_invoiced" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="total_paid" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="total_not_paid" type="java.sql.Types.NUMERIC(22,10)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-102">
+        <createTable tableName="process_run_total_pm">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="process_run_total_pm_pkey"/>
+            </column>
+            <column name="process_run_total_id" type="java.sql.Types.INTEGER"/>
+            <column name="payment_method_id" type="java.sql.Types.INTEGER"/>
+            <column name="total" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-103">
+        <createTable tableName="process_run_user">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="process_run_user_pkey"/>
+            </column>
+            <column name="process_run_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column  name="created" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-104">
+        <createTable tableName="promotion">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="promotion_pkey"/>
+            </column>
+            <column name="item_id" type="java.sql.Types.INTEGER"/>
+            <column name="code" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="once" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="since" type="java.sql.Types.DATE"/>
+            <column name="until" type="java.sql.Types.DATE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-105">
+        <createTable tableName="promotion_user_map">
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="promotion_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-106">
+        <createTable tableName="purchase_order">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="purchase_order_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="period_id" type="java.sql.Types.INTEGER"/>
+            <column name="billing_type_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active_since" type="java.sql.Types.DATE"/>
+            <column name="active_until" type="java.sql.Types.DATE"/>
+            <column name="cycle_start" type="java.sql.Types.DATE"/>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_billable_day" type="java.sql.Types.DATE"/>
+            <column name="created_by" type="java.sql.Types.INTEGER"/>
+            <column name="status_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notify" type="java.sql.Types.INTEGER"/>
+            <column name="last_notified" type="java.sql.Types.TIMESTAMP"/>
+            <column name="notification_step" type="java.sql.Types.INTEGER"/>
+            <column name="due_date_unit_id" type="java.sql.Types.INTEGER"/>
+            <column name="due_date_value" type="java.sql.Types.INTEGER"/>
+            <column name="df_fm" type="java.sql.Types.INTEGER"/>
+            <column name="anticipate_periods" type="java.sql.Types.INTEGER"/>
+            <column name="own_invoice" type="java.sql.Types.INTEGER"/>
+            <column name="notes" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="notes_in_invoice" type="java.sql.Types.INTEGER"/>
+            <column name="is_current" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-108">
+        <createTable tableName="recent_item">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="recent_item_pkey"/>
+            </column>
+            <column name="type" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="object_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-109">
+        <createTable tableName="report">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="report_pkey"/>
+            </column>
+            <column name="type_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="java.sql.Types.VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-110">
+        <createTable tableName="report_parameter">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="report_parameter_pkey"/>
+            </column>
+            <column name="report_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dtype" type="java.sql.Types.VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-111">
+        <createTable tableName="report_type">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="report_type_pkey"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-112">
+        <createTable tableName="role">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="role_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER"/>
+            <column name="role_type_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-113">
+        <createTable tableName="shortcut">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="shortcut_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="controller" type="java.sql.Types.VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="java.sql.Types.VARCHAR(255)"/>
+            <column name="name" type="java.sql.Types.VARCHAR(255)"/>
+            <column name="object_id" type="java.sql.Types.INTEGER"/>
+            <column name="version" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-114">
+        <createTable tableName="user_credit_card_map">
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="credit_card_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-115">
+        <createTable tableName="user_role_map">
+            <column name="user_id" type="java.sql.Types.INTEGER"/>
+            <column name="role_id" type="java.sql.Types.INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Mahesh Shivarkar" context="base" id="1337623084753-319">
+        <createTable tableName="item_price">
+		    <column name="id" type="java.sql.Types.INTEGER">
+	            <constraints nullable="false" primaryKey="true" primaryKeyName="item_price_pkey"/>
+	        </column>            
+		    <column name="item_id" type="java.sql.Types.INTEGER"/>
+		    <column name="currency_id" type="java.sql.Types.INTEGER"/>
+		    <column name="price" type="java.sql.Types.NUMERIC(22,10)">
+	             <constraints nullable="false"/>
+	        </column>
+		    <column name="OPTLOCK" type="java.sql.Types.INTEGER">
+	             <constraints nullable="false"/>
+	        </column>
+        </createTable>
+	</changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-117">
+        <addPrimaryKey columnNames="table_id, foreign_id, psudo_column, language_id" constraintName="international_description_pkey" tableName="international_description"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-119">
+        <addPrimaryKey columnNames="item_id, type_id" constraintName="item_type_exclude_map_pkey" tableName="item_type_exclude_map"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-123">
+        <addUniqueConstraint columnNames="id" constraintName="meta_field_value_id_key" deferrable="false" disabled="false" initiallyDeferred="false" tableName="meta_field_value"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-126">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="ach" constraintName="ach_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-127">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="ageing_entity_step" constraintName="ageing_entity_step_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-128">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="base_user" constraintName="base_user_fk_5" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-129">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="base_user" constraintName="base_user_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-130">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="base_user" constraintName="base_user_fk_4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="language" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-131">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="billing_process" constraintName="billing_process_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-132">
+        <addForeignKeyConstraint baseColumnNames="paper_invoice_batch_id" baseTableName="billing_process" constraintName="billing_process_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="paper_invoice_batch" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-133">
+        <addForeignKeyConstraint baseColumnNames="period_unit_id" baseTableName="billing_process" constraintName="billing_process_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="period_unit" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-134">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="billing_process_configuration" constraintName="billing_proc_configtn_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-135">
+        <addForeignKeyConstraint baseColumnNames="period_unit_id" baseTableName="billing_process_configuration" constraintName="billing_proc_configtn_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="period_unit" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-136">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="blacklist" constraintName="blacklist_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-137">
+        <addForeignKeyConstraint baseColumnNames="meta_field_value_id" baseTableName="blacklist" constraintName="blacklist_fk_4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-138">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="blacklist" constraintName="blacklist_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-139">
+        <addForeignKeyConstraint baseColumnNames="contact_id" baseTableName="contact_map" constraintName="contact_map_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="contact" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-140">
+        <addForeignKeyConstraint baseColumnNames="table_id" baseTableName="contact_map" constraintName="contact_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="jbilling_table" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-141">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="contact_map" constraintName="contact_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="contact_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-142">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="contact_type" constraintName="contact_type_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-143">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="currency_entity_map" constraintName="currency_entity_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-144">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="currency_entity_map" constraintName="currency_entity_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-145">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="currency_exchange" constraintName="currency_exchange_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-146">
+        <addForeignKeyConstraint baseColumnNames="invoice_delivery_method_id" baseTableName="customer" constraintName="customer_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="invoice_delivery_method" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-147">
+        <addForeignKeyConstraint baseColumnNames="partner_id" baseTableName="customer" constraintName="customer_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="partner" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-148">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="customer" constraintName="customer_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-149">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="customer_meta_field_map" constraintName="customer_meta_field_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="customer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-150">
+        <addForeignKeyConstraint baseColumnNames="meta_field_value_id" baseTableName="customer_meta_field_map" constraintName="customer_meta_field_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-153">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="entity" constraintName="entity_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-154">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="entity" constraintName="entity_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="language" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-155">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="entity_delivery_method_map" constraintName="entity_delivry_methd_map_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-156">
+        <addForeignKeyConstraint baseColumnNames="method_id" baseTableName="entity_delivery_method_map" constraintName="entity_delivry_methd_map_fk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="invoice_delivery_method" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-157">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="entity_payment_method_map" constraintName="entity_payment_method_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-158">
+        <addForeignKeyConstraint baseColumnNames="payment_method_id" baseTableName="entity_payment_method_map" constraintName="entity_payment_method_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_method" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-159">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="entity_report_map" constraintName="report_map_entity_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-160">
+        <addForeignKeyConstraint baseColumnNames="report_id" baseTableName="entity_report_map" constraintName="report_map_report_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="report" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-161">
+        <addForeignKeyConstraint baseColumnNames="enumeration_id" baseTableName="enumeration_values" constraintName="enumeration_values_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="enumeration" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-162">
+        <addForeignKeyConstraint baseColumnNames="affected_user_id" baseTableName="event_log" constraintName="event_log_fk_6" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-163">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="event_log" constraintName="event_log_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-164">
+        <addForeignKeyConstraint baseColumnNames="message_id" baseTableName="event_log" constraintName="event_log_fk_5" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="event_log_message" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-165">
+        <addForeignKeyConstraint baseColumnNames="module_id" baseTableName="event_log" constraintName="event_log_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="event_log_module" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-166">
+        <addForeignKeyConstraint baseColumnNames="table_id" baseTableName="event_log" constraintName="event_log_fk_4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="jbilling_table" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-167">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="event_log" constraintName="event_log_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-168">
+        <addForeignKeyConstraint baseColumnNames="dtype" baseTableName="generic_status" constraintName="generic_status_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="generic_status_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-169">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="international_description" constraintName="international_description_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="language" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-170">
+        <addForeignKeyConstraint baseColumnNames="billing_process_id" baseTableName="invoice" constraintName="invoice_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_process" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-171">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="invoice" constraintName="invoice_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-172">
+        <addForeignKeyConstraint baseColumnNames="delegated_invoice_id" baseTableName="invoice" constraintName="invoice_fk_4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-173">
+        <addForeignKeyConstraint baseColumnNames="paper_invoice_batch_id" baseTableName="invoice" constraintName="invoice_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="paper_invoice_batch" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-174">
+        <addForeignKeyConstraint baseColumnNames="invoice_id" baseTableName="invoice_line" constraintName="invoice_line_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-175">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="invoice_line" constraintName="invoice_line_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-176">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="invoice_line" constraintName="invoice_line_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="invoice_line_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-177">
+        <addForeignKeyConstraint baseColumnNames="invoice_id" baseTableName="invoice_meta_field_map" constraintName="invoice_meta_field_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-178">
+        <addForeignKeyConstraint baseColumnNames="meta_field_value_id" baseTableName="invoice_meta_field_map" constraintName="invoice_meta_field_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-179">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="item" constraintName="item_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-180">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="item_meta_field_map" constraintName="item_meta_field_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-181">
+        <addForeignKeyConstraint baseColumnNames="meta_field_value_id" baseTableName="item_meta_field_map" constraintName="item_meta_field_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-184">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="item_type" constraintName="item_type_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-185">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="item_type_exclude_map" constraintName="item_type_exclude_item_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-186">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="item_type_exclude_map" constraintName="item_type_exclude_type_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-187">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="item_type_map" constraintName="item_type_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-188">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="item_type_map" constraintName="item_type_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-197">
+        <addForeignKeyConstraint baseColumnNames="default_value_id" baseTableName="meta_field_name" constraintName="meta_field_name_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-198">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="meta_field_name" constraintName="meta_field_entity_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-199">
+        <addForeignKeyConstraint baseColumnNames="meta_field_name_id" baseTableName="meta_field_value" constraintName="meta_field_value_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_name" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-200">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="notification_message" constraintName="notification_message_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-201">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="notification_message" constraintName="notification_message_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="language" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-202">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="notification_message" constraintName="notification_message_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification_message_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-203">
+        <addForeignKeyConstraint baseColumnNames="message_archive_id" baseTableName="notification_message_arch_line" constraintName="notif_mess_arch_line_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification_message_arch" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-204">
+        <addForeignKeyConstraint baseColumnNames="message_section_id" baseTableName="notification_message_line" constraintName="notification_message_line_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification_message_section" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-205">
+        <addForeignKeyConstraint baseColumnNames="message_id" baseTableName="notification_message_section" constraintName="notification_msg_section_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification_message" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-206">
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="notification_message_type" constraintName="category_id_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification_category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-207">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="order_line" constraintName="order_line_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-208">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_line" constraintName="order_line_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-209">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="order_line" constraintName="order_line_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="order_line_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-210">
+        <addForeignKeyConstraint baseColumnNames="meta_field_value_id" baseTableName="order_meta_field_map" constraintName="order_meta_field_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-211">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_meta_field_map" constraintName="order_meta_field_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-212">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="order_period" constraintName="order_period_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-213">
+        <addForeignKeyConstraint baseColumnNames="unit_id" baseTableName="order_period" constraintName="order_period_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="period_unit" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-214">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_process" constraintName="order_process_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-215">
+        <addForeignKeyConstraint baseColumnNames="fee_currency_id" baseTableName="partner" constraintName="partner_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-216">
+        <addForeignKeyConstraint baseColumnNames="period_unit_id" baseTableName="partner" constraintName="partner_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="period_unit" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-217">
+        <addForeignKeyConstraint baseColumnNames="related_clerk" baseTableName="partner" constraintName="partner_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-218">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="partner" constraintName="partner_fk_4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-219">
+        <addForeignKeyConstraint baseColumnNames="meta_field_value_id" baseTableName="partner_meta_field_map" constraintName="partner_meta_field_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-220">
+        <addForeignKeyConstraint baseColumnNames="partner_id" baseTableName="partner_meta_field_map" constraintName="partner_meta_field_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="partner" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-221">
+        <addForeignKeyConstraint baseColumnNames="partner_id" baseTableName="partner_payout" constraintName="partner_payout_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="partner" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-222">
+        <addForeignKeyConstraint baseColumnNames="ach_id" baseTableName="payment" constraintName="payment_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ach" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-223">
+        <addForeignKeyConstraint baseColumnNames="credit_card_id" baseTableName="payment" constraintName="payment_fk_4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_card" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-224">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="payment" constraintName="payment_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-225">
+        <addForeignKeyConstraint baseColumnNames="method_id" baseTableName="payment" constraintName="payment_fk_6" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_method" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-226">
+        <addForeignKeyConstraint baseColumnNames="payment_id" baseTableName="payment" constraintName="payment_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-227">
+        <addForeignKeyConstraint baseColumnNames="result_id" baseTableName="payment" constraintName="payment_fk_5" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_result" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-228">
+        <addForeignKeyConstraint baseColumnNames="payment_id" baseTableName="payment_authorization" constraintName="payment_authorization_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-229">
+        <addForeignKeyConstraint baseColumnNames="payment_id" baseTableName="payment_info_cheque" constraintName="payment_info_cheque_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-230">
+        <addForeignKeyConstraint baseColumnNames="invoice_id" baseTableName="payment_invoice" constraintName="payment_invoice_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-231">
+        <addForeignKeyConstraint baseColumnNames="payment_id" baseTableName="payment_invoice" constraintName="payment_invoice_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-232">
+        <addForeignKeyConstraint baseColumnNames="meta_field_value_id" baseTableName="payment_meta_field_map" constraintName="payment_meta_field_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="meta_field_value" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-233">
+        <addForeignKeyConstraint baseColumnNames="payment_id" baseTableName="payment_meta_field_map" constraintName="payment_meta_field_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-247">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="pluggable_task" constraintName="pluggable_task_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-249">
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="pluggable_task_parameter" constraintName="pluggable_task_parameter_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pluggable_task" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-250">
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="pluggable_task_type" constraintName="pluggable_task_type_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pluggable_task_type_category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-251">
+        <addForeignKeyConstraint baseColumnNames="table_id" baseTableName="preference" constraintName="preference_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="jbilling_table" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-252">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="preference" constraintName="preference_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="preference_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-256">
+        <addForeignKeyConstraint baseColumnNames="process_id" baseTableName="process_run" constraintName="process_run_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_process" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-257">
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="process_run" constraintName="process_run_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="generic_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-258">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="process_run_total" constraintName="process_run_total_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-259">
+        <addForeignKeyConstraint baseColumnNames="process_run_id" baseTableName="process_run_total" constraintName="process_run_total_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="process_run" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-260">
+        <addForeignKeyConstraint baseColumnNames="payment_method_id" baseTableName="process_run_total_pm" constraintName="process_run_total_pm_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_method" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-261">
+        <addForeignKeyConstraint baseColumnNames="process_run_id" baseTableName="process_run_user" constraintName="process_run_user_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="process_run" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-262">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="process_run_user" constraintName="process_run_user_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-263">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="promotion" constraintName="promotion_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-264">
+        <addForeignKeyConstraint baseColumnNames="promotion_id" baseTableName="promotion_user_map" constraintName="promotion_user_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="promotion" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-265">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="promotion_user_map" constraintName="promotion_user_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-266">
+        <addForeignKeyConstraint baseColumnNames="billing_type_id" baseTableName="purchase_order" constraintName="purchase_order_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="order_billing_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-267">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="purchase_order" constraintName="purchase_order_fk_5" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-268">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="purchase_order" constraintName="purchase_order_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-269">
+        <addForeignKeyConstraint baseColumnNames="period_id" baseTableName="purchase_order" constraintName="purchase_order_fk_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="order_period" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-270">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="purchase_order" constraintName="purchase_order_fk_4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-272">
+        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="role" constraintName="role_entity_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="entity" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-273">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role_map" constraintName="user_role_map_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="role" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="FKs" id="1337623084753-274">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role_map" constraintName="user_role_map_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Mahesh Shivarkar" context="FKs" id="1337623084753-320">
+        <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="item_price" constraintName="item_price_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="currency" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Mahesh Shivarkar" context="FKs" id="1337623084753-321">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="item_price" constraintName="item_price_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="item" referencesUniqueColumn="false"/>
+	</changeSet>
+	
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-275">
+        <createIndex indexName="ix_base_user_un" tableName="base_user" unique="false">
+            <column name="entity_id"/>
+            <column name="user_name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-276">
+        <createIndex indexName="ix_blacklist_entity_type" tableName="blacklist" unique="false">
+            <column name="entity_id"/>
+            <column name="type"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-277">
+        <createIndex indexName="ix_blacklist_user_type" tableName="blacklist" unique="false">
+            <column name="user_id"/>
+            <column name="type"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-278">
+        <createIndex indexName="contact_i_del" tableName="contact" unique="false">
+            <column name="deleted"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-279">
+        <createIndex indexName="ix_contact_address" tableName="contact" unique="false">
+            <column name="street_addres1"/>
+            <column name="city"/>
+            <column name="postal_code"/>
+            <column name="street_addres2"/>
+            <column name="state_province"/>
+            <column name="country_code"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-280">
+        <createIndex indexName="ix_contact_fname" tableName="contact" unique="false">
+            <column name="first_name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-281">
+        <createIndex indexName="ix_contact_fname_lname" tableName="contact" unique="false">
+            <column name="first_name"/>
+            <column name="last_name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-282">
+        <createIndex indexName="ix_contact_lname" tableName="contact" unique="false">
+            <column name="last_name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-283">
+        <createIndex indexName="ix_contact_orgname" tableName="contact" unique="false">
+            <column name="organization_name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-284">
+        <createIndex indexName="ix_contact_phone" tableName="contact" unique="false">
+            <column name="phone_phone_number"/>
+            <column name="phone_area_code"/>
+            <column name="phone_country_code"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-285">
+        <createIndex indexName="contact_map_i_3" tableName="contact_map" unique="false">
+            <column name="table_id"/>
+            <column name="foreign_id"/>
+            <column name="type_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-286">
+        <createIndex indexName="ix_cc_number" tableName="credit_card" unique="false">
+            <column name="cc_number_plain"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-287">
+        <createIndex indexName="ix_cc_number_encrypted" tableName="credit_card" unique="false">
+            <column name="cc_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-288">
+        <createIndex indexName="currency_entity_map_i_2" tableName="currency_entity_map" unique="false">
+            <column name="currency_id"/>
+            <column name="entity_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-289">
+        <createIndex indexName="ix_el_main" tableName="event_log" unique="false">
+            <column name="module_id"/>
+            <column name="message_id"/>
+            <column name="create_datetime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-290">
+        <createIndex indexName="international_description_i_2" tableName="international_description" unique="false">
+            <column name="table_id"/>
+            <column name="foreign_id"/>
+            <column name="language_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-291">
+        <createIndex indexName="ix_invoice_date" tableName="invoice" unique="false">
+            <column name="create_datetime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-292">
+        <createIndex indexName="ix_invoice_due_date" tableName="invoice" unique="false">
+            <column name="user_id"/>
+            <column name="due_date"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-293">
+        <createIndex indexName="ix_invoice_number" tableName="invoice" unique="false">
+            <column name="user_id"/>
+            <column name="public_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-294">
+        <createIndex indexName="ix_invoice_ts" tableName="invoice" unique="false">
+            <column name="create_timestamp"/>
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-295">
+        <createIndex indexName="ix_invoice_user_id" tableName="invoice" unique="false">
+            <column name="user_id"/>
+            <column name="deleted"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-296">
+        <createIndex indexName="ix_item_ent" tableName="item" unique="false">
+            <column name="entity_id"/>
+            <column name="internal_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-298">
+        <createIndex indexName="ix_order_process_in" tableName="order_process" unique="false">
+            <column name="invoice_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-299">
+        <createIndex indexName="ix_uq_order_process_or_bp" tableName="order_process" unique="false">
+            <column name="order_id"/>
+            <column name="billing_process_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-300">
+        <createIndex indexName="ix_uq_order_process_or_in" tableName="order_process" unique="false">
+            <column name="order_id"/>
+            <column name="invoice_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-301">
+        <createIndex indexName="partner_range_p" tableName="partner_range" unique="false">
+            <column name="partner_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-302">
+        <createIndex indexName="payment_i_2" tableName="payment" unique="false">
+            <column name="user_id"/>
+            <column name="create_datetime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-303">
+        <createIndex indexName="payment_i_3" tableName="payment" unique="false">
+            <column name="user_id"/>
+            <column name="balance"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-304">
+        <createIndex indexName="create_datetime" tableName="payment_authorization" unique="false">
+            <column name="create_datetime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-305">
+        <createIndex indexName="transaction_id" tableName="payment_authorization" unique="false">
+            <column name="transaction_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-306">
+        <createIndex indexName="ix_uq_payment_inv_map_pa_in" tableName="payment_invoice" unique="false">
+            <column name="payment_id"/>
+            <column name="invoice_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-310">
+        <createIndex indexName="bp_pm_index_total" tableName="process_run_total_pm" unique="false">
+            <column name="process_run_total_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-311">
+        <createIndex indexName="ix_promotion_code" tableName="promotion" unique="false">
+            <column name="code"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-312">
+        <createIndex indexName="promotion_user_map_i_2" tableName="promotion_user_map" unique="false">
+            <column name="user_id"/>
+            <column name="promotion_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-313">
+        <createIndex indexName="ix_purchase_order_date" tableName="purchase_order" unique="false">
+            <column name="user_id"/>
+            <column name="create_datetime"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-314">
+        <createIndex indexName="purchase_order_i_notif" tableName="purchase_order" unique="false">
+            <column name="active_until"/>
+            <column name="notification_step"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-315">
+        <createIndex indexName="purchase_order_i_user" tableName="purchase_order" unique="false">
+            <column name="user_id"/>
+            <column name="deleted"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-316">
+        <createIndex indexName="user_credit_card_map_i_2" tableName="user_credit_card_map" unique="false">
+            <column name="user_id"/>
+            <column name="credit_card_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Emiliano Conde" context="base" id="1337623084753-317">
+        <createIndex indexName="user_role_map_i_2" tableName="user_role_map" unique="false">
+            <column name="user_id"/>
+            <column name="role_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet context="base" author="Juan Vidal" id="20120530-#2825-Fix-percentage-products-in-Plans">
+        <!--Upgrade data-->
+        <insert tableName="order_period">
+            <column name="id" valueNumeric="5"/>
+            <column name="entity_id"/>
+            <column name="value"/>
+            <column name="unit_id"/>
+            <column name="optlock" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="17"/>
+            <column name="foreign_id" valueNumeric="5"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="All Orders"/>
+        </insert>
+    </changeSet>
+    
+</databaseChangeLog>

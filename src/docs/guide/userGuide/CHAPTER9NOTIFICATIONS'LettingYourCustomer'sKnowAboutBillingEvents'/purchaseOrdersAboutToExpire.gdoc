@@ -1,0 +1,14 @@
+You might want to let know your customers that a purchase order is reaching its 'Active Until' date. This way, your customer can renew a service that they are subscribed to  
+before it expires. To do this, access the particular purchase  
+order you wish to change. Then, check the attribute, 'Notify user when order expires'. You will also have to enter a date into the 'Active Until' field, if there isn't one  
+already.
+
+The system can send between one and three emails per purchase order. *When* these emails are going to be sent will depend on the preferences, 'Days for order notification'  
+under Configuration, Email. These indicate how many days before  
+the purchase order's 'Active Until' date each email is going to be sent. If, you'd like to send two reminders instead of three, then leave the preference 'Days for order  
+notification - 3' blank.
+
+!ordernotification.png!
+
+There is one notification per step. You can set the text of the emails by clicking on Notification (within Configuration), Orders, and then on any of the 'Order about to  
+expire' notifications.

@@ -1,0 +1,49 @@
+h1. Overview
+
+This functionality allows a user to impersonate the users below him in the hierarchy of sub-accounts. It can also allow any administrative user belonging to a company, access all customer accounts. By impersonating a customer, it allows the user to complete most of the actions on the customer's behalf.
+
+While the user is signed in as one of the sub-accounts, or other users, their access is restricted so that they only see what the sub-account has access to. This means that they can only perform tasks that the sub-account, or user can do when they are logged in. 
+
+When the user cancels the impersonation, they will be brought back to their original state in *j*billing, meaning they will be acting as themselves again. 
+
+There is no password required to use this feature, however there are some permissions that need to be configured and added to the user's account. 
+
+h2. Impersonation Permissions
+
+The 'Super User' role is already configured to allow any user who has been assigned this role the permission to switch to any other user account in the system. It is also possible to configure the other standard roles like, clerk, or customer, to have this permission as well. The important thing to remember is, if you give the role 'Customers' the ability to switch, *all* customers in the system will be able to see all other customers or sub-accounts. 
+
+The best way to get a user to impersonate another account is to create a customized role. You can assign it to an organization, like Resellers for example. If you only wanted Parent Reseller accounts to see their Child accounts, you would select the permission: 'Allow Switching to Sub-Account'. If you wanted all Resellers to be able to switch to any other Reseller, then you would select: 'Allow Switching to Any User'.
+
+{note}
+Please Note: For more information on how to set up a role, please refer to section 1.15.5 Roles.
+{note} 
+
+The key fields that are required in order to this feature to work can be found under the permission type, 'User Switching':
+
+* Allow Switching to Sub-Account
+* Allow Switching to Any User
+
+!userswitching.png!
+
+h2. Example
+
+Telecom Services admin user, Sam Wilson can login to the system, to impersonate his sub-account, Laura Walker, and perform the tasks that she can do when she logs into the system. 
+
+!samsignin.png!
+
+Sam has logged into *j*Billing using his login credentials. After working in the system for awhile, he wants to check the orders in his child account. In order to do this, he clicks on the 'Impersonate User' icon, located beside the Laura's Login Name.
+
+!impersonatelaura.png!
+
+While Sam is working in Laura's account, his activities will be restricted to what Laura can do in the system. Laura can currently view her orders, and make a payment.
+
+!workingaslaura.png!
+
+When Sam cancels the Impersonation, by selecting the 'Resume session as swilson' link, he will be brought back to his original login state in the portal. Meaning, he will regain his role and permissions, so that he will see his regular screen view, and be able to act as himself again. 
+
+To summarize, user impersonation is a mechanism that lets the original user impersonate a user. When the user logs out, they are brought back to the state just before the impersonation. 
+
+
+
+
+

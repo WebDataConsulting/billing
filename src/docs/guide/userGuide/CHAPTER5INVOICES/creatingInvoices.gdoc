@@ -1,0 +1,5 @@
+Since invoices can only be created based purchase orders, they need to be created first. Once you have purchase orders, the invoice can be generated in two ways:
+
+# The billing process generates an invoice automatically (please refer to Chapter 4: The Billing Process for more information).
+# An invoice is created manually (please refer to Chapter 3: Purchase Orders for more information).
+

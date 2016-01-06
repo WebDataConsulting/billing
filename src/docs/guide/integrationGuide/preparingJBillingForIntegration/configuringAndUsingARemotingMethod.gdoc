@@ -1,0 +1,43 @@
+h4. Configuration
+
+You can make use of the jBilling API in any java application by including the @jbilling.jar@ and @jbilling-remote-beans.xml@
+files in your class-path. Both of these artifacts can be found in the @jbilling/resources/api/@ folder that was packaged
+with the binary *j*Billing distribution.
+
+The @jbilling-remote-beans.xml@ file contains the Spring configuration for accessing the *j*Billing remote web-services API using
+the @JbillingAPIFactory@ and @JbillingAPI@ classes. This file contains three different Spring bean configurations, one for each of the 3
+supported web-service protocols available in *j*Billing out-of-the-box. *j*Billing comes pre-configured with:
+
+* Hessian/Burlap (bean name "_apiClient_")
+* SOAP (bean name "_apiClient2_")
+* Spring HTTP Invoker (bean name "_apiClient3")
+
+
+{code:xml}
+<xml ...>
+<beans ....>
+
+	<!-- Hessian Remote WS Bean -->
+	<bean id="apiClient" ... >
+		<property .../>
+	</bean>
+
+	<!-- SOAP WS Bean -->
+	<jaxws:client id="apiClient2" ... />
+
+	<!-- Spring HTTPInvoker Remote WS Bean -->
+	<bean id="apiClient3" ... >
+		<property .../>
+	</bean>
+
+</beans>
+{code}
+
+These Spring beans connect to the exposed web-services in *j*Billing and provide access to the *j*Billing integration services.
+Unlike the others, the Spring HTTP Invoker protocol is an un-authenticated protocol. If you wish to use Spring HTTP Invoker
+for integration you'll need to configure an alternate authentication filter that forces the credentials to be used when
+making non-authenticated API calls. See the section *Enabling/Disabling authentication for jBilling web services* section below for
+information regarding this.
+
+!integration1.png!
+

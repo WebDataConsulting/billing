@@ -1,0 +1,30 @@
+Before you get started using the system, it would be helpful for you to learn how to find what you are looking for. The following information will help you to navigate more quickly through the system.
+
+h2. Navigation
+
+Within *j*Billing there are the following navigation tabs:
+
+* Customers
+* Invoices
+* Payments and Refunds
+* Orders
+* Billing
+* Mediation
+* Reports
+* Products
+* Plans
+* Configuration
+
+!navigationbar.png!
+
+h2. Breadcrumb Trail
+
+The breadcrumb trail is located beneath the system area tabs. It provides a list of links, detailing where you have been within the system. If you would like to go back to a particular screen, all you need to do is find the link in the breadcrumb trail, and click on it. You will be returned to that screen.
+
+For Example: you had been working with customer David Smith, however you needed to change a setting on the configuration screen. You clicked on the Configuration tab, made your changes and now want to return to David Smith's customer screen. Instead of clicking on the Customer tab, and then searching through all your customers, you can find David Smith in the breadcrumb trail. Clicking on this link will automatically return you to his information screen.
+
+!breadcrumbtrail.png!
+
+
+
+ 

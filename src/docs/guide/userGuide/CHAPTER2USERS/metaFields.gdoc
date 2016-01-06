@@ -1,0 +1,65 @@
+h1. Overview
+
+Meta Fields function in a way that is very similar to custom contact fields. The difference is that custom contact fields only apply to the customer information screen, while Meta Fields allow you to create a custom field on Customer, Item, Order, Invoice and Payment screens. 
+
+Just like custom contact fields, meta fields can appear on your printed invoices, and they are also important when using some of jBilling's extensions. This area of the system can be accessed by selecting Configuration, and then Meta Fields from the menu on the left hand side of the screen. 
+
+h2. Creating a Meta Field
+
+As previously stated, there are five areas of jBilling in which a Meta Field can be created: Customer, Item, Order, Invoice and Payment. They are all listed as 'Entity Types' in the Meta Fields area of Configuration.
+
+!allmetafields.png!
+
+When creating a Meta Field, you will simply have to select the 'Entity Type' you want it to appear under. For example, let's create a Meta Field for an Item.
+
+Click on the 'Entity Type': Item. 
+
+If there are any existing Meta Fields, they will appear listed on the right. To create a new meta field, click on the 'Add New' button. 
+
+!metafielditem.png!
+
+The New Meta Field screen will appear. 
+
+!metafieldnew.png!
+
+h2. Field Descriptions
+
+The following is a list of fields that you will find when you add a new Meta Field.
+
+*Number:*
+
+When you first create a Meta Field, this field will read 'New'. When you save the Meta Field, the system will automatically assign it a number. This number is how the system will identify the field. 
+
+*Name:*
+
+This field represents the title of the Meta Field as you want it to display on the screen. For example, if you want to create a special product ID field, you could enter: Special Product ID.
+
+*Data Type:*
+
+This drop down menu gives you the following options to choose from, STRING, INTEGER, DECIMAL, BOOLEAN, DATE, JSON_OBJECT, and ENUMERATION. 
+
+Select the type that best corresponds with the information you are going to be entering into the field. For example if you were creating a Meta Field that required a date, you would select DATE.
+
+*Mandatory:*
+
+If the Meta Field is required, then you need to check this check box. The system will not allow you to leave the page or save the screen if the Meta Field has not been filled in. 
+
+*Disabled:*
+
+This field should be selected if the field is disabled. If it is, it will not display or be editable. For example, if you selected this field for the Meta Field: Special Product ID, it would no longer appear, or be editable on the Items screen. 
+
+*Display Order:*
+
+This field should contain the number of the order you want the Meta Field to display in on the screen that it pertains to. For example, if you want the Special Product ID to appear after another field named, Alternate Product Name than you would give Special Product ID a display order of 2, and the Alternate Product Name a display order of 1.
+
+*Default Value:*
+
+Should be selected if you have a static default value or variable like @ Today @ for Date fields. 
+
+*Save Changes:*
+
+Click on this button to save the Meta Field.
+
+*Cancel:*
+
+Click on this button to cancel your changes and return to the main Meta Field screen. 

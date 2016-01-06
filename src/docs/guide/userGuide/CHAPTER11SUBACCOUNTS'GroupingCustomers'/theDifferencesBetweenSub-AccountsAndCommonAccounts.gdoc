@@ -1,0 +1,35 @@
+Parent and children accounts work pretty much the same as common accounts. Still, there are a few differences that are important for you to be aware of:
+
+h3. Listing Parent and Children Accounts
+
+When you click on Users and then Customers the list of customers does not include children accounts. *Only normal accounts or parent accounts are listed*. To view the children accounts associated to a parent account, start by selecting the parent account.
+
+The usual customer screen shows up, with a few differences. First, the number of children account is added to the user's information. Also, a link to this customer's list of children accounts is available.
+
+!childaddedparent.png!
+
+!childwithuser.png!
+
+h3. Purchase Orders
+
+Parent and children accounts can have their own purchase orders. These will be included in the invoices generation for the parent account.
+
+*For Children*
+
+To create a purchase order for a children account, you follow the exact same steps for the creation of a purchase order for a normal account. The only difference is that you have to first select the parent account from the list of customers to create the new purchase order. Since this is a parent account, the list of children accounts will be displayed. Now you have to select the child account that will own the new purchase order.
+
+*For Parents*
+
+Follow the same steps as when creating a purchase order for a normal customer.
+
+*Sub-Accounts Login*
+
+Children accounts cannot login to *j*billing. These accounts do not receive invoices or submit payments, so there would be little value for them to login to *j*billing.
+
+On the other hand, parent accounts will find all their billing information and history by login in to *j*billing, just like a normal account. Additionally, parent accounts can list the sub-account that they own and verify their information.
+
+*Invoices*
+
+Children accounts do not receive invoices. Instead, all their related purchase orders are included in the invoice sent to their parent.
+
+Parents receive an invoice that compiles the charges for all its children. The header for each children section uses the first name and last name of the primary contact of the children account. The items in the invoices are order by the item number (just like in a normal invoice), but also grouped by sub-account. You can also see that this invoice had some items from a purchase order that belongs directly to the parent account. These items are listed first.

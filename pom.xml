@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.sapienter.jbilling</groupId>
+    <artifactId>jbilling-example-ws-client</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    
+	<name>jBilling Example Web Service</name>	
+	
+	<dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+    </dependencies>
+	
+    <build>
+        <plugins>
+            
+			<!--
+				Generate a Java web-service client from a WSDL				
+				Run with "mvn generate-sources"
+				
+				http://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html							
+			-->
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun.xml.ws</groupId>
+                        <artifactId>jaxws-tools</artifactId>
+                        <version>2.1.5</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <!-- generate from local file -->
+					<!-- 
+                    <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
+					-->
+
+                    <!-- generate from url -->
+                    <wsdlUrls>
+						<wsdlUrl>http://www.webservicex.net/globalweather.asmx?WSDL</wsdlUrl>
+					</wsdlUrls>
+					
+                    <!-- default location of the service endpoint's wsdl file at runtime -->
+                    <wsdlLocation>http://www.webservicex.net/globalweather.asmx?WSDL</wsdlLocation>
+
+                    <packageName>com.sapienter.jbilling.server.user.tasks.ws</packageName>
+					<sourceDestDir>./src/java</sourceDestDir>
+					<extension>true</extension>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+
+            <!--
+                Checkout the JAX-WS ri dependencies and copy to the jbilling lib/ folder
+                Run with "mvn package"
+
+                http://maven.apache.org/plugins/maven-dependency-plugin/
+            -->
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>./lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeScope>runtime</includeScope>
+                            <includeArtifactIds>jaxws-api,mimepull,resolver,stax-ex,streambuffer</includeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

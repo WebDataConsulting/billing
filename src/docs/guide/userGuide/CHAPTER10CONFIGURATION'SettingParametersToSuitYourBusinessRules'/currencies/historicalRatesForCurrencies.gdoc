@@ -1,0 +1,77 @@
+When creating currencies, it is also possible to keep track of the changes in exchange rates by using the historical timeline. The historical timeline enables you to record a particular exchange rate on a specific date. 
+
+h2. Adding a Date to the Timeline
+
+The first step in adding a date to the timeline is to click on the 'Add Date' link. 
+
+!addcurrency.png!
+
+The date field will automatically default to the current date. From here, it is possible to move the date to the one you want. 
+
+!changedate.png!
+
+At this point, you should change the exchange rates for the currencies that are in use. This should be done in the exchange rate fields. 
+
+!currencyexchanage.png!
+
+Clicking on the 'Save Changes' button will ensure that the updates you have made to the historical timeline will be captured and saved. 
+
+!savechanges.png!
+
+h2. Historical Currency Rates and Purchase Orders
+
+Once you have set currency rates on the historical timeline, the purchase orders that are created will take on the exchange rate based on the Active Since date that is entered. 
+
+For example: 
+
+Trend uses two currencies, United States dollar, and Canadian dollar. 
+
+On March 3, Trend sets the Canadian dollar exchange rate to 0.5672. 
+
+!currencyexample.png!
+
+On March 24, Trend sets the Canadian dollar exchange rate to 0.5232.
+
+!currencyexample2.png!
+
+All of Trend's products are set up using United States Dollar. Brian Smith however, is a Canadian customer. When Trend's billing administrator creates a purchase order for Brian, the exchange rates will be based on the Active Since date.
+
+If the purchase order is created on March 3 and before March 24, all products will be calculated using the Canadian exchange rate of 0.5672. 
+
+However, if the purchase order is created with an Active Since of March 24 or later, all products will be calculated using the Canadian exchange rate of 0.5232.
+
+h2. Editing the Currency Exchange Rates on the Timeline
+
+Once a date has been created on the timeline, it is possible to go back and make changes if information has been entered incorrectly. 
+
+To edit a historical exchange rate, find the date in the timeline that you want to change, and click on it. 
+
+!edithistoricalcurrency.png!
+
+From here you can edit aspects such as, the date on the timeline, or/and the actual exchange rates themselves. 
+
+Once you have completed making your desired changes, click on the 'Save Changes' button to ensure that the updates you have made are stored in the system. 
+
+{note}
+Please Note: once the historical exchange rate(s) has been edited, the changes will only take affect on *new* purchase orders. This means that any pre-existing purchase order created with an active since for the particular historical exchange rate that was changed, will *not* automatically update with the new currency rate or date.  
+{note}
+
+h2. To Delete a Date on the Timeline
+
+Deleting a saved date on the currency timeline is quite simple. 
+
+Select the date on the timeline that you want to delete. You will know that it is selected because the text will be bold. 
+
+!deletecurrency.png!
+
+Click on the 'Delete' button. 
+
+!delete.png!
+
+The date will be removed from the timeline.
+
+!dateremoved.png!
+
+{note}
+Please Note: once a date has been deleted from the timeline, the corresponding exchange rates will no longer be available. Before you delete, ensure that there are no active purchase orders using those exchange rates.
+{note}

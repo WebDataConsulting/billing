@@ -1,0 +1,77 @@
+h2. Payment Statuses
+
+There are two kinds of statuses that can be associated to a payment: 
+
+* Good
+* Bad
+
+Within each, there are two *types* of statuses that will be assigned to a payment within the jBilling system.
+
+Good:
+
+* Entered (Manual): The payment has been received outside of the system, and a billing administrator has manually entered the payment. This type of payment can be made with a payment process in real-time, or not. 
+
+* Successful Real-Time: The payment has been made with an automatic payment processor, and it has been processed successfully.
+
+Bad:
+
+* Failed Real-Time: The payment processor, or gateway, has attempted to process the payment, but it failed. This result could potentially occur if the customer's credit card or banking information needs to be updated. 
+
+* Processor Unavailable Real-Time: The payment process did not process the payment. This means that there is something wrong with the payment processor itself, and the issue needs to be looked into.
+
+h2. Balance of a Payment
+
+If the status of a payment is 'good', it means that the total will equal the balance (to start). If the payment is linked to an invoice, both the balance of the invoice and payment go down.
+
+If the status of a payment is 'bad', it means that the balance will equal zero. If this payment is linked to an invoice, the invoice will not get paid, meaning, the invoice balance will not go down. 
+
+Let's take a look at an example. For the month of February the system generates an invoice for a customer. The total of the invoice is $100, which means that the invoice balance will also be $100. 
+
+{note}
+Please Note: for more information on the balance and status of an invoice, please refer to section 1.6.4.
+{note}
+
+There is a payment attempt made on the invoice for: $100. However, the payment fails: 
+
+* Total of the Payment is $100
+* Payment Balance is $0
+* Invoice total is going to be $100
+* Invoice Balance is going to be $100
+
+This result is generated despite the fact that the user is providing a total payment of $100. The balance is $0, which means that this payment would fall under the 'bad' kind of payment. Due to this fact, the invoice also does not get paid. This means that the invoice balance is not going to go down. It will stay the same. 
+
+Another payment is made, this time for $10. It is a successful payment, and the payment has been linked to an invoice:
+
+* Total of the Payment is $10
+* The Balance of the Payment is $0
+* Invoice Total is going to be $100
+* Invoice Balance is going to be $90
+
+In this scenario, because the payment is 'good', both the Balance of the payment and invoice is going to go down. The total for both the invoice and payment remain the same. 
+ 
+Another payment for $10 is made, however, it has *not* been linked to the invoice: 
+
+* Total of the Payment is $10
+* The Balance of the Payment is $10
+* The Invoice Total is going to be $100
+* The Invoice Balance is going to be $90
+
+If a payment is *not* linked to an invoice, there is no way for the system to know that a payment has been made. This example demonstrates that an invoice needs to be linked to a payment in order for both the Payment and Invoice balance to go down. 
+
+The previous payment has now been linked to the invoice: 
+
+* Total of the Payment is $10
+* The Balance of the Payment is $0
+* The Invoice Total is $100
+* The Invoice Balance is $80
+
+Now that the successful payment has been linked to the invoice, both balances go down.
+
+The customer makes another successful payment for $100: 
+
+* Total of the Payment is $100
+* The Balance of the Payment is $20
+* The Invoice Total is $100
+* The Invoice Balance is $0
+
+Since the customer has made a payment that is greater than the balance, the remaining amount will either be automatically applied to the next invoice, or it will remain stored until it is manually linked to the next invoice. The invoice balance is now $0, and the invoice has finally been paid. 

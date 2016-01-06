@@ -1,0 +1,5 @@
+When inspecting a customer (click Customers, select a customer and click on the magnified glass icon beside the User ID), an information box lists any blacklist matches for that particular customer. It only includes matches for the enabled filters.
+
+h3. Add/Remove Link
+
+The add/remove link on the bottom of the 'Blacklist Matches' box, shown above, allows administrators or clerks to add or remove a customer's user id from the blacklist. This can be done whether the user id blacklist filter is enabled or disabled.

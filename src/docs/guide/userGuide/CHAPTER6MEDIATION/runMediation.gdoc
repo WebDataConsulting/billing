@@ -1,0 +1,22 @@
+In order to run mediation, you need to make sure that the process.run_provisioning = true. You can also change the process.frequency. Depending on your business needs, this number can be changed to any amount of time you desire.
+
+At this point, you would restart *j*Billing, so that the mediation reports will run. Based on the *Trend* example, the result will look like this: 
+
+!mediationprocessrun.png!
+
+The run will let you know which configuration name you are viewing, the start, end and total runtime, how many records were processed, how many orders were affected, how many are complete and not billable, how many errors were detected and declared.
+
+Let`s take a look now at what has changed in the system. The mediation run stated that 5 orders were affected. In the Orders list, you will see that an order for Terry Wilson  
+with Products B-03 and B-04 has been created. 
+
+!terrywilsonpurchaseorder.png!
+
+What Happened?:
+
+Terry Wilson`s events were recorded on the mediation-sample file. *Trend* ran a mediation process which in turn, translated those events, rated and applied rules, and then  
+updated the user account with the appropriate information. In this case, it was a purchase order with two products. 
+
+!mediationterrywilson.png!
+
+The most important aspect to remember about mediation is that its purpose is to sort the information in a way which the rules engine can understand. It leaves the heavy  
+lifting to *j*Billing, meaning that the system is responsible for taking the sorted information, rating it and applying it to the correct account.

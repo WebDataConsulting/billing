@@ -1,0 +1,13 @@
+Security is a very important aspect in *j*Billing, especially because this system is a billing system. Within it you have all of your customer's information: contact, credit cards, purchasing behaviour, etc.
+
+It is very important to look at security as an area that needs to be addressed from a number of different fronts:
+ 
+* Your network.
+* Access to the server that is running *j*billing. 
+* The database that is supporting *j*billing.
+
+For example: if you are running on a secure operating system such as Linux, it will be very difficult for someone to gain access to it without a password. Yet, it is not a good idea to go ahead and install Linux, only to use it with all the parameters out of the box. You need to configure its many security options, like the firewall. Closing unneeded ports to the outside and shutting down services that are not required are just some of the tasks that relate to securing your server.
+
+The same applies to your database. A robust data base has built-in security that, when used properly, give you a good degree of security on the data stored there.
+
+This is why *j*billing is mostly focused on those areas. No matter how secure your OS and database are, if the application is not secure it would mean that there could be unauthorized access to the billing system.

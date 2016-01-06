@@ -1,0 +1,2 @@
+# Generate a daily DB dump of the PSQL DB named jbilling
+17 0 * * * jbilling /usr/local/bin/billing-db-dump.sh

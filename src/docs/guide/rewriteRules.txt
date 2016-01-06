@@ -1,0 +1,2 @@
+1.%20jBilling%20User%20Guide.html -> userGuide.html
+2.%20jBilling%20Integration%20Guide.html -> integrationGuide.html

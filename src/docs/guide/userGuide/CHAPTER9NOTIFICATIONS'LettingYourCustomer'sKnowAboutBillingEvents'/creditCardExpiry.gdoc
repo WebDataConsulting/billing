@@ -1,0 +1,23 @@
+h1. Overview
+
+When you have customers who use credit cards to make payments on their invoices, there may be times when the payment gateway will not process a payment. A reason for this could be because the credit card has expired and the customer has not provided your company with updated information. 
+
+By activating and setting up the Credit Card Expiry notification, it is possible to send these customers an email to request that they update their credit card information as soon as possible. 
+
+For more information on how to set up notifications, please refer to 1.10.2 Writing Your Own Text.
+
+h2. Frequency of the Credit Card Expiry Notification
+
+This notification will be sent once a month. If a customer has updated their credit card information after the first notification, they will not receive a second one. For example:
+
+Susan has an expired credit card. On June 11, she receives a notification stating that in order for her invoice to get paid, she must provide updated information. Susan provides the information, and her account is updated. On July 11, when the notifications are scheduled to go out again, Susan will not receive one, because her account has been updated and the payment has been successfully processed.
+
+Another customer, Tom, also has an expired credit card. On June 11, he received a notification stating that in order for a payment to be made, he is required to provide updated information. Tom does *not* provide any information, therefore his account is *not* updated. On July 11, Tom will receive another notification because his account has not been updated, which means his invoice has not been paid. 
+
+h2.  Customer Status
+
+A customer's status can also affect whether or not they recieve these types of notifications. 
+
+If a customer has a status of Active or Overdue, they will continue to receive expired credit card notifications. This of course, only occurs if they do not provide updated information. 
+
+If a customer has a status of Suspended, the notification will *not* be sent to them, even if thier credit card has expired. 

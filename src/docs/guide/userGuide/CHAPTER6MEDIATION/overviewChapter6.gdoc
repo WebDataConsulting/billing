@@ -1,0 +1,12 @@
+Mediation is similar to integration in the way that they both assist in the transfer of large quantities of information from an external system into the *j*Billing system. 
+However, the *key* difference between the two is: mediation must be used when a company`s system, the external system, cannot make an API call. All it is able to do is to save the records in a file or a database. 
+
+When *j*Billing receives data from an external system, there is a potential for that data to be in a different format from what the system recognizes. Mediation is also an important process because it will filter unnecessary events, translate them, rate the records based on pre-determined rules, and then update the record by applying it to the appropriate account.
+
+Let's review an example to give you a better idea of how mediation works:
+
+A phone company records an event every time a customer makes a phone call. This happens regardless of the fact that the call was dropped, lasts zero seconds, three minutes, or ten hours. Every time the user presses the call button, the action is recorded as an event.
+ 
+These events are then stored in files or a database. When these events are given to *j*Billing, the Mediation Plug-In(s) rate the information through the use of rules, and then updates the customer accounts. In this case, the events (duration of a phone call) would become purchase orders, adding products and pricing to each appropriate customer. 
+
+As you can imagine, if this process did not exist, the billing administrator for this company would need to manually enter each event. A file or database could potentially consist of hundreds and thousands of events. Not only would this be extremely time consuming, the odds of creating an error in a purchase order are much greater. Therefore, the mediation process eliminates errors and saves your company valuable time.

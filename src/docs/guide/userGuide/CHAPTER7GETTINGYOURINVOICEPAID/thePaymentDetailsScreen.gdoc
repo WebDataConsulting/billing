@@ -1,0 +1,7 @@
+When you click on the Payments and Refunds tab, a list of payments and refunds will be displayed. You can then view the details of a particular payment by clicking on it.
+
+!paymentsrefunds.png!
+
+Here you can see which invoice(s) the payment is paying, when the link was created, and how much of the invoice is being paid. If you click on the Invoice link displayed in the payment, you can view the particular invoice. 
+
+It is from this list that you can also remove a link to an invoice, by clicking on 'Unlink'. The effects of this operation are described in the following section. The fields displayed will depend on the payment method. 

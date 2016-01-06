@@ -1,0 +1,59 @@
+h2. Overview
+
+A product needs to belong to at least one category. Therefore, the first thing you must do is create a category. Categories will also help when you run a report. They make it easier to identify if certain products distort the results.
+
+For example: in a report rendering the revenue for a given year, it is important to exclude taxes. *j*Billing will facilitate this if all the products relating to taxes are sorted into a single category.
+
+h2. Creating a Category
+
+To create a category, click on 'Products' and then the '+ Add Category' button. 
+
+!addaproduct.png!
+
+The Add Product Category screen will appear.
+ 
+The fields you will see on this screen are defined below: 
+
+*Category ID*
+
+!categoryidnew.png!
+
+When you first create a category, the Category ID will show up as: New. Once you save the category, a sequential number will be automatically generated, or assigned. This number helps *j*Billing to internally identify categories. 
+
+!categoryid1.png!
+
+*Type*
+
+Categories have a type associated to them. In the screen shot below, type can be: 'Items', 'Tax' or 'Penalties'. The type affects how the invoices are calculated, and how the products are presented in the invoice. 
+
+For example: a product that belongs to the category type: 'Tax' will not be included as the base when calculating another tax. For PDF versions of invoices, where the total 'Tax' amount is segregated, *j*Billing knows which product is a tax by checking the category to which it belongs.
+
+!categorytype.png!
+
+*Name*
+
+Enter the name you want to give to your category into this text box.
+
+!categoryname.png!
+
+*Save*
+
+After you have completed filling out the fields, you can save the category by clicking on the 'Save Changes' button.
+
+!savechanges.png!
+
+*Edit*
+
+To make changes to a category, select the category you wish to change and click on the 'Edit' button. 
+
+!categoryedit.png!
+
+*Delete*
+
+To delete a category, select the one you wish to remove, and click on the 'Delete Category' button located in the pane on the right hand side of your screen.
+
+!deletecategory.png!
+
+{note}
+Please Note: to delete a category that has products, you will have to delete them before you can delete the category. Refer to the Products section of this guide (below) to learn how to delete a product.
+{note}

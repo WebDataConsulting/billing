@@ -1,0 +1,124 @@
+The filter fields allow you to narrow down your search for a particular customer, product, invoice, etc. You can also customize your *j*Billing filters so that the information, or areas of the system you search through most often is right at your fingertips.
+
+Although the Filters appear to be the same in every tab of the system (Customers, Invoices, Payments and Refunds, etc), it is important to remember that each tab carries a different set of filter fields. 
+
+If you wanted to search for a particular invoice, you would click on the Invoices Tab. If you wanted to find a Purchase order from six months ago, you would click on the Orders Tab. If you wanted to search for a Report that was generated last week, you would click on the Reports Tab. Within each section of the system, you will find Filters, and additional filters that apply specifically to the tab you are in.
+
+For example: if you want to search by the first name of a customer, you would have to click on the Customer Tab (located at the top of your screen), click on the 'Add Filter' button, and then select 'First Name'.
+
+!filters.png!
+
+The new filter will appear under the Filter By list:
+
+!filterby.png!
+
+
+h2. To Search Using a Filter
+
+To use your newly added filter, enter the appropriate value. In this case it would be: all or part of a first name:
+
+!filterbysmith.png!
+
+The result will appear listed. You can click on the item you were looking for, and the information will appear on the right of your screen. In this example, Brian Smith`s information appears:
+
+!filtercustomerresult.png!
+
+From here, you can click on any of the links provided to access the different areas of the system. This means that you don`t have to switch tabs to find what you`re looking for. 
+
+For example: if you wanted to view Brian Smith`s invoices, all you would have to do is click on the 'show all invoices' link. The information will appear on the right of your screen. There is no need for you to click on the Invoices Tab, only to have to search for Brian's invoices all over again.
+
+h2. Deleting a Filter
+
+It is important to remember to clear the filters if you decide to search for another field, or if you want to view the full list again.
+To remove any filter, simply click on the red 'x' located to the right of the filter you wish to delete. 
+
+!deletefilter.png!
+
+
+h2. Current List of Available Filters by Tab
+
+{table}
+*Customers*|
+Email
+Custom Fields
+First Name
+Last Name
+Login Name
+Status
+Organization Name
+Phone Number
+Postal Code
+Created Date
+Currency
+ID 
+Has Invoices
+Language
+Has Orders
+Has Payments
+{table}
+
+{table}
+*Invoices*|
+Due Date
+Invoice Status
+Balance
+User ID
+Billing Process ID
+Carried Balance
+Created Date
+Currency
+ID
+Review Invoices
+Payment Applied
+Total
+{table}
+
+{table}
+*Payment and Refunds*|
+Amount
+User ID
+Login Name
+Balance
+Created Date
+Invoice ID
+ID
+Refund Payments 
+Payment Method
+Payment Result
+{table}
+
+{table}
+*Orders*|
+Created Date
+Order Period
+User ID
+Active Since
+Active Until
+ID
+Main Subscription
+Next Billable Date
+Order Status
+Login Name
+{table}
+
+{table}
+*Billing*|
+Run Date
+Review Process
+ID
+{table}
+
+{table}
+*Products*|
+Description
+Product Code
+Pricing Rate
+Pricing Strategy
+GL Code
+Decimal Quantities
+ID
+Line Percentage
+{table}
+
+
+

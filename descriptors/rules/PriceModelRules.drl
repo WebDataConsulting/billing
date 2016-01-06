@@ -1,0 +1,69 @@
+package PlanPricingRule
+
+# imports
+import com.sapienter.jbilling.server.mediation.task.MediationResult;
+import com.sapienter.jbilling.server.item.tasks.PricingResult
+import com.sapienter.jbilling.server.item.PricingField
+import com.sapienter.jbilling.server.user.CustomerPriceBL
+import com.sapienter.jbilling.server.order.UsageBL
+import com.sapienter.jbilling.server.order.Usage
+import java.util.HashMap
+import java.util.Map
+import java.util.SortedMap
+import java.util.List
+import java.util.Date
+import org.apache.log4j.Logger
+
+# global
+global org.apache.log4j.Logger LOG
+
+# These rules are designed to be used when pricing mediated items. The idea is to use
+# the mediation PricingFields as attributes to find an appropriate pricing model. Any
+# mediated item that shares the same set of attributes can be priced using these rules,
+# you'll only ever need to add new rules when the attributes change.
+#
+# Author: Brian Cowdery
+# Date: Aug 17, 2010
+
+function SortedMap getPriceModel(Integer userId, Integer itemId, String lata, String rateCenter, String stateProvince) {
+    Map<String, String> attributes = new HashMap<String, String>(3);
+    attributes.put("lata", lata);
+    attributes.put("rateCenter", rateCenter);
+    attributes.put("stateProvince", stateProvince);
+
+    List<PlanItemDTO> items = new CustomerPriceBL(userId).getPricesByWildcardAttributes(itemId, attributes, 1);
+    return !items.isEmpty() ? items.get(0).getModels() : null;
+}
+
+function Usage getCurrentUsage(Integer userId, Integer itemId) {
+    return new UsageBL(userId).getItemUsage(itemId);
+}
+
+rule "set national call price"
+dialect 'java'
+when
+    # pricing a mediated national call item
+    $result : PricingResult( itemId == 108, price == null )
+    $mediation : MediationResult( id == $result.pricingFieldsResultId )
+
+    PricingField( name == "lata", $lata : strValue != null, resultId == $result.id )
+    PricingField( name == "rateCenter", $rateCenter : strValue != null, resultId == $result.id )
+    PricingField( name == "stateProvince", $stateProvince : strValue != null, resultId == $result.id )
+then
+    # use mediation fields as attributes to find customer pricing
+    SortedMap models = getPriceModel($result.getUserId(), $result.getItemId(), $lata, $rateCenter, $stateProvince);
+    PriceModelDTO model =  models != null ? PriceModelBL.getPriceForDate(models, new Date()) : null;
+
+    # apply pricing
+    if (model != null) {
+
+        # get total item usage for the current billing period
+        Usage usage = null;
+        if (model.getStrategy().requiresUsage()) {
+            usage = getCurrentUsage($result.getUserId(), $result.getItemId());
+        }
+
+        model.applyTo($mediation.getCurrentOrder(), $result.getQuantity(), $result, null, usage, true, new Date());
+        LOG.debug("Applying price model: " + model);
+    }
+end

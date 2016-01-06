@@ -1,0 +1,29 @@
+By default, *j*Billing web-based application has the *j*Billing logo in the top left corner, as well as *j*Billing's image: fonts, colours, etc. You might want to change these to your own colours and logo. This way, when your customers login to the system, they will find the familiar 'look and feel' from your company.
+
+{note}
+Please Note: the branding of *j*Billing can only be done within the parameters of the *j*billing Public License (JPL). You can change the parameters described in this document, while other references to *j*Billing and Sapienter Billing Software have to be left in place. For more information, JPL is available [herehttp://www.jbilling.com/JPL].
+{note}
+
+Branding the application to fit your needs is very simple. There are two parameters for you to modify. By default they are blank (empty), which means that *j*Billing's defaults will be used until they are changed. 
+
+h3. Logo URL
+
+This is the location of your logo for the top left corner of the screen. The file has to be in any of the Internet supported formats (jpg and gif for example). You have to enter the complete URL of the location of the file, for example:
+
+http://www.yourcompany.com/image/logo.gif
+
+If you have installed *j*Billing to run with encryption (where all the addresses start with 'https' instead of 'http'), you will need to provide the logo URL from a secured host as well. If you provide a location for your logo that is not encrypted, most web browsers will display a warning message when accessing every page.
+
+h3. Cascade Style Sheet URL
+
+Cascade style sheets provide a way to specify all the display attributes of a web page. This includes colours, fonts, text formatting, spaces between characters, etc. *j*Billing's web-based application relies on a .css file at: [http://your_host/billing/css/jbilling.css] (where 'your_host' is the location of the host where you've installed *j*Billing, such as 'localhost'). 
+
+h3. Preferences
+
+To access the Preferences, click on the Configuration link, located at the top of your screen. A list of all preferences will appear.
+
+{note}
+Please Note: if you are already in the Configuration section of *j*Billing, you only need to click on the corresponding link, located in the side bar on the left hand side of your screen. This applies to all areas within Configuration. 
+{note}
+
+To learn more about preferences, please refer to Appendix A: Preferences. 

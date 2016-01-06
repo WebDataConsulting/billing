@@ -1,0 +1,16 @@
+Before you can delete or edit a payment, you need to remove all the links between the payment and any invoices. *A payment cannot be modified as long as it is linked to invoices*. To remove the link between a payment and an invoice, click on 'Unlink'. This will undo the effect of the payment by increasing the invoice balance and also increasing the payment balance.
+
+!unlinkpayment.png!
+
+Once a payment is on its own, without paying any invoices, you will see the 'Delete' button, on the bottom of your screen. By clicking on it, you will be removing the payment from the system.
+
+Another option that is available when the payment is not linked to invoices is 'Edit'. This option also requires that the payment has been entered manually (see 'Types of payments' above). *A payment that was processed by a payment processor cannot be modified*. Payments made with cheques and manual credit cards can be edited to correct errors.
+
+The last action that you can do with an existing payment is to link it to invoices. For this, the payment has to have a balance greater than zero. Linking a payment to an invoice amount allows the user to pay (at least partially) the invoice. This is usually done when the payment is created (either manually or by the billing process), so manually linking a payment to an invoice should be an exception.
+
+To create the link, follow the steps to submit a new payment (see above). Select the radio button beside the invoice you wish to link to the payment.
+
+{note}
+Please Note: all of the payment's balance will be used to towards the invoice, up to the total balance of the invoice. If a payment has a $50 balance, and the invoice is $50, then the payment will cover the $50 and be 'Finished' with balance of zero. If the invoice's balance is smaller than $50, then the invoice will be fully paid, and there will be some balance left over from the payment.
+{note}
+

@@ -1,0 +1,45 @@
+To view a list of your purchase orders, click on the Orders link. A list of all your purchase orders will appear in chronological order, starting with the most recent one. Click on a purchase order to view the details that relate to it.
+ 
+h2. Details of a Purchase Order
+
+From here you can see all the details of the selected purchase order.
+
+*Order Details*
+
+The first pane reveals the order's core information, such as the date this order was created, its status (active, finished, etc.), the length of time each period covers, etc. Clicking on the User ID will link you to the customers screen.
+ 
+!orderdetails.png!
+
+An important field to note is, 'Next Invoice'. This is a date that represents the first day yet to be invoiced. In other words, the next time this order is included in an invoice will be for the date shown in this field. This date is only  relevant for recurring orders. When it is blank, it means that this order has not been included in any invoice yet.
+
+Let's examine the above example. This is a monthly invoice, created on June 7, 2011. That same day, an invoice was generated, including one month: from June 7, 2011 to July 7, 2011. Thus, the value of the 'Next day to invoice' is July 7, 2011 because that day is the first one not yet included on any invoice. 
+
+*Notes*
+
+This pane allows you to create a note that will either remain private, or be printed on the invoice.
+
+!notesorders.png!
+
+*Products*
+
+The third table lists the products contained in this purchase order, how many of each, and their price.
+
+!productorders.png!
+
+h2. Invoices
+
+The last table relates to the invoices this purchase order might have generated. It helps you to see what was sent to a customer and when. If no invoices have been generated, than this table will be empty. 
+
+!invoicesorders.png!
+
+*ID*
+
+This is the ID of the invoice where this purchase order has been applied. Clicking on the ID will lead you to the details screen of the invoice itself. 
+
+!invoiceid.png!
+
+*Date* 
+
+This field represents the date the invoice was generated.
+
+!invoicedate.png!

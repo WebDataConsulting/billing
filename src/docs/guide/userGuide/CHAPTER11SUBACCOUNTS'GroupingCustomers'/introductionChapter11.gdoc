@@ -1,0 +1,9 @@
+In many occasions, each of your customers actually represents many individual customers, gathered under one organization. These individual customers are the end users of your services, but they should not be invoiced directly. The invoice should go to the organization and should include all the charges of each of the end customers.
+
+A typical example is a company who provides cell phones to their employees. If you are the cell phone provider, your customer is the company, not the employees. The employees are the end users of your services. The company wants one invoice, but the invoiec needs to clearly separate the usage of each of its employees. You do not want to send an individual invoice to each employee; they are not the ones paying.
+
+*j*billing allows this kind of multiple-level customer organization through its sub-account support. The organization will then 'own' many sub-accounts. We can visualize this as the organization being the 'parent' account, and each of the end customers or sub-accounts being the 'children' accounts.
+
+The core concept behind sub-accounts is that a customer account can be a parent account that is linked to many children accounts. Both parent and children accounts can have their own purchase orders that represent the services that they are subscribed to, or have bought from you.
+
+When the billing process generates invoices, it will create *one invoice for the parent account*. The single invoice will include all charges from the purchase orders belonging to the children accounts. The resulting invoice will be divided in sections, one per sub-account, with a description of the account, the items and a sub-total.

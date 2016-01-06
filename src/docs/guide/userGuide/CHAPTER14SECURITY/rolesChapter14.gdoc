@@ -1,0 +1,34 @@
+This area of the system allows you to define the different roles that will be available to assign to your users. To access this section of Configuration, click on the Roles link, which is located in the sidebar on the left hand side of your screen. 
+
+!configurationroles.png!
+
+By default there are three security levels available in jBillng: Super User, Clerk and Customer. 
+
+* Super Users can perform any task in the system as they have access to all areas.
+* Clerks can perform all billing tasks, but can't make any changes to the configuration of the system. 
+* Customers are only able to view their details, and pay their invoices.
+
+Additional roles are available, however they must be added, or configured. If, for example, you don't want customers to have access to the system at all, you would need to uncheck all fields and assign the role to the appropriate users. 
+
+Before you add a role, let's take a look at the Super User as an example. You can do this by clicking on the role, and then on the 'Edit' button. You will be redirected to the 'Edit Role' screen, where you will see headers, followed by a list of items with check-boxes. 
+
+!editrole.png!
+
+{note}
+Please Note: the above image does not include all items available. This is only a sample.
+{note}
+
+Since this role is for a Super User, all the check-boxes will be checked. This means that the user you assign this role to will have the ability to manipulate all the areas selected. Therefore, when you are creating a new role, you need to carefully consider which aspects of the system you want it to have access to. 
+
+To add a new role, click on the 'Add New' button. You will be redirected to the New Role screen where you will have to enter the following information:
+
+*Number:* This is not an editable field. However you should be aware that it will read 'New' until you save the role. Your new role will then be assigned a number by the system.
+
+*Role Name:* Enter the name of your role here. For example: Customer, Reviewer, Clerk, etc.
+
+*Description:* Enter a brief description detailing the function of the role. For example: a description for the role name, Customer would have: 'A customer that will query his/her account' in the description field. 
+
+Once you have entered information into the above mentioned fields, scroll through the rest of the form and select appropriate check-boxes. Remember, if you select a check-box, it means that the user will have access to that information, and or the authority to manipulate it. 
+
+Click the 'Save Changes' button to save the role you have created. This role will now be available for selection in the Role dropdown list on the New User screen.
+

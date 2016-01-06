@@ -1,0 +1,157 @@
+userGuide: 1. jBilling User Guide
+introductionUserGuide: 1.1 Introduction
+jBillingBinaryInstallationInstructions: 1.1.1 jBilling Binary Installation Instructions
+navigatingJBilling: 1.1.1 Navigating jBilling
+navigatingJBilling: 1.1.2 Navigating jBilling
+filters: 1.1.3 Filters
+lists: 1.1.4 Lists
+CVSDownload: 1.1.5 CVS Download
+internationalization: 1.1.6 Internationalization
+web-ApplicationLoadBalancing: 1.1.7 Web-Application Load Balancing
+CHAPTER1PRODUCTS'YourCatalogOfGoodsAndServices': 1.2 CHAPTER 1 PRODUCTS 'Your Catalog of Goods and Services'
+productManagement: 1.2.1 Product Management
+productCategories: 1.2.2 Product Categories
+products: 1.2.3 Products
+pricingModels: 1.2.4 Pricing Models
+historicalRatesForProducts: 1.2.5 Historical Rates for Products
+CHAPTER2USERS: 1.3 CHAPTER 2 USERS
+customersAndOtherTypesOfUsers: 1.3.1 Customers and Other Types of Users
+newUsers: 1.3.2 New Users
+dynamicBalance: 1.3.3 Dynamic Balance
+customContactFields: 1.3.4 Custom Contact Fields
+metaFields: 1.3.5 Meta Fields
+enumerations: 1.3.6 Enumerations
+inspectCustomer: 1.3.7 Inspect Customer
+usersFAQ: 1.3.8 Users FAQ
+CHAPTER3PURCHASEORDERS'KeepingSubscriptionsAndOtherPurchasesWellOrganized': 1.4 CHAPTER 3 PURCHASE ORDERS 'Keeping Subscriptions and other Purchases Well Organized'
+overviewChapter3: 1.4.1 Overview
+creatingOrders: 1.4.2 Creating Orders
+pro-Rating: 1.4.3 Pro-Rating
+creditForEarlyCancellation: 1.4.4 Credit for Early Cancellation
+browsingPurchaseOrders: 1.4.5 Browsing Purchase Orders
+managingPurchaseOrders: 1.4.6 Managing Purchase Orders
+CHAPTER4THEBILLINGPROCESS'AutomatingInvoiceGenerationAndPaymentProcessing': 1.5 CHAPTER 4 THE BILLING PROCESS 'Automating Invoice Generation and Payment Processing'
+howTheBillingProcessWorks: 1.5.1 How the Billing Process Works
+theBillingPeriod: 1.5.2 The Billing Period
+selectingPurchaseOrders: 1.5.3 Selecting Purchase Orders
+selectingTheRightBillingPeriod: 1.5.4 Selecting the Right Billing Period
+invoicesCarriedOverToOtherInvoices: 1.5.5 Invoices Carried Over to Other Invoices
+dueDates: 1.5.6 Due Dates
+automaticPaymentProcessing: 1.5.7 Automatic Payment Processing
+configurationOfTheBillingProcess: 1.5.8 Configuration of the Billing Process
+numberOfRetries: 1.5.9 Number of Retries
+maximumPeriodsToInvoice: 1.5.11 Maximum Periods to Invoice
+applyOverPaymentsToInvoices: 1.5.12 Apply Over Payments to Invoices
+viewingTheProcessResults: 1.5.13 Viewing the Process Results
+reviewThatYourBillingProcessWillRunAsPlanned: 1.5.14 Review that Your Billing Process will Run as Planned
+alternativeBillingProcess: 1.5.15 Alternate Billing Process
+CHAPTER5INVOICES: 1.6 CHAPTER 5 INVOICES
+overviewChapter5: 1.6.1 Overview
+TheRelationshipBetweenPurchaseOrdersAndInvoices: 1.6.2  The Relationship Between Purchase Orders and Invoices
+creatingInvoices: 1.6.3 Creating Invoices
+statusAndBalanceOfAnInvoice: 1.6.4 Status and Balance of an Invoice
+modifyingAnInvoice: 1.6.5 Modifying an Invoice
+deletingAnInvoice: 1.6.6 Deleting an Invoice
+theInvoiceDetailsScreen: 1.6.7 The Invoice Details Screen
+numbering: 1.6.8 Numbering
+CHAPTER6MEDIATION: 1.7 CHAPTER 6 MEDIATION
+overviewChapter6: 1.7.1 Overview
+addingMediationEventsToOrders: 1.7.2 Adding Mediation Events to Orders
+configureAMediationRun: 1.7.3 Configure a Mediation Run
+runMediation: 1.7.4 Run Mediation
+CHAPTER7GETTINGYOURINVOICEPAID: 1.8 CHAPTER 7 GETTING YOUR INVOICE PAID
+payingInvoices: 1.8.1 Paying Invoices
+typesOfPayments: 1.8.2 Types of Payments
+statusAndBalanceOfAPayment: 1.8.3 Status and Balance of a Payment
+thePaymentDetailsScreen: 1.8.4 The Payment Details Screen
+deleting,ModifyingAndLinkingAPayment: 1.8.5 Deleting, Modifying and Linking a Payment
+refunds: 1.8.5.1 Refunds
+automaticInsertionOfTaxes: 1.8.6 Automatic Insertion of Taxes
+CHAPTER8PLANS: 1.9 CHAPTER 8 PLANS
+overviewChapter8: 1.9.1 Overview
+creatingAPlan: 1.9.2 Creating a Plan
+plansInAPurchaseOrder: 1.9.3 Plans in a Purchase Order
+editingAndDeletingAPlan: 1.9.4 Editing and Deleting a Plan
+historicalRatesForPlans: 1.9.5 Historical Rates for Plans
+CHAPTER9NOTIFICATIONS'LettingYourCustomer'sKnowAboutBillingEvents': 1.10 CHAPTER 9 NOTIFICATIONS 'Letting Your Customer's Know About Billing Events'
+introductionToJBilling'sNotifications: 1.10.1 Introduction to jBilling's Notifications
+writingYourOwnText: 1.10.2 Writing Your Own Text
+emailDeliveryParameters: 1.10.3 Email Delivery Parameters
+selfDeliveryPaperInvoices: 1.10.4 Self Delivery Paper Invoices
+customer'sNotesOnInvoices: 1.10.5 Customer's Notes on Invoices
+purchaseOrdersAboutToExpire: 1.10.6 Purchase Orders About to Expire
+invoiceReminders: 1.10.7 Invoice Reminders
+creditCardExpiry: 1.10.8 Credit Card Expiry
+CHAPTER10CONFIGURATION'SettingParametersToSuitYourBusinessRules': 1.11 CHAPTER 10 CONFIGURATION 'Setting Parameters to Suit Your Business Rules'
+overviewChapter10: 1.11.1 Overview
+branding: 1.11.2 Branding
+ageing: 1.11.3 Ageing
+billingProcess: 1.11.4 Billing Process
+blacklist: 1.11.5 Blacklist
+company: 1.11.6 Company
+currencies: 1.11.7 Currencies
+historicalRatesForCurrencies: 1.11.7.1 Historical Rates for Currencies
+email: 1.11.8 Email
+invoiceDisplay: 1.11.9 Invoice Display
+mediation: 1.11.10 Mediation
+notifcation: 1.11.11 Notifcation
+orderPeriods: 1.11.12 Order Periods
+plugIns: 1.11.13 Plug Ins
+roles: 1.11.15 Roles
+rateCards: 1.11.18 Rate Cards
+CHAPTER11SUBACCOUNTS'GroupingCustomers': 1.12 CHAPTER 11 SUB ACCOUNTS 'Grouping Customers'
+introductionChapter11: 1.12.1 Introduction
+whenToUseSubAccounts: 1.12.2 When to Use Sub Accounts
+creatingAParent-ChildrenAccount: 1.12.3 Creating a Parent-Children Account
+theDifferencesBetweenSub-AccountsAndCommonAccounts: 1.12.4 The Differences Between Sub-Accounts and Common Accounts
+howToSetUpADistributorAccount: 1.12.5 How to Set Up a Distributor Account
+sub-AccountCustomerManagement: 1.12.6 Sub-Account Customer Management
+CHAPTER12BLACKLIST'FilterPaymentRequests': 1.13 CHAPTER 12 BLACKLIST 'Filter Payment Requests'
+overviewChapter12: 1.13.1 Overview
+activatingTheBlacklist: 1.13.2 Activating the Blacklist
+blacklistPreferenceSetup: 1.13.3 Blacklist Preference Setup
+blacklistMatches: 1.13.4 Blacklist Matches
+batchUpload: 1.13.5 Batch Upload
+CVSFormat: 1.13.6 CVS Format
+CHAPTER13REPORTS: 1.14 CHAPTER 13 REPORTS
+overviewChapter13: 1.14.1 Overview
+interpretingTheResults: 1.14.2 Interpreting the Results
+CHAPTER14SECURITY: 1.15 CHAPTER 14 SECURITY
+overviewChapter14: 1.15.1 Overview
+creditCards: 1.15.2 Credit Cards
+passwordManagement: 1.15.3 Password Management
+securingJBillingWithSSL: 1.15.4 Securing jBilling with SSL
+rolesChapter14: 1.15.5 Roles
+usersWithMultipleRoles: 1.15.6 Users with Multiple Roles
+userImpersonation: 1.15.7 User Impersonation
+APPENDIXAPREFERENCES: 1.16 APPENDIX A PREFERENCES
+overviewAppendix: 1.16.1 Overview
+API: 1.17 API
+useLogsToLearnAPI: 1.17.1 Use Logs to Learn API
+integrationGuide: 2. jBilling Integration Guide
+introductionIntegrationGuide: 2.1 Introduction
+theNeedForIntegration: 2.2 The Need for Integration
+jBillingIntegrationRequirements: 2.3 jBilling Integration Requirements
+preparingJBillingForIntegration: 2.4 Preparing jBilling for Integration
+configuringAndUsingARemotingMethod: 2.4.1 Configuring and Using a Remoting Method
+securingIntegrationAccess: 2.4.2 Securing Integration Access
+settingUpJBillingToAcceptExternalCalls: 2.4.3 Setting up jBilling to accept external calls
+connectingToJBilling: 2.5 Connecting to jBilling
+SOAP: 2.5.1 SOAP
+hessian-Burlap: 2.5.2 Hessian-Burlap
+springHTTPInvoker: 2.5.3 Spring HTTP Invoker
+integratingJBillingToYourApplication: 2.6 Integrating jBilling to your Application
+overview: 2.6.1 Overview
+theJBillingClientAPI: 2.6.2 The jBilling Client API
+integrationWithNon-JavaApplications: 2.6.3 Integration with non-Java Applications
+anIntegrationTutorial: 2.7 An Integration Tutorial
+overviewAIT: 2.7.1 Overview
+theTrendWebsite: 2.7.2 The Trend Website
+conclusion: 2.7.3 Conclusion
+clientAPIReference: 2.8 Client API Reference
+dataStructures-ObjectClasses: 2.8.1 Data Structures - Object Classes
+APIServiceCalls: 2.8.2 API Service Calls
+appendixA: 2.9 Appendix A
+constantsReference: 2.9.1 Constants Reference
+appendixB: 2.10 Appendix B
+howToUseTheJBilling3LogsForIntegration: 2.10.1 How to use the jBilling 3 Logs for integration

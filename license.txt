@@ -1,0 +1,4 @@
+# jbilling enterprise license key
+licensee=jbilling.com
+licenseKey=CxDQhSwN8zcgc33OzIXg2FzLWgTlgpQtHR4Zl0BiOlTYnnQAVhgkrT3ocl/8e+b/pR7milJKSUfMJS3+OYcSMJucnxiFZSSWLTBnDp96qCyMKpLRKaNURvew8PAowIHM	
+

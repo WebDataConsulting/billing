@@ -1,0 +1,88 @@
+h3. Overview
+
+Products represent the catalog of goods or services sold by your company. Creating one gives you the ability to detail the description and price of a product. A product can also be a promotion, interest, late fees, a tax or anything else that you might want an invoice to contain.
+
+h2. Creating a Product
+
+As illustrated below, to create a product, click on the category you wish to add the product to, and click the 'Add Product' button. The Add Product screen will appear.
+
+!addproduct.png!
+
+The fields you will see on this screen are defined below: 
+
+*Product ID*
+
+!productidnew.png!
+
+When you first create a product, the Product ID will show up as: New. Once you save the product, a sequential number that helps *j*Billing to internally identify products will be assigned.
+
+!productid1.png! 
+
+*Description*
+
+Here is where a product is named. This name will eventually be displayed on the invoice. It can be edited when creating a purchase order. The default language of your company should be used, which has been configured during sign-up.
+
+You need to initially enter the description in your company's default language. If you need to enter the description in more than one language, you can do so later by editing the product.
+
+!productdescription.png!
+
+*Line Percentage*
+
+This field indicates that you wish for the value of the product to be calculated as a percentage of the total of the purchase order. 
+
+For example: a tax, such as the VAT (Value Added Tax) or GST (Goods and Services Tax), which is a fixed percentage of the total value of the product. 
+
+!linepercent.png!
+
+{note}
+Please Note: if this field is filled out, the 'price' fields have to be left blank.
+{note}
+
+*Allow Decimal Quantity*
+
+Flagging this field allows you to enter amounts with decimal values.
+
+!allowdecimal.png!
+
+*Product Code*
+
+This field is optional. It is your company`s internal identification codes. You can use this field to distinguish and organize your products. You can assign any combination of numbers, letters and symbols to your product. It is possible to assign the same product code to more than one product. The numbers, letters, and symbols you assign to your product will affect the order in which it will appear with the other products in an invoice. 
+
+!productcode.png!
+
+{note}
+Please Note: the most important effect that the product code has is that it *determines how products will be numbered in an invoice.*
+{note}
+
+If a product's order in an invoice is important to you, you should think of a number strategy to follow. Let's say that you want all your normal items to show up first, followed by any discounts and lastly, the taxes. In this case, you might want to start the product code with a letter that follows these three groups: 'A' for normal products, 'B' for discounts, and 'C' for taxes. These are prefixes and can be followed by a number. 
+
+For example:
+
+* A-1 Monthly front page banner
+* A-2 Featured article
+* B-1 One year subscription discount
+* C-1 State taxes
+
+*GL Code*
+
+If applicable, enter the GL code for the product into the text box. 
+
+!glcode.png!
+
+*Categories*
+
+Select the category the product will belong to. Each product needs to be assigned to at least *ONE* category. It is possible for a product to belong to more than one.
+
+!productcategories.png!
+
+*Edit*
+
+To edit a product, ensure that the product you wish to change is selected, then click on the 'Edit' button.
+
+!productedit.png!
+
+*Delete*
+
+To delete a product, select the product you wish to remove and click on the 'Delete' button. 
+
+!productdelete.png!

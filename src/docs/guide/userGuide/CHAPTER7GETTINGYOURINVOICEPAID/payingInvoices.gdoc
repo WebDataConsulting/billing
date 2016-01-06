@@ -1,0 +1,23 @@
+The last step in a billing cycle takes place when your customers pay their invoices. A payment reduces the balance of an invoice, and when that balance reaches zero, the invoice is considered paid.
+
+The most common situation is to receive one payment per invoice, for the total amount of the invoice. In this case, you will have one payment per invoice, without any further complexity. This is the ideal case.
+
+However, there are many other situations that can occur that will make the relationship between payment and invoices more complex. A customer might send a payment for the wrong amount, smaller or greater than their invoice. Or they might send one payment to pay two invoices. Eventually, you might have many payments associated to one invoice, or many invoices associated to one payment.
+
+In *j*Billing, the association of a payment to an invoices is called a 'link'. A payment will be linked to an invoice when it is paying that invoice. *j*Billing will track these links. It will tell you how much a payment is paying for each invoice that it has a link with. Also, if an invoice with many payments is being paid, *j*Billing will tell you which are these payment and how much each of them are paying to an invoice.
+
+The balance of an *invoice* is how much of it remains to be paid. The balance of a *payment* is how much of it is still not linked to an invoice. If a payment has a balance greater than zero, it means that it can still be linked to an invoice. It is possible to create and remove links to invoices very easily. 
+
+Let's go through an example to better illustrate the relationship between payments and invoices.
+
+* On June 1st a new customer sends a cheque to *Trend* for $50. They do so because they have to pay for a sign-up fee.
+* On June 15th, this same customer receives an invoice for $100. They then send a cheque for $100.
+* On July 15th, they get an invoice for a total of $100, but with a balance of $50. They then send *Trend* a cheque for $50.
+
+*Trend* now has the following payment/invoice situation:
+
+Payment number 1: pays $50 of invoice number 1. This invoice is also partially paid by payment number 2. Between these two payments, the invoice is fully paid.
+
+Payment number 2: also pays invoice number 2 for half of its value. The rest of that invoice is paid by payment number 3.
+
+So we have three payments, and two invoices, but the middle payment is linked to both invoices.

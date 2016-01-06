@@ -1,0 +1,104 @@
+h4. Overview
+
+While integration services could be an extremely useful feature, they do bring up some
+security concerns you'll need to take into account. It is critical that the services are not
+exposed to external parties, otherwise it could be possible for them to invoke the same
+functionality you're using (and, most probably, you don't want an outsider to be able to
+create a payment or invoice).
+
+Therefore, the integration services should be exposed only to properly authorized
+parties. This is, at least in part, guaranteed by *j*Billing, since by default it requires a client
+application to identify itself via a user name/password pair, before servicing any of its
+requests. It would also be important to transmit all data over a secure channel, which
+can be accomplished by using the SOAP or Hessian/Burlap calls over an SSL tunnel,
+something we'll cover shortly.
+
+Ideally, the web services would be exposed only to the server(s) that require it, and any
+other parties should be excluded. This can be accomplished by using a firewall
+application that limits the IP addresses that have access to *j*Billing's integration services.
+Please refer to the documentation of the Operating System or platform in which your
+copy of *j*Billing is to run, in order to have some information on how to restrict access to
+specific TCP ports in your system.
+
+It is also recommended that all service calls are performed by means of an encrypted
+channel, as provided by the SSL (Secure Socket Layer) protocol. This effectively avoids
+any threats related to unauthorized interception or decryption of the service calls. SSL
+also ensures that the party you're engaging communication with is actually your intended
+recipient, nullifying any impersonation attempts.
+
+In order to determine if the party engaged in communication is actually who it is
+pretending to be, SSL uses certificates. Therefore, in order to establish an SSL
+connection to *j*Billing, it could be required to have a copy of *j*Billing's certificate in your
+development and production systems.
+
+h4. Restricting Access to Known IP Addresses
+
+By default, *j*Billing will accept web-service calls from any IP address. You can change this behaviour to restrict API
+client requests to known machines within your own network. To change this, edit the @jbilling/jbilling-Config.groovy@ script
+and un-comment the @grails.plugins.springsecurity.ipRestrictions@ property.
+
+IP restriction patterns can be provided as single-value strings, or a multi-value list of strings. They can also use
+CIDR masks, and can specify either IPv4 or IPV6 patterns.
+
+{code}
+grails.plugins.springsecurity.ipRestrictions = [
+        '/services/**': '192.168.0.110',
+        '/hessian/**': ['192.168.0.110','192.168.0.111'],
+        '/httpinvoker/**': '192.168.0.0/24'
+]
+{code}
+
+Note that you can always access these URLs from @localhost@, regardless of the IP restriction.
+
+
+h4. Enabling/Disabling authentication for *j*Billing web services
+
+By default, all calls to *j*Billing must be authenticated. In most cases, this is the desired
+behavior. If Spring HTTP Invoker is used to make calls to *j*Billing, authentication is not available. 
+If the *j*Billing server is called by clients within an internal network secured from outside access, it may also
+be preferable to remove the need to force clients to authenticate themselves.
+
+You can force any exposed web-service to use a specific set of credentials (instead of asking for authentication) by
+editing the @jbilling/jbilling-Config.groovy@ script. Find the @grails.plugins.springsecurity.filterChain.chainMap@ property
+and change the authentication filter set to ignore the default @JOINED_FILTERS@, and instead use a filter chain that contains
+the @staticAuthenticationProcessingFilter@ (copy the filter chain used for "/httpinvoker/**"):
+
+{code}
+grails.plugins.springsecurity.filterChain.chainMap = [
+        '/services/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+        '/hessian/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+        '/httpinvoker/**': 'securityContextPersistenceFilter,staticAuthenticationProcessingFilter,securityContextHolderAwareRequestFilter,basicExceptionTranslationFilter,filterInvocationInterceptor',
+        '/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+]
+{code}
+
+The @staticAuthenticationProcessingFilter@ itself is configured in the *j*Billing @resources.groovy@ file. You'll need
+to re-compile jBilling to access this configuration file so you can change the static authentication credentials.
+
+
+h4. Enabling/Disabling company security checks
+
+If only one company is using the *j*Billing installation, unnecessary security checks, which
+make sure one company is not accessing another company's data, can be disabled to
+further increase performance. To disable the check, edit the following file:
+
+@./grails-app/conf/spring/resources.xml@
+
+Comment out or delete the two XML beans under the section *AOP: Security / Logging*:
+Bean ids *webServicesSecurityAdvice* and *webServicesSecurityAdvisor*).
+
+h4. Enabling SSL for *j*Billing web services
+
+Since web services run on HTTPS, for *j*Billing this is actually managed by Tomcat. Tomcat is the web server that 
+comes with the *j*Billing distribution. Thus, the first step is to enable SSL in the Tomcat configuration. This is 
+explained in the *Security* chapter of the *[jBilling User Guide|guide:userGuide]*. Please refer to that document. 
+Once you can use your standard web client over SSL, you can immediately start doing all the web
+services communication through HTTPS, effectively securing your web services. A further step is to force all 
+the web services communication over SSL. To achieve that extract the billing web archive:
+
+@jbilling\webapps\billing.war@ and edit the file: @descriptors\web\web.xml@
+
+Notice that there is already a section at the bottom to force HTTPS, but it is commented.
+Uncomment the XML tag *<security-constraint>* and its contents to force HTTPS.
+It will use the SSL certificate that Tomcat is using to secure the standard web client.
+Recreate the web archive (compress with a zip utility program) when done.

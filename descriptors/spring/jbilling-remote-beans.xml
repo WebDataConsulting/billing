@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Configuration for accessing remote beans from a client.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+    <!--
+        Remote method calls are authenticated and must be made using a valid username and password.
+
+        Usernames should be in the format "username;companyId", where the resulting remote bean will be scoped
+        to the given user and company. Using the API for multiple clients requires defining multiple remote beans.
+    -->
+
+    <!-- Hessian remote web-service bean -->
+    <bean id="apiClient" class="org.springframework.remoting.caucho.HessianProxyFactoryBean" lazy-init="true">
+        <property name="serviceUrl" value="http://localhost:#{systemProperties['JBILLING_PORT'] ?: '8080'}/jbilling/hessian/ApiService"/>
+        <property name="serviceInterface" value="com.sapienter.jbilling.server.util.IWebServicesSessionBean"/>
+        <property name="hessian2" value="true"/>
+        <property name="username" value="admin;1"/>
+        <property name="password" value="123qwe"/>
+    </bean>
+
+    <!-- SOAP remote web-service bean -->
+    <jaxws:client id="apiClient2"
+                  serviceClass="com.sapienter.jbilling.server.util.IWebServicesSessionBean"
+                  address="http://localhost:#{systemProperties['JBILLING_PORT'] ?: '8080'}/jbilling/services/api"
+                  username="admin;1"
+                  password="123qwe"/>
+
+    <!--
+       Spring HTTP Invoker and RMI don't have support for authentication. For these non-authenticated
+       protocols, you must configure an alternate authentication filter that sets the credentials to be used
+       when making non-authenticated API calls.
+
+       see resources.groovy and the "staticAuthenticationProcessingFilter"
+    -->
+
+    <!-- Spring HTTP Invoker remote web-service bean -->
+    <bean id="apiClient3" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean" lazy-init="true">
+        <property name="serviceUrl" value="http://localhost:#{systemProperties['JBILLING_PORT'] ?: '8080'}/jbilling/httpinvoker/ApiService"/>
+        <property name="serviceInterface" value="com.sapienter.jbilling.server.util.IWebServicesSessionBean"/>
+    </bean>
+
+    <!-- Hessian remote web-service bean -->
+    <bean id="apiClient4" class="org.springframework.remoting.caucho.HessianProxyFactoryBean" lazy-init="true">
+        <property name="serviceUrl" value="http://localhost:8080/jbilling/hessian/ApiService"/>
+        <property name="serviceInterface" value="com.sapienter.jbilling.server.util.IWebServicesSessionBean"/>
+        <property name="hessian2" value="true"/>
+        <property name="username" value="admin;3"/>
+        <property name="password" value="123qwe"/>
+    </bean>
+    
+    <!-- Hessian remove web-service bean for making calls to Mordor company -->
+   	<bean id="apiClientMordor" class="org.springframework.remoting.caucho.HessianProxyFactoryBean" lazy-init="true">
+       <property name="serviceUrl" value="http://localhost:8080/jbilling/hessian/ApiService"/>
+       <property name="serviceInterface" value="com.sapienter.jbilling.server.util.IWebServicesSessionBean"/>
+       <property name="hessian2" value="true"/>
+       <property name="username" value="mordor;2"/>
+       <property name="password" value="123qwe"/>
+   	</bean>
+</beans>

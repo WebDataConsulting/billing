@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/cookie-0.51/grails-app/i18n"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/cookie-0.51/grails-app/services"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/cookie-0.51/grails-app/taglib"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/cxf-2.0.1/grails-app/conf"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/cxf-2.0.1/src/groovy"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/cxf-2.0.1/src/java"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/hibernate-3.6.10.14/grails-app/i18n"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/hibernate-3.6.10.14/src/java"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/jquery-1.11.1/grails-app/assets"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/jquery-1.11.1/grails-app/conf"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/jquery-1.11.1/grails-app/services"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/jquery-1.11.1/grails-app/taglib"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/jquery-1.11.1/src/groovy"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/jquery-ui-1.10.4/grails-app/conf"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/jquery-ui-1.10.4/grails-app/taglib"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/remote-pagination-0.4.8/grails-app/i18n"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/remote-pagination-0.4.8/grails-app/taglib"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/remoting-1.3/src/groovy"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/remoting-1.3/src/java"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/resources-1.2.8/grails-app/conf"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/resources-1.2.8/grails-app/i18n"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/resources-1.2.8/grails-app/resourceMappers"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/resources-1.2.8/grails-app/taglib"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/resources-1.2.8/src/groovy"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/resources-1.2.8/src/java"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/grails-app/conf"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/grails-app/controllers"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/grails-app/i18n"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/grails-app/services"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/grails-app/taglib"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/grails-app/views"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/src/groovy"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/spring-security-core-2.0-RC4/src/java"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/tomcat8-8.0.5/src/groovy"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/tomcat8-8.0.5/src/java"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/webflow-2.1.0/src/groovy"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/webxml-1.4.1/grails-app/conf"/>
+	<contentEntry url="file://$GRAILS_ROOT$/2.4.3/projects/jbilling-telco-4.1.1/plugins/webxml-1.4.1/src/groovy"/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+</component>

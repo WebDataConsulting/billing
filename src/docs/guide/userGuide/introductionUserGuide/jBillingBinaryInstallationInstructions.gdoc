@@ -1,0 +1,234 @@
+h1. Installation Instructions (Binary Release)
+
+The following instructions detail how to install *j*Billing from the public release archive as downloaded from jBilling.com, or from a release package generated from the source code using the @grails package-public-release@ command.
+
+h2. Installing
+
+Unzip *j*Billing to the desired installation directory. Typically you would create a new *j*Billing user and unzip it to the home directory (/home/jbilling/jbilling-enterprise-3.0)
+
+!sh.png!
+
+h2. Configuring the Database
+
+To configure *j*Billing to work with a different database vendor, you will need to do two things:
+* Tell Hibernate what kind of database it needs to work with.
+* Initialize a new database with the *j*Billing schema (tables, indexes, keys and base data).
+
+h3. Configure Hibernate
+
+Edit the @jbilling-DataSource.groovy@ file and enter in your database connection information. Typically you will need the user name, password, server host name and database instance name.
+
+The exact syntax of the URL property depends on the JDBC driver and the vendor you obtained it from. Please refer to your vendor's JDBC driver's documentation for information on how to specify the JDBC connection URL to your database
+
+Also in the @jbilling-DataSource.groovy@ file you will find the Hibernate dialect property. The dialect tells Hibernate how to talk to your database and about all the supported statements and syntax that are allowed. By default *j*Billing is configured to use the Hypersonic dialect - "org.hibernate.dialect.HSQLDialect". You will need to change the dialect to a value that matches your database vendor (see the [Hibernate Core documentation | http://docs.jboss.org/hibernate/core/3.5/reference/en-US/html/session-configuration.html#configuration-optional-dialects] for a complete list). 
+
+!datasourcegroovy.png!
+
+Last but not least, you will need to provide the JDBC driver .jar file to the application server. This is done by copying the jar file to Tomcat's lib/ folder. *j*Billing 3.x already comes packaged with drivers for Hypersonic, and PostgreSQL - for other database vendors, you'll need to get the driver file from the database vendor.
+
+h3. Database Inilialization
+
+To initialize your database you must run one of the database scripts. This of course, assumes that you have your database up and running with a user and target database instance created (again, see the *j*Billing Required Software Installation guide). In the sql/ folder, you will find a set of files named:
+
+!schema.png!
+
+and another file named 
+
+@jbilling-data.sql@. 
+
+There is one schema creation script per supported database engine. *j*Billing's base data resides in the jbilling-data.sql file and must be inserted after the schema has been created, but before all the foreign keys and constraints are created. To get this to work, you will need to separate the schema creation from the constraint creation statements and run them separately. 
+
+Open up the file @jbilling-schema-postgresql.sql@ and look for the first foreign key constraint statement for the ACH table. This statement should appear about two thirds of the way into the schema creation script. Take all of the constraints and cut-and-paste them into a new file named @jbilling-schema-postgresql-constraints.sql@.
+
+Now that you have separated the schema creation statements from the constraints, you can execute the scripts using your databases client utility. To initialize your database, run the scripts in the following order:
+* run @jbilling-schema-postgresql.sql@
+* run @jbilling-data.sql@
+* run @jbilling-schema-postgresql-constraints.sql@
+
+h2. Basic Configuration Instructions
+
+h2. Tomcat
+
+To setup the HTTP listener port, edit the @conf/server.xml@ Tomcat configuration file and change the HTTP Connector port to the desired port. 
+
+!line69.png!
+
+For more information, please refer to the [Tomcat 6 Configuration Documentation|http://tomcat.apache.org/tomcat-6.0-doc/config/http.html].
+
+h2. *j*Billing
+
+*j*Billing can be configured by updating the groovy configuration files that are bundled with either of the release packages. You'll also find these files in the source code (they're copied to the release packages), but in the source tree they have a different name.
+
+In most cases the only thing you need to configure for a typical *j*Billing installation is the Database Connection settings (@DataSource.groovy@, see the Configuring the Database section above for more information.), the other configuration defaults are suitable for the majority of installations.
+
+In a binary installation you'll find the configuration files in the @jbilling-enterprise-3.0.x/jbilling/@ folder. We refer to this folder as "jBilling Home". In the *j*Billing Home folder, you will find externalized configuration files and all of the resources (invoice designs, company logos, rules etc.) that *j*Billing needs to run.
+
+h2. Main Configuration Files
+
+* @jbilling/jbilling-Config.groovy@ - Grails application and security settings. 
+* @jbilling/jbilling-DataSource.groovy@ - Database connection settings.
+* @jbilling.properties@ - All *j*Billing runtime properties including SMTP config. 
+
+h2. Moving *j*Billing Home
+
+When deploying as a binary, you also have the option of moving the *j*Billing Home folder out of the tomcat instance into a directory of your choosing. This can be accomplished by providing either a JBILLING_HOME environment variable or a JBILLING_HOME command line argument to Tomcat via a startup script (the environment variable is recommended).
+
+Move the home folder jbilling/ out of tomcat to the directory of your choosing:
+
+@mv jbilling-enterprise-3.0.1/jbilling/ /home/jbilling/my-jbilling-home@
+
+Export the JBILLING_HOME environment variable and restart *j*Billing
+
+@export JBILLING_HOME=/home/jbilling/my-jbilling-home@
+
+{note}
+Please Note: To make the JBILLING_HOME environment variable permanent, add the export command to your /etc/ profile script or to your windows environment variables. 
+{note}
+
+Your *j*Billing Home folder should contain the following structure:
+
+@jbilling-DataSource.groovy@
+
+@jbilling-Config.groovy@
+
+@jbilling.properties@
+
+@resources/designs/@
+
+@resources/invoices@
+
+@resources/logos/@
+
+@resources/mediation/@
+
+@resources/reports/@
+
+@resources/rules/@
+
+h2. Installing a SMTP Mailer (Linux)
+
+By default, *j*Billing attempts to use a local SMTP mailer installed on the host system. You can configure *j*Billing to user another mailer by editing the @jbilling.properties@ and updating all of the smtp properties.
+
+To use a local mailer, you must have one installed. We recommend 'postfix':
+
+* @sudo apt-get intsall postfix@ (Ubuntu/Debian)
+
+* @sudo yum install postfix@ (RedHat/CentOS)
+
+h1. PostgreSQL Installation
+
+h2. Installation and Configuration
+
+h3. Red Hat/CentOS
+
+@sudo yum install postgresql-libs postgresql postgresql-server@
+
+@sudo service postgresql initdb@ (or start/stop in initdb not supported by postgres version)
+
+h3. Ubuntu/Debian
+
+@sudo apt-get install postgresql postgresql-client@
+
+Trust all local connections to the PostgresSQL instance. Edit the pg_hba.conf file and change the IPv4 and "local" Unix socket lines to "@trust@". Note that the client should be aware of this and adjust the security to their needs in a production environment, it's best if their own system admin consults the PostgreSQL documentation to determine the correct settings for their environment.
+
+The version number in the path to the @pg_hba.conf@ might change depending on the verson installed by the package manager. Pay attention to the version of PostgreSQL installed. 
+
+@sudo vim /var/lib/pgsql/data/pg_hba.conf@ (Red Hat/CentOS)
+@sudo vim /etc/postgresql/8.4/main/pg_hba.conf (Ubuntu/Devian)
+
+!local.png!
+
+Change the PostgresSQL listener to allow connections via TCP. The client should review this later; It might not be necessary to listen on all addressses if the machine has a static IP.
+
+* @sudo vim /var/lib/pgsql/data/postgresql.conf@ (Red Hat/CentOS)
+* @sudo vim /etc/postgresql/8.4/main/postgresql.conf@ (Ubuntu/Debain
+
+!listenaddresses.png!
+
+@sudo service postgresql start@
+
+h2. Create the *j*Billing Database and Database User
+
+PosgreSQL comes with a simple database template that you can connect to temporarily to create the necessary role and database.
+
+!createdatabaseuser.png!
+
+*References*
+
+* [https://help.ubuntu.com/community/PostgreSQL]
+
+h1. Java Installation
+
+h2. Package Manager (Ubuntu/Debain)
+
+In Ubuntu systems you can try installing the '@sun-java6-jdk@' package. This package will put java on the path but please note that it does not create a JAVA_HOME environment variable.
+
+@sudo apt-get install sun-java6-jdk@
+
+If the above command returns the error "Package sun-java6-jdk has no installation candidate", then you will need to follow the steps below:
+
+Add to the bottom of sources list:
+
+@sudo vim /etc/apt/sources.list@
+
+@deb http://acrhive.canonical.com/ lucid partner@
+
+Update your sources and retry the installation.
+
+@sudo apt-get update@
+
+@sudo apt-get install sun-java6-jdk@
+
+h2. Manual Install (Preferred)
+
+Check to see if you need the 32bit or 64bit version of Java. The easiest way to check is to look at the name of the linux kernel to see if it's labeled as x86_64 (which means you'll require 64bit):
+
+@uname -r@
+
+@2.6.32-131.0.15.e16.x86_64@ (64 bit kernal)
+
+Download and install the Java 6 JDK, go to the Oracle download site|http://www.oracle.com/technetwork/java/javase/downloads/index.html and download the most recent update of Java 6 (the below commands are an example and may not match your downloaded version of java):
+
+@wget -O jdk-6u25-linux-i586.bin http://download.oracle.com/otn-pub/java/jdk/@
+
+@6u25-b06/jdk-6u25-linux-i586.bin@
+
+@chmod 755 jdk-6u25-linux-i586.bin@
+
+@./jdk-6u25-linux-i586.bin@
+
+@sudo mv jdk1.6.0_25/ /opt@
+
+@cd /opt@
+
+@sudo ln -s jdk1.6.0_25 jdk1.6@
+
+Create a new profile script in /etc/profile.d/ to set JAVA_HOME to the location of the unpacked JDK, then change the symlink in /etc/alternatives to point at the new java binary so that it's availabe to all applications.
+
+!sudo.png!
+
+h1. Installing *j*Billing as a Service (Linux)
+
+Create a new service script in the /etc/init.d/ folder to register the *j*Billing Tomcat application server as a service. Make sure the JAVA_HOME and JBILLING_TOMCAT_HOME variables match your installation paths.
+
+!jbillingtomcat.png!
+
+!jbillingtomcatcont.png!
+
+You can test that your service script works by using the "service" command to start and stop the application server.
+
+@sudo service jbilling start@
+
+@sudo service jbilling stop@
+
+To start *j*Billing automatically, you will need to create a symlink to your /etc/init.d/jbilling script in the appropriate runconf folder (ideally /etc/rc6.d/). It's recommended that you use the reconf tool for this task to reduce the risk of causing permanent damage.
+
+@sudo apt-get install rccconf@
+
+@sudo rcconf@
+
+Use the arrow keys to scroll down and find 'jbilling' in the list of services. Press spacebar to mark it as a startup item, press tab, then <Ok> to save your changes. 
+
+!configurationtool.png!
+
+

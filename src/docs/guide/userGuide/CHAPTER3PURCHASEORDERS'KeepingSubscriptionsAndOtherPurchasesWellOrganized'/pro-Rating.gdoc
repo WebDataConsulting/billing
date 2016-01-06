@@ -1,0 +1,124 @@
+Pro-rating allows the invoicing of partial periods. 
+
+For example: your customer receives an invoice every month. Under normal circumstances, your customer will receive an invoice for the *whole* period, therefore for the full amount of the services they have subscribed to. 
+
+However, it is very possible that for the first or last period of the subscription, your customer has to be invoiced for only a fraction of the full period. In these cases, the system has to calculate the amount to be invoiced considering the total time invoiced compared to the time of a full period. This 'fractional invoicing' is called: pro-rating.
+
+Let's review a typical scenario where pro-rating is necessary. You have a customer, who is subscribed to a number of services. On the 10th of every month, this customer receives *one* invoice with all the charges for the services they are receiving from your company. 
+
+On the 20th of a month, the customer calls your company's customer service to subscribe to another service that is $60 a month. From now on, your customer will not want to receive an invoice on the 10th, plus another one on the 20th with only the new service. It is much simpler to send one monthly invoice. However, since your customer is subscribing on the 20th, you can't charge them for the full month.
+ 
+With pro-rating, you can add a new purchase order with the new service, and specify that the order should fit the '10th of the month' cycle. The next invoice will add about two thirds of the full period ($40 in this example) for this initial period of the new service. Subsequent invoices will show the full period of $60.
+
+A similar situation occurs when the customer cancels a service and you need to invoice for that last part of a period proportionally to the price of a full period. Using our previous example, if the customer wants to cancel, the last day being the 25th, then the next invoice should show the charge for the period between the 10th (the beginning of the billing cycle), and the 25th. 
+
+h2. Enable Pro-Rating
+
+By default, pro-rating is not enabled in *j*Billing. This means that *j*Billing expects all orders to invoice full periods only. If you try to enter an order that does not fit full periods, you will get an error. 
+
+For example: an order with an 'Active Since' of February 1st and 'Active Until' of March 10th will not save on the order.
+
+You need to tell *j*Billing that you want to work with fractions of a period by using pro-rating.  
+
+h2. Calculating the Fractions of a Period:
+
+The plug-in that you configure, will take the length of the cycle and count the number of days within it. The plug-in will divide total of the order by the number of days in the cycle. This result is the daily cost. The plug-in will then multiply the daily cost by the total number of days in the period. This means that 15 days in the month of June will be half the monthly price, but not for July as it has 31 days. 
+
+{note}
+Please Note: this is the 'daily' pro-rating plug-in. You can implement other types of pro-rated calculations by creating your own plug-in. 
+{note}
+
+
+h2. Change the Pro-Rating Plug-Ins
+
+Preference 42 indicates if a company is going to be using pro-rating or not. Since this feature is not the default, you need to override it. Change the value to: 1.
+
+You also need to change the default plug-ins that deal with invoice generation so the system can make the additional calculations that pro-rating requires. 
+
+Click on the Configuration link, and then on Plug-ins. In the list of Plug-In categories that appears, find:
+
+@com.sapienter.jbilling.server.pluggableTask.BasicCompositionTask@
+
+You will need to replace this with:
+
+@com.sapienter.jbilling.server.process.task.DailyProRateCompoisitionTask@ 
+
+You will also need to replace:
+
+@com.sapienter.jbilling.server.pluggableTask.BasicOrderPeriodTask@
+
+With: 
+
+@com.sapienter.jbilling.server.process.task.ProRateOrderPeriodTask@
+
+Click on the 'Save Plug-in' button to save your changes.
+
+!saveplugin.png!
+
+h2. The Order 'Cycle' Attribute
+
+Once pro-rating is enabled, you will see a new attribute in your orders. 
+
+!cyclestart.png!
+
+This new attribute is called the 'Cycle Start' date. Setting this field will tell the system when it is that this order should generate an invoice. Tihs field needs to be aligned with the billing period.
+ 
+* If the 'Active Since' field is not the same as (or aligned to) the billing period date, then you will have a first invoice with a pro-rated value. This is an amount that is smaller than the total of the order.
+* The 'Active Since' is not a required field. If left blank, it defaults to the order's creation date.
+* If the 'Active Until' is not aligned to the cycle date, then the last invoice from this order will be pro-rated.
+* The 'Active Until' is not a required field. If left blank the order is ongoing. 
+
+As you can see, this attribute defines the cycle of the order and adds to the 'Active Since' and 'Active Until' dates, to give orders pro-rating behaviour. 
+
+{note}
+Please Note: the 'Active Since' and 'Active Until' fields work exactly the same. Their functions have not changed. 
+{note}
+ 
+Keep in mind that the cycle date is not a required field. If left blank, the order won't be pro-rated, it will simply be a 'normal' order. However, this also means that you will only be able to change the cycle date if the order has not  
+generated any invoices. 
+
+Let's take a look at the term 'aligned'. 'Aligned' refers to the fact that the order generates an invoice by taking the billing period date and the order's period into consideration. In the above screenshot, the cycle starts on the first of January  
+and the order is Monthly. What this really means is that the customer expects an invoice on the first day of every month. 
+
+Because the order starts on the 10th of January (the customer has their service activated on this date), then the first invoice will still be on January the first. However, rather than charging for the full amount, the invoice will only be for the 10th to 31st, or about two thirds of the monthly total. 
+
+As you can see, the cycle date is an attribute at the order level. Any order can have its own value for this date. This allows for very complex scenarios that you probably want to avoid. It is better to have all the recurring orders for a given customer with the same cycle date. 
+
+h2. Examples
+
+*Signup in the middle of the month:*
+
+*Trend* is a company that prefers to invoice all its customers on the 1st of the month. Customers who sign-up on any other day but the 1st will have the first period pro-rated. This means that they will be billed from the day they signed  
+up until the last day of the month.
+
+Susan signs up for her front page ad on January 10th. A new purchase order with a cycle date of January 1st and an active since of January 10th is created. The next invoice will only include the 10th to the 31st period. Subsequent invoices will have full months included. 
+
+!example1.png! 
+
+{note}
+Please Note: all this is done using *one* single purchase order.
+{note}
+
+*Cancellation in the middle of the month:*
+
+Susan has a pre-paid monthly plan, so she has already paid $100 for the month of June. She calls on June 16th to cancel the service immediately. She should receive a credit for the remaining of the month (this means that the credit plug-in is in its place, see the 'Credits' section for more information).
+
+To do this, the order needs to be edited. The 'Active Until' date needs to be changed to June 16th as it is the date Susan cancelled her services. The system will automatically create a new order with a negative price, June 16th as the 'Active Since' date, and July 1st as 'Active Until' date.
+ 
+!example2.png!
+
+Having activated pro-rating, when the billing process runs, it will generate an invoice with a total of -50 dollars for the period of time that had been originally invoiced, but later had to be refunded to Susan because of the early cancellation. 
+
+Because you only changed the 'Active Until' field of the original order, you will have a new order to represent the cancellation credit. The original order will now be in a 'Finished' state.
+
+!statusfinished.png!
+
+*Change of Service*
+
+Even more common than signing up for a new service or cancelling an existing service is when a customer decides to changes a current service. Susan calls *Trend* on the 25th to upgrade her existing front page banner ad from a side bar to the top bar. This new ad of course, has a different price. Susan gets an invoice every 15th of the month with all the advertisement charges. 
+
+First, the existing order for the side bar needs to end. You can do this by editing the order and adding an 'Active Until' with today's date (the 25th in the example). Then, you have to create a new monthly order with one product, the top bar ad. It will have a cycle date of the 15th. You don't need to edit the 'Active Since' date as it automatically defaults to today's date.
+
+!example3.png!
+
+The next invoice will show two charges: one for the side bar ad for the period of the 15th to the 24th, and another one for the item top bar ad for the period of the 25th to the 14th of the next month. In this example you are using a pro-rated end of period plus a pro-rated start period to replace a subscription. 

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user_activity" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="10" bottomMargin="10" uuid="41ebbd40-dd66-4e7a-bc40-4a0080dc6703">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="active_status" class="java.lang.String"/>
+	<parameter name="activity_days" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="order_by" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from (
+            select
+        u.id, u.user_name, c.first_name, c.last_name, c.email, c.phone_country_code, c.phone_area_code, c.phone_phone_number, u.account_disabled_date, u.create_datetime, u.last_login, DATE_PART('day', current_date::timestamp - coalesce(cast(u.last_login as date)::timestamp, cast(u.create_datetime as date)::timestamp)) as inactive_days,
+        (select email_mfv.string_value
+                from
+                    meta_field_value email_mfv
+                    join meta_field_name email_mfm on email_mfv.meta_field_name_id = email_mfm.id
+                    join customer_account_info_type_timeline caitt on email_mfv.id = caitt.meta_field_value_id
+                    join customer cs on cs.id = caitt.customer_id
+                where
+                    email_mfm.entity_type = 'ACCOUNT_TYPE' and (email_mfm.name ilike 'contact.email' )
+                    and cs.user_id = u.id
+                    and email_mfm.entity_id = u.entity_id
+            ) as customer_email,
+            (select first_name_mfv.string_value
+                from
+                    meta_field_value first_name_mfv
+                    join meta_field_name first_name_mfm on first_name_mfv.meta_field_name_id = first_name_mfm.id
+                    join customer_account_info_type_timeline caitt on first_name_mfv.id = caitt.meta_field_value_id
+                    join customer cs on cs.id = caitt.customer_id
+                where
+                    first_name_mfm.entity_type = 'ACCOUNT_TYPE' and (first_name_mfm.name ilike 'contact.first.name' )
+                    and cs.user_id = u.id
+                    and first_name_mfm.entity_id = u.entity_id
+            ) as customer_first_name,
+            (select last_name_mfv.string_value
+                from
+                    meta_field_value last_name_mfv
+                    join meta_field_name last_name_mfm on last_name_mfv.meta_field_name_id = last_name_mfm.id
+                    join customer_account_info_type_timeline caitt on last_name_mfv.id = caitt.meta_field_value_id
+                    join customer cs on cs.id = caitt.customer_id
+                where
+                    last_name_mfm.entity_type = 'ACCOUNT_TYPE' and (last_name_mfm.name ilike 'contact.last.name' )
+                    and cs.user_id = u.id
+                    and last_name_mfm.entity_id = u.entity_id
+            ) as customer_last_name,
+            (select ph_country_code_mfv.string_value
+                from
+                    meta_field_value ph_country_code_mfv
+                    join meta_field_name ph_country_code_mfm on ph_country_code_mfv.meta_field_name_id = ph_country_code_mfm.id
+                    join customer_account_info_type_timeline caitt on ph_country_code_mfv.id = caitt.meta_field_value_id
+                    join customer cs on cs.id = caitt.customer_id
+                where
+                    ph_country_code_mfm.entity_type = 'ACCOUNT_TYPE' and (ph_country_code_mfm.name ilike 'contact.phone.country.code' )
+                    and cs.user_id = u.id
+                    and ph_country_code_mfm.entity_id = u.entity_id
+            ) as customer_ph_country_code,
+            (select ph_area_mfv.string_value
+                from
+                    meta_field_value ph_area_mfv
+                    join meta_field_name ph_area_mfm on ph_area_mfv.meta_field_name_id = ph_area_mfm.id
+                    join customer_account_info_type_timeline caitt on ph_area_mfv.id = caitt.meta_field_value_id
+                    join customer cs on cs.id = caitt.customer_id
+                where
+                    ph_area_mfm.entity_type = 'ACCOUNT_TYPE' and (ph_area_mfm.name ilike 'contact.phone.area.code' )
+                    and cs.user_id = u.id
+                    and ph_area_mfm.entity_id = u.entity_id
+            ) as customer_ph_area,
+            (select ph_number_mfv.string_value
+                from
+                    meta_field_value ph_number_mfv
+                    join meta_field_name ph_number_mfm on ph_number_mfv.meta_field_name_id = ph_number_mfm.id
+                    join customer_account_info_type_timeline caitt on ph_number_mfv.id = caitt.meta_field_value_id
+                    join customer cs on cs.id = caitt.customer_id
+                where
+                    ph_number_mfm.entity_type = 'ACCOUNT_TYPE' and (ph_number_mfm.name ilike 'contact.phone.number' )
+                    and cs.user_id = u.id
+                    and ph_number_mfm.entity_id = u.entity_id
+            ) as customer_ph_number
+    from
+        base_user u
+    left outer join
+        contact c on c.user_id = u.id
+    where
+        u.deleted = 0
+    group by
+        u.id, u.user_name, c.first_name, c.last_name, c.email, c.phone_country_code, c.phone_area_code, c.phone_phone_number, u.last_login, u.create_datetime, u.account_disabled_date,customer_last_name
+    having
+        case $P{active_status}
+        when 'Active'
+        then DATE_PART('day', current_date::timestamp - coalesce(cast(u.last_login as date)::timestamp, cast(u.create_datetime as date)::timestamp)) < $P{activity_days}
+        when 'Inactive' then DATE_PART('day', current_date::timestamp - coalesce(cast(u.last_login as date)::timestamp, cast(u.create_datetime as date)::timestamp)) > $P{activity_days}
+        else 0=0
+        end
+	) result
+order by
+	case $P{order_by}
+	when 'name' then
+        case result.last_name
+        when 'null' then result.first_name
+        else
+            case result.first_name
+            when 'null' then result.customer_last_name
+            else
+                case result.customer_last_name
+                when 'null' then result.customer_first_name
+                else result.customer_last_name
+                end
+            end
+        end
+    end,
+	case $P{order_by}
+	when 'login' then
+		case result.last_login::timestamp
+		when null then result.create_datetime
+		else result.last_login
+		end
+	end]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="user_name" class="java.lang.String"/>
+	<field name="first_name" class="java.lang.String"/>
+	<field name="last_name" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="phone_country_code" class="java.lang.Integer"/>
+	<field name="phone_area_code" class="java.lang.Integer"/>
+	<field name="phone_phone_number" class="java.lang.String"/>
+	<field name="account_disabled_date" class="java.sql.Date"/>
+	<field name="create_datetime" class="java.sql.Timestamp"/>
+	<field name="last_login" class="java.sql.Timestamp"/>
+	<field name="inactive_days" class="java.lang.Double"/>
+	<field name="customer_first_name" class="java.lang.String"/>
+	<field name="customer_last_name" class="java.lang.String"/>
+	<field name="customer_email" class="java.lang.String"/>
+	<field name="customer_ph_country_code" class="java.lang.Integer"/>
+	<field name="customer_ph_area" class="java.lang.Integer"/>
+	<field name="customer_ph_number" class="java.lang.String"/>
+	<variable name="status_string" class="java.lang.String">
+		<variableExpression><![CDATA[$P{active_status} == "Active" ? "having DATE_PART('day', current_date::timestamp - coalesce(cast(u.last_login as date)::timestamp, cast(u.create_datetime as date)::timestamp)) < $P{activity_days}" : $P{active_status} == "Inactive" ? "having DATE_PART('day', current_date::timestamp - coalesce(cast(u.last_login as date)::timestamp, cast(u.create_datetime as date)::timestamp)) > $P{activity_days}" : "0=0"]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="171" y="4" width="156" height="20" uuid="e5dc298c-32d3-42df-8c24-300ef5821280"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Users Activity Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="460" y="8" width="75" height="24" uuid="7029b623-7bde-43bf-992e-566d2afd031c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inactive Date]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="35" width="585" height="1" uuid="9c85aba8-f931-4f5c-afb6-d6da09cac002"/>
+			</line>
+			<staticText>
+				<reportElement x="410" y="8" width="50" height="24" uuid="6c3681da-4245-4ff6-909a-ce6069f2a70a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Account Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="8" width="100" height="24" uuid="52e75d26-0fde-4572-b730-0a1b44e06b19"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="8" width="70" height="24" uuid="51b1a353-8747-43af-b55a-a7fc151f7a18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[User Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="8" width="120" height="24" uuid="a131699f-9fa9-45f2-ac4e-58d9db06b3c9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Login Name]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="3" width="585" height="1" uuid="08bf2fec-731b-4926-8a4b-205b899e4612"/>
+			</line>
+			<staticText>
+				<reportElement x="190" y="8" width="120" height="24" uuid="3fddfddd-1df2-40b5-8363-5f2109c625de"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="535" y="8" width="50" height="24" uuid="3e06c57e-2b33-4ed7-aaec-2f95710c8e11"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inactive Days]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField pattern="###-###-####" isBlankWhenNull="true">
+				<reportElement x="310" y="5" width="100" height="20" uuid="2b5347d5-5364-47d9-b4fc-36cbbe8c3049"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{phone_area_code}.equals(null) && $F{phone_country_code}.equals(null) && $F{phone_phone_number}.equals(null)?("".concat($F{customer_ph_country_code} == null ? "     - ": $F{customer_ph_country_code}.toString().concat("-")).concat($F{customer_ph_area} == null ? "     - ": $F{customer_ph_area}.toString().concat("-")).concat($F{customer_ph_number} == null ? "": $F{customer_ph_number}.toString()))
+				                                    :"".concat($F{phone_country_code} == null ? "     - ": $F{phone_country_code}.toString().concat("-")).concat($F{phone_area_code} == null ? "     - ": $F{phone_area_code}.toString().concat("-")).concat($F{phone_phone_number} == null ? "": $F{phone_phone_number}.toString())]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement x="460" y="5" width="75" height="20" uuid="db5896f5-203d-4fff-b489-e0199528770b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{inactive_days} <= $P{activity_days} ? null : $F{last_login} ? $F{last_login} : $F{create_datetime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true" isStretchWithOverflow="true">
+				<reportElement x="70" y="5" width="120" height="20" uuid="43a0ba47-e43f-4741-83e0-90d6d412fe6b"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="5" width="70" height="20" uuid="7cb7e3b0-f2b6-4935-97c5-e66d0e10cf25"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{first_name}.equals(null) && $F{last_name}.equals(null) ? $F{customer_first_name}.concat(" ".concat($F{customer_last_name}))
+				                                : $F{first_name}.concat(" ".concat($F{last_name}))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="5" width="120" height="20" uuid="df696129-454d-46ab-9c40-f918d8b21f95"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{email}.equals(null)? $F{customer_email} : $F{email}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="535" y="5" width="50" height="20" uuid="d9af4189-d832-4c69-9401-2638fed5432b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{inactive_days}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="410" y="5" width="50" height="20" uuid="15886e1a-957b-4ba8-98a9-5f0c146582c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{inactive_days} <= $P{activity_days} ? "Active" : "Inactive"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="24" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="1" width="585" height="1" uuid="c5f95b54-619f-4e72-8ee8-a9edbab0333c"/>
+			</line>
+			<textField>
+				<reportElement x="485" y="2" width="75" height="20" uuid="65c58a11-6b13-4ffc-9aa5-fadb9443c797"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page ".concat($V{PAGE_NUMBER}.toString().concat(" of "))]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="560" y="2" width="25" height="20" uuid="5f8b375b-4316-40ad-ac2d-beafd1c7df4e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

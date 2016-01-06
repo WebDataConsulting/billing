@@ -1,0 +1,28 @@
+h1. Overview
+
+In some situations, you might have a user who completes two different types of tasks, or roles within the system. This functionality allows you to create multiple roles for a user. The user is assigned a default role, and gains the ability to switch back and forth between the different roles that have been assigned to their account. This prevents a user from becoming confused with the options and menus availble to them.
+
+For example: 
+
+User John Smithe is an Agent for the fictitious company Trend. Paul completes two different types of roles when he signs into jBilling. For 90% of the time he completes Agent Role type tasks. The other 10% of his time is dedicated to configuration work. 
+
+Two roles are created for him (this creation could include other users who require the same permissions). Agent Role and Configuration Role. For more information on how to create a Role, please refer to section 1.15.5 Roles. 
+
+!multiplerolesagentconfig.png!
+
+Since John spends most of his time completing Agent tasks, these roles are configured so that the Agent Role is the default role. Any time he logs into the system, he will automatically default to the Agent role. 
+
+!multiplerolemenu.png!
+
+To switch between Roles at any time, all John needs to do is select the one he wants from the drop down menu.
+
+As you can see by taking a look at each of the menu's associated with each role, John will view and have access only to the inforamation he needs to complete the role associated with the task. 
+
+Here is what his menu screen looks like when he has selected the Agent Role:
+
+!agentrolemenu.png!
+
+Here is what his menu screen looks like when he has selected the Configuration Role:
+
+!configurationrolemenu.png!
+

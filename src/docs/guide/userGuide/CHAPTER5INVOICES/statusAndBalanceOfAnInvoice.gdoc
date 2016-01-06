@@ -1,0 +1,103 @@
+h2. Invoice Statuses
+
+There are 3 statuses that an invoice can be in:
+
+* Paid - this means that the invoice has been paid. The customer no longer owes anything to your company for that invoice.
+* Unpaid - this status lets the billing administrator know that the customer has not yet provided your company with a payment.
+* Unpaid and Carried - if a customer does not pay their invoice by the designated due date, another invoice will be generated. The balance of the first invoice will be carried over to the second invoice.
+
+Let's take a look at how these statuses are applied to invoices, by taking a look at a scenario: 
+
+Customer Brian Smith receives his monthly invoice On June 1, for $100. This invoice is due by: June 30. Since Brian has yet to provide your company with payment, the invoice will have a status of 'unpaid'. 
+
+The month of June passes. It is now July 1, and Brian has not paid his invoice. When the billing process runs again on July 1, another invoice is going to be generated for $150, with a status of 'unpaid'. Brian will then have two invoices. Invoice A (June): $100 and Invoice B (July): $150.
+
+!invoiceab.png!
+
+What the system automatically does in this situation is, when invoice B (July): $150 is generated, it will change the status of invoice A (June) to: 'unpaid and carried'. The amount due, or total of invoice A (June): $100 will then be carried over to the *total* of invoice B. 
+
+!invoiceabcarried.png!
+
+The result will be that the *total* of invoice B will now be: Invoice A (June): $100 + Invoice B (July): $150 = $250. Brian owes your company a *total* of: $250. This is represented in the invoice by a line, stating the unpaid and carried item and amount.
+
+On July 10, Brian provides your company with a payment of $250. 
+
+The system will find the oldest unpaid invoice, and pay it first. In this scenario, it would mean that the system would find invoice A (June), and make a payment of $100. The status of invoice A will change from 'Unpaid and Carried' to 'Paid'. 
+
+Since there is a remaining balance of $150, one of two things could happen: 
+
+1. If the 'Apply overpayments to Invoices' field is selected in the billing process configuration screen, the remaining balance will be automatically applied to invoice B. The status of invoice B will then change to 'Paid'.
+
+2. If the 'Apply overpayments to Invoices' field is *not* selected in the billing process configuration screen, the remaining balance will remain in Brian's account until it is assigned to an invoice for payment. 
+
+!carriedbalancepayment.png!
+
+{note}
+Please Note: for more information on the Billing Process configuration screen, please refer to 1.11.4 Billing Process.
+{note}
+
+
+h2. Total and Balance of an Invoice
+
+In addition to an invoice *total*, all invoices carry a *balance*. Generally, when an invoice is created, the balance equals the total.
+
+For example: when an invoice is first generated, the balance is: $100, and the total is: $100.
+
+For the most part, the balance will change, but the total will not. If the balance equals 0, this means that the invoice has been paid, and therefore, will have a status of 'paid'. If the balance is greater than 0, then the invoice is *not* paid and will have a status of 'unpaid', or 'unpaid and carried'. 
+
+The total is assigned when the invoice is created, and the balance changes when a payment is made. 
+
+Let's take a look at an example of how the balance and total affect an invoice. This will help you to better understand the results you will see in the system. We will look at the same example we had for invoice statuses: 
+
+Customer Brian Smith receives his monthly invoice On June 1, for $100. This invoice is due by: June 30. Since Brian has yet to provide your company with payment, the invoice will have a status of 'unpaid'. 
+
+*What is the balance of this invoice?*
+
+Since this invoice has just been generated, and no payment has been made, the total = $100, and the balance = $100. The balance equals the total. 
+
+The month of June passes, it is now July 1, and Brian has not paid his invoice. When the billing process runs again on July 1, another invoice is going to be generated for $150, with a status of 'unpaid'. Brian will then have two invoices. Invoice A (June): $100 and Invoice B (July): $150.
+
+What the system will automatically do is, when invoice B (July): $150 is generated, it will change the status of invoice A (June) to: 'unpaid and carried'. The amount due for invoice A (June): $100 will then be carried over to the *total* of invoice B: $150. 
+
+The result will be that the *total* of invoice B will now be: Invoice A (June): $100 + Invoice B (July): $150 = $250. Brian owes your company a *total* of: $250. 
+
+We know that the *total* of invoice B is going to be $250. This leaves us with this question: What will the *balance* of the invoice be?
+
+The balance is going to be: $150. 
+
+!invoicebalancecarried.png!
+
+Why? Well, for accounting purposes, both the billing administrator and customer need a way to view what the charges are as they apply to *each* invoice. 
+
+In our scenario, this means that Invoice B needs to display the amount due for the month of July as a separate amount from invoice A, which carries the charges for June. Therefore, invoice B *total* is the result of adding both invoice totals together ($100 plus $150) so that we know the overall total amount due. The *balance* of invoice B displays the current billing period charges: $150, as it *only* applies to invoice B. Another way of describing this is: Invoice total - Carried Balance = Invoice Balance
+
+Here's another example. This time, we are going to take a look at the result of a total and balance on an invoice when partial payments are made:
+
+Another customer, Peter, receives an invoice for $500. The current total and balance are: $500 (Remember, to start, the total and balance are the same). Peter makes a partial payment for $250. 
+
+The total remains the same: $500. 
+
+In this scenario, we aren't adding another invoice to the current invoice. This means that the total won't change because that is the amount in full Peter owes for the products and services he purchased. Making a payment doesn't change the fact that the total amount Peter needs to pay is $500.
+
+The balance, however, *will* go down, because Peter has made a payment. The balance is now: $250. By looking at this amount, we know that Peter still owes $250.
+
+Peter makes another payment of $100. 
+
+The total remains the same: $500.
+
+The balance will go down again, because Peter has made another payment. The balance is now: $150. We know that Peter still owes $150. 
+
+Peter makes a final payment of $150. 
+
+The total remains the same: $500.
+
+The balance is now: $0. Peter no longer needs to make payments on this invoice. 
+
+!invoicetotalandbalance.png!
+
+{note}
+Please Note: for further information, and examples on how the total and a balance of an invoice are affected by payments, please refer to 1.8.3 Status and Balance of a Payment. 
+{note}
+
+
+

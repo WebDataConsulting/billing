@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_design" language="groovy" pageWidth="595" pageHeight="842" columnWidth="523" leftMargin="36" rightMargin="36" topMargin="36" bottomMargin="36">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="152"/>
+	<import value="java.text.SimpleDateFormat"/>
+	<style name="background color"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="invoice_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sales_tax" class="java.math.BigDecimal"/>
+	<parameter name="LOGO" class="java.io.File"/>
+	<parameter name="customer_notes" class="java.lang.String"/>
+	<parameter name="owner_company" class="java.lang.String"/>
+	<parameter name="owner_street_address" class="java.lang.String"/>
+	<parameter name="owner_city" class="java.lang.String"/>
+	<parameter name="owner_state" class="java.lang.String"/>
+	<parameter name="owner_country" class="java.lang.String"/>
+	<parameter name="owner_phone" class="java.lang.String"/>
+	<parameter name="owner_email" class="java.lang.String"/>
+	<parameter name="receiver_company" class="java.lang.String"/>
+	<parameter name="receiver_street_address" class="java.lang.String"/>
+	<parameter name="receiver_city" class="java.lang.String"/>
+	<parameter name="receiver_state" class="java.lang.String"/>
+	<parameter name="receiver_country" class="java.lang.String"/>
+	<parameter name="receiver_zip" class="java.lang.String"/>
+	<parameter name="receiver_phone" class="java.lang.String"/>
+	<parameter name="receiver_name" class="java.lang.String"/>
+	<parameter name="receiver_email" class="java.lang.String"/>
+	<parameter name="owner_zip" class="java.lang.String"/>
+	<parameter name="invoice_notes" class="java.lang.String"/>
+	<parameter name="invoice_due_date" class="java.lang.String"/>
+	<parameter name="invoice_create_datetime" class="java.lang.String"/>
+	<parameter name="payment_terms" class="java.lang.String"/>
+	<parameter name="invoice_line_tax_id" class="java.lang.Integer"/>
+	<parameter name="message1" class="java.lang.String"/>
+	<parameter name="message2" class="java.lang.String"/>
+	<parameter name="invoice_number" class="java.lang.String"/>
+	<parameter name="currency_symbol" class="java.lang.String"/>
+	<parameter name="tax_price" class="java.lang.String"/>
+	<parameter name="tax_amount" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select id from invoice where id=$P{invoice_id}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="305" splitType="Prevent">
+			<rectangle>
+				<reportElement x="407" y="278" width="83" height="17" forecolor="#A6A7A7"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="300" y="278" width="107" height="17" forecolor="#A6A7A7"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="399" y="261" width="91" height="17" forecolor="#A6A7A7" backcolor="#B7DBFF"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="300" y="261" width="107" height="17" forecolor="#A6A7A7" backcolor="#B7DBFF"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="23" y="278" width="277" height="17" forecolor="#A6A7A7"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="23" y="261" width="277" height="17" forecolor="#A6A7A7" backcolor="#B7DBFF"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="23" y="11" width="166" height="41" forecolor="#B7DBFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="32" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INVOICE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="290" y="47" width="257" height="113"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="328" y="158" width="219" height="10" forecolor="#A6A7A7"/>
+				<textElement verticalAlignment="Top" markup="none">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{message1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="23" y="51" width="166" height="42" isRemoveLineWhenBlank="true" forecolor="#A6A7A7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date : "+$P{invoice_create_datetime}+"\n"+
+"Invoice : "+$P{invoice_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="156" y="167" width="20" height="20" forecolor="#1F5868"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[To]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="177" y="168" width="160" height="89" isRemoveLineWhenBlank="true" forecolor="#A6A7A7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{receiver_company}+"\n"+
+$P{receiver_street_address}+"\n"+
+$P{receiver_city}+" "+$P{receiver_zip}+" "+$P{receiver_country}+"\n"+
+$P{receiver_name}+"\n"+
+$P{receiver_phone}+"\n"+
+$P{receiver_email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="312" y="277" width="95" height="18" isRemoveLineWhenBlank="true" forecolor="#A6A7A7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{payment_terms} + " days from invoice date"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="36" y="278" width="264" height="17" isRemoveLineWhenBlank="true" forecolor="#A6A7A7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoice_notes}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="407" y="261" width="83" height="16" forecolor="#1F5868" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[    DUE DATE]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="417" y="278" width="73" height="17" isRemoveLineWhenBlank="true" forecolor="#A6A7A7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoice_due_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="300" y="262" width="107" height="15" forecolor="#1F5868" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[    PAYMENT TERMS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="23" y="261" width="277" height="15" forecolor="#1F5868" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[     NOTES]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="23" y="168" width="130" height="88" isRemoveLineWhenBlank="true" forecolor="#A6A7A7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{owner_company}+"\n"+
+$P{owner_street_address}+"\n"+
+$P{owner_city}+", " + $P{owner_state} + ", " + $P{owner_country}+"\n"+
+$P{owner_zip}+"\n"+
+$P{owner_phone}+"\n"+
+$P{owner_email}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="37" splitType="Immediate">
+			<subreport isUsingCache="false" runToBottom="false">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="-45" y="0" width="523" height="34" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<subreportParameter name="invoice_line_tax_id">
+					<subreportParameterExpression><![CDATA[$P{invoice_line_tax_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tax_price">
+					<subreportParameterExpression><![CDATA[$P{tax_price}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="sales_tax">
+					<subreportParameterExpression><![CDATA[$P{sales_tax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tax_amount">
+					<subreportParameterExpression><![CDATA[$P{tax_amount}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="currency_symbol">
+					<subreportParameterExpression><![CDATA[$P{currency_symbol}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoice_id">
+					<subreportParameterExpression><![CDATA[$P{invoice_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customer_notes">
+					<subreportParameterExpression><![CDATA[$P{customer_notes}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "invoice_design_sub.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="26">
+			<textField>
+				<reportElement x="0" y="1" width="523" height="25" forecolor="#1F5868"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{message2}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="24">
+			<subreport isUsingCache="false">
+				<reportElement x="0" y="0" width="523" height="23"/>
+				<subreportParameter name="owner_company">
+					<subreportParameterExpression><![CDATA[$P{owner_company}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="owner_phone">
+					<subreportParameterExpression><![CDATA[$P{owner_phone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="owner_email">
+					<subreportParameterExpression><![CDATA[$P{owner_email}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="owner_street_address">
+					<subreportParameterExpression><![CDATA[$P{owner_street_address}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="owner_state">
+					<subreportParameterExpression><![CDATA[$P{owner_state}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="owner_zip">
+					<subreportParameterExpression><![CDATA[$P{owner_zip}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="owner_country">
+					<subreportParameterExpression><![CDATA[$P{owner_country}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="owner_city">
+					<subreportParameterExpression><![CDATA[$P{owner_city}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "invoice_design_page2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

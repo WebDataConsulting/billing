@@ -1,0 +1,135 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="jBilling Functional Test Suite" verbose="2" parallel="false">
+
+	<!--
+		Note that "preserve-order" won't work with tests annotated with @Test(dependsOn* ...)
+		when order is defined using annotations the order here will always loose, so do all your
+		ordering here or ENTIRELY using groups/method dependency annotations.
+	-->
+	<test name="web-services" preserve-order="true">
+	<classes>
+    <!--
+            <class name="com.sapienter.jbilling.server.order.WSTest"/>
+            <class name="com.sapienter.jbilling.server.user.WSTest"/>
+            <class name="com.sapienter.jbilling.server.user.CustomerNotesWSTest"/>
+            <class name="com.sapienter.jbilling.server.payment.WSTest"/>
+            <class name="com.sapienter.jbilling.server.item.WSTest"/>
+            <class name="com.sapienter.jbilling.server.invoice.WSTest"/>
+            <class name="com.sapienter.jbilling.server.process.WSTest"/>
+            <class name="com.sapienter.jbilling.server.user.PartnerWSTest"/>
+            <class name="com.sapienter.jbilling.server.user.PurchaseAuthorizationTest"/>
+            <class name="com.sapienter.jbilling.server.payment.RefundTest"/>
+            <class name="com.sapienter.jbilling.server.metafield.WSTest"/>
+            <class name="com.sapienter.jbilling.server.accountType.WSTest"/>
+            <class name="com.sapienter.jbilling.server.order.OrderCancellationFeeTest"/>
+            <class name="com.sapienter.jbilling.server.ratecards.WSTest"/>
+            <class name="com.sapienter.jbilling.server.ratecards.Bug7935Test"/>
+			<class name="com.sapienter.jbilling.server.user.AITTimelineTest"/>
+            <class name="com.sapienter.jbilling.server.user.CommissionTest"/>
+            <class name="com.sapienter.jbilling.server.pluggable.WSTest"/>
+            <class name="com.sapienter.jbilling.server.asset.WSTest"/>
+            <class name="com.sapienter.jbilling.server.util.WSTest"/>
+            <class name="com.sapienter.jbilling.server.orderStatus.OrderStatusTest"/>
+            <class name="com.sapienter.jbilling.server.orderChangeStatus.WSTest"/>
+            <class name="com.sapienter.jbilling.server.paymentMethod.WSTest"/>
+            <class name="com.sapienter.jbilling.server.item.AssetValidateTest"/>
+    -->
+	</classes>
+	</test>
+
+	<test name="integration" preserve-order="true">
+		<classes>
+    <!--
+			<class name="com.sapienter.jbilling.server.item.CurrencyExchangeTest"/>
+			<class name="com.sapienter.jbilling.server.process.BillingProcessTest"/>
+			<class name="com.sapienter.jbilling.server.process.AgeingTest"/>
+			<class name="com.sapienter.jbilling.server.task.SimpleTaxCompositionTaskTest"/>
+			<class name="com.sapienter.jbilling.server.task.CountryTaxCompositionTaskTest"/>
+			<class name="com.sapienter.jbilling.server.task.PaymentTermPenaltyTaskTest"/>
+			<class name="com.sapienter.jbilling.server.task.ThresholdNotificationTest"/>
+            <class name="com.sapienter.jbilling.server.task.AutoRechargeTaskTest"/>
+            <class name="com.sapienter.jbilling.server.task.DynamicBalanceManagerTaskTest"/>
+            <class name="com.sapienter.jbilling.server.task.CreditLimitationNotificationTaskTest"/>
+            -->
+		</classes>
+	</test>
+	
+	<test name="selenium-ui-functional" preserve-order="true">
+		<classes>
+        	<class name="com.sapienter.jbilling.selenium.sanity.JBillingSanityTest"/>           
+		</classes>
+	</test>
+	
+	<!--
+	   1. discounts test group not execute in ant test and ant test-ws
+	   2. This group execute independently. when you do ant test-discounts
+	-->
+	<test name="discounts" preserve-order="true">
+		<classes>
+    <!--
+            <class name="com.sapienter.jbilling.server.discounts.AmountDiscountOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.CreateDiscountSubOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.PercentageDiscountOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.PeriodBasedDiscountOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.RateOrderDiscountTest"/>
+    -->
+        </classes>
+	</test> 
+	
+	<!--
+	   1. billing test group not execute in ant test and ant test-ws
+	   2. This group execute independently. when you do ant test-billing
+	-->
+	<test name="billing" preserve-order="true">
+		<classes>
+    <!--
+			<class name="com.sapienter.jbilling.server.process.DailyBillingCycleTest"/>
+			<class name="com.sapienter.jbilling.server.process.SemiMonthlyBillingCycleTest"/>
+	        <class name="com.sapienter.jbilling.server.process.MonthlyBillingCycleTest"/>
+	        <class name="com.sapienter.jbilling.server.process.WeeklyBillingCycleTest"/>
+    -->
+        </classes>
+     </test>
+     
+     <!--
+	   1. billing-and-discounts test group is combination of discounts and billing groups as per ascending order of triggering billing.
+	   2. this test group execute in ant test and also execute independently. when you do ant test-billing-and-discounts
+	-->
+     <test name="billing-and-discounts" preserve-order="true">
+		<classes>
+    <!--
+			<class name="com.sapienter.jbilling.server.process.DailyBillingCycleTest"/>
+			<class name="com.sapienter.jbilling.server.process.SemiMonthlyBillingCycleTest"/>
+			<class name="com.sapienter.jbilling.server.process.MonthlyBillingCycleTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.AmountDiscountOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.CreateDiscountSubOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.PercentageDiscountOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.PeriodBasedDiscountOrderTest"/>
+			<class name="com.sapienter.jbilling.server.discounts.RateOrderDiscountTest"/>
+			<class name="com.sapienter.jbilling.server.process.WeeklyBillingCycleTest"/>
+            <class name="com.sapienter.jbilling.server.process.OrderLineChangesBillingTest" />
+            -->
+        </classes>
+     </test>
+
+    <test name="order-line-changes" preserve-order="true">
+        <classes>
+            <class name="com.sapienter.jbilling.server.process.OrderLineChangesBillingTest" />
+        </classes>
+    </test>
+
+    <test name="debug" preserve-order="true">
+        <classes>
+            <class name="com.sapienter.jbilling.server.process.MonthlyBillingCycleTest" />
+            <!-- class name="com.sapienter.jbilling.server.process.BillingProcessTest" /-->
+        </classes>
+    </test>
+
+	<test name="rating-late-usage" preserve-order="true">
+		<classes>
+			<class name="com.sapienter.jbilling.server.item.LateGuidedUsageTest"/>
+		</classes>
+	</test>
+
+</suite>

@@ -1,0 +1,11 @@
+To delete an invoice, click on Invoices. Click on the invoice you wish to delete, and then on the 'Delete Invoice' button, located at the bottom of the screen.
+
+!deleteinvoice.png!
+
+You are then asked to confirm this choice. Please keep in mind that once an invoice has been deleted, it is deleted permanently.
+
+!suredeleteinvoice.png!
+
+Once an invoice has been deleted, the purchase order that had generated the invoice in the first place, gets automatically modified to the status it held before the invoice was generated.
+
+For example: an invoice is generated out of a one-time purchase order. This one-time purchase order's status will then change from 'Active' to 'Finished'. When the invoice is deleted, the status of the purchase order will go back to 'Active'. The purchase order will probably generate a new invoice again if not modified.

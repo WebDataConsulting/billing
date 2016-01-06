@@ -1,0 +1,117 @@
+h2. Overview
+
+The historical rates functionality is very useful if you have products with a constant flux of rates. This feature will allow you to add prices to a plan, based on a timeline. In other words, it's possible for you to set up different rates over a period of time. This could include rates after a day, week, month, etc. Rates are captured and available to view directly on the plan timeline. 
+
+When a purchase order is created, if you add a plan with a historical rate timeline, the system will search for the rate that the date in the 'Active Since' field belongs to. The system will then automatically apply the appropriate historical or current rate(s) for the plan to the purchase order. 
+
+{note}
+Please Note: this feature is only available in the Enterprise Edition of jBilling, as it relates to plans. 
+{note}
+
+When you first create a plan, there will be a timeline at the top of the screen with a field that reads: 01/01/1970.  
+
+!historicaltimelineplan.png!
+
+You can complete the creation of your plan by following the instructions provided in: 1.9.2 Creating a Plan. Once you have completed this, you can edit the plan to create a historical rate.
+
+
+h2. How to Set up a Historical Rate on a Plan
+
+Taking a look at a scenario will help to explain the process of setting up a historical rate for a Plan:
+
+Telecall Systems is a cell phone service provider. In jBilling, they have set up a monthly cell phone plan with the following bundled (quantity of 1) products: 
+
+* Cell Phone 1002, with a metered rate of $50
+* 100 text messages with a metered rate of $5 
+
+In March, Telecall Systems decides that they want to sell the products on this plan at a discounted price.
+
+* Cell Phone 1002 at a metered rate of $30
+* 100 text messages at a metered rate of $2.
+
+In order to do this, they need to add a date to the timeline, and change the rate of the products on the plan.
+
+{note}
+Please Note: before we get into the details of how to add a date to the historical timeline, there is a default field that is important to take note of. This field is the default date that appears on the timeline: 01/01/2011. 
+
+This date acts as a starting point for the system, and should not be altered. This is not to say that it *can't* be altered, it is just highly recommended that you leave it as is.
+{note}
+
+*To Add a Date to the Historical Timeline*
+
+Click on the 'Add Date' link, located on the plan timeline. It is important to remember this step because if you do not click on this link, you will remove whatever date exists before it. This is something you do not want to do, especially for the default 01/01/1970 date.
+
+!adddateplan.png!
+ 
+A calendar will appear. The 'Start Date' will default to the current date.
+
+!planratedate.png!
+
+Select the desired date from the Start Date field. In this example, it's March 1, 2011 (03/01/2011). Once you have selected the date, click on the 'Save' button. To cancel any changes, click on the 'Cancel' button.
+
+!plandateexample.png!
+
+The new date will appear in the timeline. 
+
+Update the rate of the products in the plan. In this example, Telecall Systems has changed Cell Phone 1002 from $50, to $30, and 100 cell phone minutes from $5 to $2.
+
+!planchangedrate.png!
+
+Click on the 'Save Changes' button. You wil be returned to the main Plans screen. If you edit the plan again, you can click between the two dates (in this example they were January 1, 1970 and March 1, 2011) to see the rates of the products change.
+
+In summary, Telecall Systems now has a rate of $50 for Cell Phone 1002, and a rate of $5 for 100 minutes from January 1, 1970, until February 28, 2011. From March 1, 2011 onward, the rate for the cell phone will be $30, and the rate for the cell phone minutes will be $2. To add another rate, repeat the process described above. 
+
+For example:
+
+Let's say that Telecall Systems wants to end the discounted plan rates on April 1, 2011. To do this, they would simply need to follow the steps for creating a historical rate on the product timeline. The new date would be; April 1, 2011, and the rates would $50 (cell phone) and $5 (minutes). Any purchase order created with an 'Active Since' date of April 1, 2011 and later will receive the cell phone at a rate of $100.
+
+It is possible to add as many rates to a plan as you require. Dates can also fall on whatever day of the month you want, it doesn't have to be the first. It's also important to remember that the length of time between rate changes does not *have* to be monthly. It can be daily, weekly, yearly, etc.
+
+
+h2. Historical Rates and Purchase Orders
+
+Now that you have an understanding of how to set up a historical rate, it's important to know how purchase orders are affected. 
+
+Telecall Systems has a customer named Peter Smith. In February, Peter subscribes to a plan called: Alternate Monthly Plan. It has a rate of: $25 until March 1, 2011, when the rate changes to: $20. Since it is a monthly subscription, a monthly purchase order is created on February 1, 2011. 
+
+!planpurchaseorder.png!
+
+As you can see, the purchase order has an Active Since date of: February 1, 2011. Therefore the plan, when added to the purchase order takes on the rate of $25.
+
+What if Peter Smith had subscribed to the plan on March 7, 2011? Let's take a look:
+
+!secondrateplan.png!
+
+As you can see, the purchase order has an Active Since date of: March 7, 2011. Therefore, the plan, when added to the purchase order takes on the rate of $20. 
+
+If we were to take a look at the example under *To Add a Date to the Historical Timeline*, where we had different rates for products starting on March 1, 2011 (not including the example where we changed the rate again on April 1), you would get the following result on a purchase order:
+
+Example 1:
+* Active Since: January 11, 2011
+* Plan Rates:
+* Cell Phone 1002 = $50
+* 100 Text Messages = $5
+
+Example 2:
+* Active Since: May 25, 2011
+* Plan Rates:
+* Cell Phone 1002 = $30
+* 100 Text Messages = $2
+
+It is important to note that once the Active Since date is set, the plan will not change rates, even if they change on the historical timeline. 
+
+For example, if we take a look at the previous Example 1:
+
+Example 1:
+* Active Since: January 11, 2011
+* Plan Rates:
+* Cell Phone 1002 = $50
+* 100 Text Messages = $5
+
+When the March invoice is generated, the rates will not change to match the timeline. They will remain as they are. When a purchase order is created and the active since date is set, the system will find the correct rate to use, and moving forward will apply only that rate until configured otherwise.  
+
+In summary, any product on a plan, or plan itself that recieves a different, or multiple rates on the hisotrical timeline, will be reflected accordingly on the purchase order, based on what the Active Since date is. 
+
+{note}
+Please Note: if a plan is created as a purchase order for a customer, and another purchase order is created with any of the products included in the existing plan, the customer will also recieve the historical plan rates for the product(s).
+{note}

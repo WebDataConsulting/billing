@@ -1,0 +1,7 @@
+The system will, by default, apply the number 1 to your first generated invoice. If, however, your company has generated previous invoices from a legacy system, it is necessary to tell the system what number the first invoice it generates for you should be.
+
+!configinvoicenumber.png!
+
+Invoices will be generated using the number that you provide. The system will increment this number by one for every new invoice. You also have the option of adding a prefix to your invoice numbering. This prefix can have up to 20 characters and can be any digit, letter or symbol. 
+
+To configure the number of your first invoice, and perhaps the prefix to your invoices, click on Configuration, then Invoice Display. You can update the invoice numbering at any time.

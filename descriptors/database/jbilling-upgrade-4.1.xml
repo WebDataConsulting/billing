@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="Maeis Gharibjanian" context="base" id="#6316-new-password-column-size">
+        <comment>
+            Increasing the size of the password column. This should be enough to store
+            most hashes generated from known hashing methods plus the generated salt.
+        </comment>
+        <modifyDataType tableName="base_user" columnName="password" newDataType="java.sql.Types.VARCHAR(1024)"/>
+    </changeSet>
+
+    <changeSet author="Khurram M Cheema" context="base" id="#6316-hashing-method-column">
+        <comment>
+            Adding a column to represent the encryption scheme. Here we are assuming that
+            all clients are sticking to the default password hashing method which is MD5.
+        </comment>
+
+        <addColumn tableName="base_user">
+            <column name="encryption_scheme" type="java.sql.Types.INTEGER" />
+        </addColumn>
+
+        <!-- WARNING: Assume that all user's passwords were hashed with MD5 -->
+        <update tableName="base_user">
+            <column name="encryption_scheme" value="2"></column>
+        </update>
+
+        <!-- Make this column to be not null -->
+        <addNotNullConstraint columnDataType="java.sql.Types.INTEGER" tableName="base_user" columnName="encryption_scheme" />
+    </changeSet>
+
+    <changeSet author="Vladimir Carevski" context="test" id="#6316-change-test-data-pass-and-method" >
+        <comment>It changes the hashed value of all test users to match the one from BCrypt</comment>
+
+        <!-- Update all users that have password 'asdfasdf'
+             hashed with MD5 to be hashed with BCRYPT.
+             For BCrypt we use default = 12 logrounds -->
+        <update tableName="base_user">
+            <column name="encryption_scheme" value="6" />
+            <column name="password" value="$2a$10$VKqJRm960OawSLgkJQszEu4ZOZo/kBN8HwY9gQOXnCz1Qv2.PVhi." />
+            <where>password='6a204bd89f3c8348afd5c77c717a097a' and encryption_scheme=2</where>
+        </update>
+
+        <!-- Update all users that have password 'password'
+             hashed with MD5 to be hashed with BCRYPT.
+             For BCrypt we use default = 12 logrounds -->
+        <update tableName="base_user">
+            <column name="encryption_scheme" value="6" />
+            <column name="password" value="$2a$10$cBjn.r46Ne5nXCezYEQ1DeanrIFGzsdBZSBlLxlXhQEH8LNeyuar2" />
+            <where>password='5f4dcc3b5aa765d61d8327deb882cf99' and encryption_scheme=2</where>
+        </update>
+
+        <!-- Update all users that have password '123qwe'
+             hashed with MD5 to be hashed with BCRYPT.
+             For BCrypt we use default = 12 logrounds -->
+        <update tableName="base_user">
+            <column name="encryption_scheme" value="6" />
+            <column name="password" value="$2a$10$gNwEehQuLk2dw5Sao.uIfeJ06HJSsG0aDvr63fpwKGEm4Di5neE1y" />
+            <where>password='46f94c8de14fb36680850768ff1b7f2a' and encryption_scheme=2</where>
+        </update>
+
+        <!-- Update all users that have password 'asdfasdf1'
+             hashed with MD5 to be hashed with BCRYPT.
+             For BCrypt we use default = 12 logrounds -->
+        <update tableName="base_user">
+            <column name="encryption_scheme" value="6" />
+            <column name="password" value="$2a$10$FSZeszv7AsYk50f5RPt2Bu2PKop6CYabzkQwmgitL9HV5fIv2qDQq" />
+            <where>password='eee0f3c319c7bdaf6311559eec5058e1' and encryption_scheme=2</where>
+        </update>
+
+        <!-- Several users (users: orc1, inactive) had '9369e99369e9' for pass hash
+             which is not correct MD5. This users are reset to have '123qwe'
+             for password hashed with BCrypt. For BCrypt we use default = 12 logrounds -->
+        <update tableName="base_user">
+            <column name="encryption_scheme" value="6" />
+            <column name="password" value="$2a$10$gNwEehQuLk2dw5Sao.uIfeJ06HJSsG0aDvr63fpwKGEm4Di5neE1y" />
+            <where>password='9369e99369e9' and encryption_scheme=2</where>
+        </update>
+
+    </changeSet>
+
+    <changeSet author="Bilal Shah" context="base" id="#10595-Password lockout for failed login attempts">
+        <addColumn tableName="base_user">
+            <column name="account_locked_time" type="java.sql.Types.Timestamp"/>
+        </addColumn>
+
+        <comment>Constant ID may need to be changed during merging of this feature to later branches to avoid overlapping with other preference IDs</comment>
+        <insert tableName="preference_type">
+            <column name="id" valueNumeric="68"/> <!-- This preference is inserted after preference 61 in upgrade-3.4.xml-->
+            <column name="def_value" value="0"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="68"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Account Lockout Time"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="68"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Number of minutes a User's account will remain locked after the number of allowed retries (Preference 39) are exhausted."/>
+        </insert>
+
+        <update tableName="international_description">
+            <column name="content" value="The number of retries to allow before locking the user account. A locked user account will be locked for the amount of minutes specified in Preference 68. To enable this locking feature, setting Preference 68 to a non-zero value is a must."/>
+            <where> table_id = 50 and foreign_id = 39 and language_id = 1 and psudo_column = 'instruction'</where>
+        </update>
+
+        <insert tableName="event_log_message">
+            <column name="id" valueComputed="(select max(e.id)+1 from event_log_message e)"></column>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="47"/>
+            <column name="foreign_id" valueComputed="(select max(e.id) from event_log_message e)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="A failed login attempt was made."/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="prevent-test-failures-for-password-rules" author="Vikas Bodani" context="test">
+        <sql>update base_user set change_password_date = now() where id = 1</sql>
+    </changeSet>
+
+    <changeSet author="Rohit Gupta" context="base" id="#11107 - Line Percentage">
+        <dropColumn
+                columnName="percentage"
+                tableName="item"/>
+
+        <addColumn tableName="order_line">
+            <column defaultValueBoolean="false" name="is_percentage" type="java.sql.Types.BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="order_change">
+            <column defaultValueBoolean="false" name="is_percentage" type="java.sql.Types.BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Feature - Asset Reservation -->
+    <changeSet id="#10256:Asset Reservation" author="Morales Fernando G." context="base">
+
+        <comment>Adding reservation parameter</comment>
+        <addColumn tableName="item">
+            <column name="reservation_duration" type="java.sql.Types.INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <comment>Asset reservation table</comment>
+        <createTable tableName="asset_reservation">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="asset_reservation_pkey"/>
+            </column>
+            <column name="user_id" type="java.sql.Types.INTEGER" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator_user_id" type="java.sql.Types.INTEGER" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_id" type="java.sql.Types.INTEGER" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="java.sql.Types.TIMESTAMP" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="java.sql.Types.TIMESTAMP" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <comment>Adding indexes</comment>
+        <createIndex indexName="asset_reservation_end_date_index" tableName="asset_reservation" unique="false">
+            <column name="end_date"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="creator_user_id"
+                                 baseTableName="asset_reservation" constraintName="asset_reservation_fk_1"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+                                 onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user"
+                                 referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="asset_reservation" constraintName="asset_reservation_fk_2"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+                                 onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user"
+                                 referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="asset_id"
+                                 baseTableName="asset_reservation" constraintName="asset_reservation_fk_3"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+                                 onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="asset"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+
+    <changeSet author="Rohit Gupta" context="base" id="#11243-AIT-Inhancement">
+        <addColumn tableName="account_type">
+            <column name="notification_ait_id" type="java.sql.Types.INTEGER" >
+            	<constraints nullable="true"/>
+            </column>	
+       	</addColumn>
+    </changeSet>
+    
+    <changeSet author="Rohit Gupta" context="test" id="#11243-AIT-Inhancement-2">
+    	<update tableName="account_type">
+       		<column name="notification_ait_id" value="1"></column>
+       		<where> id = 1</where>
+       	</update>
+       	<update tableName="account_type">
+       		<column name="notification_ait_id" value="3"></column>
+       		<where> id = 3</where>
+       	</update>
+       	<update tableName="account_type">
+       		<column name="notification_ait_id" value="6"></column>
+       		<where> id = 4</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="Vladimir Carevski" context="base" id="20141030-#10344-asset-assignment-history">
+        <comment>#10344 Implementing the asset assignment feature</comment>
+
+        <createTable tableName="asset_assignment">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="asset_assignment_pkey"/>
+            </column>
+            <column name="asset_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_line_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_datetime" type="java.sql.Types.TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="asset_id"
+                                 baseTableName="asset_assignment" constraintName="asset_assignment_fk_1"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+                                 onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="asset"
+                                 referencesUniqueColumn="false"/>
+
+        <addForeignKeyConstraint baseColumnNames="order_line_id"
+                                 baseTableName="asset_assignment" constraintName="asset_assignment_fk_2"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+                                 onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="order_line"
+                                 referencesUniqueColumn="false"/>
+
+        <insert tableName="jbilling_seqs">
+            <column name="name" value="asset_assignment"/>
+            <column name="next_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="jbilling_table">
+            <column name="id" valueComputed="(select max(jt.id)+1 from jbilling_table jt)"/>
+            <column name="name" value="asset_assignment"/>
+        </insert>
+
+        <!-- Make mini migration/reconstruction of data -->
+        <sql>
+            <![CDATA[
+                insert into asset_assignment (id, asset_id, order_line_id, start_datetime)
+
+               (select a.id, a.id, a.order_line_id, ooc.application_date
+                    from asset a
+                        inner join order_line ol on a.order_line_id = ol.id
+                        inner join order_change ooc on ooc.order_line_id = ol.id
+                    where
+                        a.order_line_id is not null
+                    and ooc.id = (
+                       select oc.id from order_change oc
+                            inner join order_change_asset_map ocam on ocam.order_change_id = oc.id
+                        where oc.order_line_id = ol.id
+                            and ocam.asset_id = a.id
+                            order by oc.application_date desc
+                            limit 1));
+            ]]>
+        </sql>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="coalesce((select max(p.id)+1 from asset_assignment p),1)"/>
+            <where>name='asset_assignment'</where>
+        </update>
+
+    </changeSet>
+
+    <changeSet id="#10355 - reset password after expiry period" author="Bilal Shah" context="base">
+       <createTable tableName="user_password_map">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_password_map_pkey"/>
+            </column>
+            <column name="base_user_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_password" type="java.sql.Types.VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="20150307-missing-not-null-constraint" author="Vikas Bodani" context="base">
+        <addNotNullConstraint columnDataType="java.sql.Types.INTEGER" tableName="reset_password_code" columnName="base_user_id"/>
+    </changeSet>
+
+    <changeSet id="#8922-20150309-customer-price-active-expiry-date" author="Vikas Bodani" context="base">
+        <comment>Price subscription and expiration dates for customer price. Price expiration dates for Account Type price</comment>
+
+        <addColumn tableName="account_type_price">
+            <column  name="price_expiry_date" type="java.sql.Types.DATE">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="#10256:Asset Reservation scheduler plugin" author="Aman Goel" context="base">
+        <update tableName="pluggable_task_type">
+            <column name="min_parameters" valueNumeric="0"/>
+            <where>class_name='com.sapienter.jbilling.server.item.tasks.CheckAssetReservationCronScheduledTask'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="Aadil Nazir" context="base" id="#11369-Feature to identify inactive accounts">
+        <comment>#11369 Develop ability to identify inactive accounts</comment>
+
+        <comment>Added new column in base_user, value is set to date on which a user is marked in-active</comment>
+        <addColumn tableName="base_user">
+            <column name="account_disabled_date" type="java.sql.Types.DATE"/>
+        </addColumn>
+
+        <comment>Add new preference of Number of days after which a User's account will become inactive</comment>
+        <comment>Constant ID may need to be changed during merging of this feature to later branches to avoid overlapping with other preference IDs</comment>
+        <insert tableName="preference_type">
+            <column name="id" valueComputed="(select max(t.id)+1 from preference_type t)"/> <!-- should be 69 -->
+            <column name="def_value" value="60"/>
+        </insert>
+
+        <comment>foreign_id may need to be changed depending upon preference ID assigned above during merging to later branches</comment>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="70"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Expire Inactive Accounts After Days"/>
+        </insert>
+        <comment>foreign_id may need to be changed depending upon preference ID assigned above during merging to later branches</comment>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="70"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Number of days after which a User's account will become inactive. This will disable the ability to login to jBilling for that user."/>
+        </insert>
+
+        <comment>Add new plug-in to make users inactive if they are not logged-in for number of days specified in the preference created above</comment>
+        <comment>Constant ID may need to be changed during merging of this feature to later branches to avoid overlapping with other plug-ins</comment>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueComputed="coalesce((select max(p.id)+1 from pluggable_task_type p),1)"/>
+            <column name="category_id" valueNumeric="22"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.pluggableTask.InactiveUserManagementTask"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+
+        <comment>foreign_id may need to be changed depending upon plug-in ID assigned above during merging to later branches</comment>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(id) from pluggable_task_type)"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Inactive user account management plugin"/>
+        </insert>
+
+        <comment>foreign_id may need to be changed depending upon plug-in ID assigned above during merging to later branches</comment>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(id) from pluggable_task_type)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This is a scheduled plugin that takes in user that has not been logged-in for number of days specified in preference 55 and update there status to Inactive."/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Aadil Nazir" context="base" id="#11369-Report for Feature to identify inactive accounts">
+        <insert tableName="report">
+            <column name="id" valueComputed="(select coalesce(max(r.id), 1)+1 from report r)"/>
+            <column name="type_id" valueComputed="(select id from report_type rt where rt.name = 'user')"/>
+            <column name="name" value="user_activity"/>
+            <column name="file_name" value="user_activity.jasper"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+        <insert tableName="report_parameter">
+            <column name="id" valueComputed="(select coalesce(max(rp.id), 1)+1 from report_parameter rp)"/>
+            <column name="report_id" valueComputed="(select id from report r where r.name = 'user_activity')"/>
+            <column name="dtype" value="integer"/>
+            <column name="name" value="activity_days"/>
+        </insert>
+        <insert tableName="report_parameter">
+            <column name="id" valueComputed="(select coalesce(max(rp.id), 1)+1 from report_parameter rp)"/>
+            <column name="report_id" valueComputed="(select id from report r where r.name = 'user_activity')"/>
+            <column name="dtype" value="string"/>
+            <column name="name" value="active_status"/>
+        </insert>
+        <insert tableName="report_parameter">
+            <column name="id" valueComputed="(select coalesce(max(rp.id), 1)+1 from report_parameter rp)"/>
+            <column name="report_id" valueComputed="(select id from report r where r.name = 'user_activity')"/>
+            <column name="dtype" value="string"/>
+            <column name="name" value="order_by"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueComputed="(select id from jbilling_table jt where jt.name = 'report')"/>
+            <column name="foreign_id" valueComputed="(select id from report r where r.name = 'user_activity')"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Statement of User Activity within specified number of days"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Aadil Nazir" context="test" id="#11369-Enter new report in report entity map for inactive accounts feature">
+        <insert tableName="entity_report_map">
+            <column name="report_id" valueComputed="(select id from report r where r.name = 'user_activity')"/>
+            <column name="entity_id" valueComputed="1"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Aman Goel" id="#10815-filter-key-data" context="base">
+        <addColumn tableName="filter">
+            <column name="field_key_data" type="java.sql.Types.VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="#12636-granting-user-credentials" author="Javier Rivero" context="base">
+        <insert tableName="preference_type">
+            <column name="id" value="71"/>
+            <column name="def_value" value="24"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" value="71"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Forgot Password Expiration (hours)"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="71"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Hours until the link for password change expires."/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="#12702:Default credentials changed" author="Nelson Secchi" context="base">
+        <insert tableName="preference_type">
+            <column name="id" value="75"/>
+            <column name="def_value" value="0"/>
+        </insert>
+
+        <comment>Description for the preference type, this is shown on the list of preferences</comment>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="75"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Should credentials be created by default"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="75"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="1 to have credentials created by default when the user is created. 0 (default) to require credential creation be requested upon creation."/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="#12702:Credentials email message notification" author="Nelson Secchi" context="base">
+        <comment>We need a new message for when credentials are being created</comment>
+        <comment>Define the notification message type. For new entities, this id will be used on EntityDefaults</comment>
+        <insert tableName="notification_message_type">
+            <column name="id" valueComputed="21"/>
+            <column name="category_id" valueNumeric="4"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="52"/>
+            <column name="foreign_id" valueComputed="21"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Credentials creation"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="#12702:Credentials email message notification - test" author="Nelson Secchi" context="test">
+        <comment>This is an instance of the message for the entity 1</comment>
+        <insert tableName="notification_message">
+            <column name="id" valueComputed="(select max(nm.id)+1 from notification_message nm)"/>
+            <column name="type_id" valueComputed="21"/>
+            <column name="entity_id" valueNumeric="1"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="use_flag" valueNumeric="1"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="(select max(nm.id) from notification_message nm)"/>
+            <where>name = 'notification_message'</where>
+        </update>
+
+        <comment>This is the section message for the title</comment>
+        <insert tableName="notification_message_section">
+            <column name="id" valueComputed="(select max(nms.id)+1 from notification_message_section nms)"/>
+            <column name="message_id" valueComputed="(select max(id) from notification_message)"/>
+            <column name="section" valueNumeric="1"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="notification_message_line">
+            <column name="id" valueComputed="(select max(nml.id)+1 from notification_message_line nml)"/>
+            <column name="message_section_id" valueComputed="(select max(id) from notification_message_section)"/>
+            <column name="content" value="Your registration credentials"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <comment>This is the section message for the content of the email</comment>
+        <insert tableName="notification_message_section">
+            <column name="id" valueComputed="(select max(nms.id)+1 from notification_message_section nms)"/>
+            <column name="message_id" valueComputed="(select max(id) from notification_message)"/>
+            <column name="section" valueNumeric="2"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="notification_message_line">
+            <column name="id" valueComputed="(select max(nml.id)+1 from notification_message_line nml)"/>
+            <column name="message_section_id" valueComputed="(select max(id) from notification_message_section)"/>
+            <column name="content" value="Hello  $first_name $last_name,\r\n\r\nWelcome to JBilling!.\r\n\r\nPlease follow this link to set your credentials:\r\n\r\n$newPasswordLink"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="(select max(nml.id)+1 from notification_message_section nml)"/>
+            <where>name = 'notification_message_section'</where>
+        </update>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="(select max(nml.id)+1 from notification_message_line nml)"/>
+            <where>name = 'notification_message_line'</where>
+        </update>
+    </changeSet>
+    
+    <changeSet id="#12686_Default_Security_Preferences:validation_rules" author="Fernando G. Morales" context="base">
+
+        <comment>Add validation rule to the preference type</comment>
+        <addColumn tableName="preference_type">
+            <column  name="validation_rule_id" type="java.sql.Types.INTEGER"/>
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="validation_rule_id"
+                                 baseTableName="preference_type" constraintName="preference_type_vr_fk_1"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+                                 onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="validation_rule"
+                                 referencesUniqueColumn="false"/>
+
+        <comment>Define validation rules and add to preferences</comment>
+
+        <insert tableName="validation_rule">
+            <column name="id" valueComputed="coalesce((select max(t.id)+1 from validation_rule t),1)"/>
+            <column name="rule_type" value="RANGE"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="minRange"/>
+            <column name="attribute_value" value="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="maxRange"/>
+            <column name="attribute_value" value="7"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="foreign_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="table_id" valueComputed="(select id from jbilling_table where name='validation_rule')"/>
+            <column name="psudo_column" value="errorMessage"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Failed login attempts can not be more than 6"/>
+        </insert>
+        <comment>Set rule for preference: Lock-out user after failed login attempts</comment>
+        <update tableName="preference_type">
+            <column name="validation_rule_id" valueComputed="(select max(vr.id) from validation_rule vr)"/>
+            <where> id = 39</where>
+        </update>
+
+        <insert tableName="validation_rule">
+            <column name="id" valueComputed="coalesce((select max(t.id)+1 from validation_rule t),1)"/>
+            <column name="rule_type" value="RANGE"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="minRange"/>
+            <column name="attribute_value" value="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="maxRange"/>
+            <column name="attribute_value" value="91"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="foreign_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="table_id" valueComputed="(select id from jbilling_table where name='validation_rule')"/>
+            <column name="psudo_column" value="errorMessage"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Passwords must expire before 90 days"/>
+        </insert>
+        <comment>Set rule for preference: 'Expire user passwords after days'</comment>
+        <update tableName="preference_type">
+            <column name="validation_rule_id" valueComputed="(select max(vr.id) from validation_rule vr)"/>
+            <where> id = 40</where>
+        </update>
+
+        <insert tableName="validation_rule">
+            <column name="id" valueComputed="coalesce((select max(t.id)+1 from validation_rule t),1)"/>
+            <column name="rule_type" value="RANGE"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="minRange"/>
+            <column name="attribute_value" value="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="maxRange"/>
+            <column name="attribute_value" value="91"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="foreign_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="table_id" valueComputed="(select id from jbilling_table where name='validation_rule')"/>
+            <column name="psudo_column" value="errorMessage"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Inactive account checks must be done quicker than 90 days"/>
+        </insert>
+        <comment>Set rule for preference: 'Expire Inactive Accounts After Days'</comment>
+        <update tableName="preference_type">
+            <column name="validation_rule_id" valueComputed="(select max(vr.id) from validation_rule vr)"/>
+            <where> id = 69</where>
+        </update>
+
+    </changeSet>
+
+    <changeSet id="#12686_Default_Security_Preferences:remove_preferences" author="Fernando G. Morales" context="base">
+        <comment>Removed the HIDE CC CARD NUMBER preference</comment>
+        <delete tableName="preference">
+            <where>type_id=37</where>
+        </delete>
+        <delete tableName="international_description">
+            <where>table_id = (select id from jbilling_table where name ='preference_type') and foreign_id=37</where>
+        </delete>
+        <delete tableName="preference_type">
+            <where>id=37</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="#12686_Default_Security_Preferences:validation_rules for Telco-4.1" author="Nelson Secchi" context="base">
+        <comment>Reverts the validation set for validation rule 69</comment>
+        <update tableName="preference_type">
+            <column name="validation_rule_id" valueComputed="null"/>
+            <where> id = 69</where>
+        </update>
+
+        <comment>Set rule for preference: 'Expire Inactive Accounts After Days'</comment>
+        <comment>This assumes that the last changeset that added validations was #12686_Default_Security_Preferences:validation_rules</comment>
+        <update tableName="preference_type">
+            <column name="validation_rule_id" valueComputed="(select max(vr.id) from validation_rule vr)"/>
+            <where> id = 70</where>
+        </update>
+
+    </changeSet>
+
+	<changeSet author="Bilal Shah" context="base"  id="#12602-audit-log-user-related-information">
+
+		<insert tableName="event_log_message">
+			<column name="id" valueNumeric="38" />
+		</insert>
+
+		<insert tableName="international_description">
+			<column name="table_id" valueNumeric="47" />
+			<column name="foreign_id" valueNumeric="38" />
+			<column name="psudo_column" value="description" />
+			<column name="language_id" valueNumeric="1" />
+			<column name="content" value="User logged in successfully" />
+		</insert>
+
+		<insert tableName="event_log_message">
+			<column name="id" valueNumeric="39" />
+		</insert>
+
+		<insert tableName="international_description">
+			<column name="table_id" valueNumeric="47" />
+			<column name="foreign_id" valueNumeric="39" />
+			<column name="psudo_column" value="description" />
+			<column name="language_id" valueNumeric="1" />
+			<column name="content" value="User logged out successfully" />
+		</insert>
+		<insert tableName="event_log_message">
+			<column name="id" valueNumeric="40" />
+		</insert>
+
+		<insert tableName="international_description">
+			<column name="table_id" valueNumeric="47" />
+			<column name="foreign_id" valueNumeric="40" />
+			<column name="psudo_column" value="description" />
+			<column name="language_id" valueNumeric="1" />
+			<column name="content"
+				value="User failed to log in due to incorrect username/password" />
+		</insert>
+	</changeSet>
+
+    <changeSet id="#08072015" author="Ravi Singhal" context="base">
+    	<update tableName="notification_message_line">
+    		<column name="content" value="Hello  $first_name $last_name,\n\nYou (or someone pretending to be you) requested a password reset of your account.\n\nYou may reset your password from the following link:\n\n$newPasswordLink\n\nAdmin:\t$organization_name"></column>
+    		<where>
+    			content = 'Hello  $first_name $last_name,\r\n\r\nYou (or someone pretending to be you) requested a password reset of your account.\r\n\r\nIf you access the following link your password will be changed to: $newPassword\r\n\r\n$newPasswordLink'
+    			or
+    			content = '&lt;p&gt;Hello $first_name $last_name,&lt;/p&gt;&lt;p&gt;You (or someone pretending to be you) requested a password reset of your account.&lt;/p&gt;&lt;p&gt;If you access the following link your password will be changed to: &lt;strong&gt;$newPassword&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;$newPasswordLink&quot;&gt;$newPasswordLink&lt;/a&gt;&lt;/p&gt;'
+    		</where>
+    	</update>
+    </changeSet>
+
+    <changeSet id="#14013 Adding Asset reservation minute and it's validation" author="Vivek Yadav" context="base">
+        <comment>Adding default reservation minute for asset reservation</comment>
+
+        <comment>Add validation rule for Asset reservation duration</comment>
+        <insert tableName="validation_rule">
+            <column name="id" valueComputed="coalesce((select max(t.id)+1 from validation_rule t),1)"/>
+            <column name="rule_type" value="RANGE"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="minRange"/>
+            <column name="attribute_value" value="0"/>
+        </insert>
+        <insert tableName="validation_rule_attributes">
+            <column name="validation_rule_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="attribute_name" value="maxRange"/>
+            <column name="attribute_value" value="600000"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="foreign_id" valueComputed="(select max(t.id) from validation_rule t)"/>
+            <column name="table_id" valueComputed="(select id from jbilling_table where name='validation_rule')"/>
+            <column name="psudo_column" value="errorMessage"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Reservation duration should be between 0 and 600000"/>
+        </insert>
+
+        <insert tableName="preference_type">
+            <column name="id" valueComputed="(select max(p.id) + 1 from preference_type p)"/>
+            <column name="def_value" value="10"/>
+            <column name="validation_rule_id" valueComputed="(select max(vr.id) from validation_rule vr)"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueComputed="(select max(id) from preference_type)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Default Asset Reservation Duration"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueComputed="(select max(id) from preference_type)"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Add Default Asset reservation minute here. It will work if product is asset enabled. (Must be greater than zero)"/>
+        </insert>
+    </changeSet>
+    
+     <changeSet id="Removing PricingRuleTask" author="Manisha Gupta" context="base">
+            
+        <delete tableName="pluggable_task_parameter">
+			<where>task_id=(select id from pluggable_task where type_id =61)</where>
+		</delete>
+		<delete tableName="pluggable_task">
+			<where>type_id =61</where>
+		</delete>
+		<delete tableName="pluggable_task">
+			<where>type_id =53</where>
+		</delete>
+		
+     </changeSet>
+    
+    <changeSet id="Removing Preferences for mediation, provisioning and ITG" author="Manisha Gupta" context="base">
+            
+        <delete tableName="preference_type">
+			<where>id in (47,48,69)</where>
+		</delete>
+		<delete tableName="preference">
+			<where>type_id in (47,48,69)</where>
+		</delete>
+		
+    </changeSet>
+
+    <changeSet id="20151102-host-preferences" author="Vikas Bodani" context="base">
+        <createTable tableName="jb_host_master">
+            <column name="jb_version" type="java.sql.Types.CHAR(10)"/>
+            <column name="jb_allow_signup" type="java.sql.Types.BOOLEAN" defaultValueBoolean="true"/>
+            <column name="jb_git_url" type="java.sql.Types.VARCHAR(256)"/>
+            <column name="jb_last_git_commit" type="java.sql.Types.CHAR(10)" defaultValue="null"/>
+        </createTable>
+
+        <insert tableName="jb_host_master">
+            <column name="jb_version">CE-4.1.1</column>
+            <column name="jb_git_url">git@github.com:WebDataConsulting/billing.git</column>
+        </insert>
+    </changeSet>
+
+    <!-- jBilling Mediation as of jBilling CE 3.1 -->
+    <changeSet id="jbilling-mediation-2.x-1" author="Vikas Bodani" context="base">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="mediation_cfg"/>
+            </not>
+        </preConditions>
+        <comment>This table may exists because it may have gotten created from previous builds</comment>
+        <createTable tableName="mediation_cfg">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mediation_cfg_pkey"/>
+            </column>
+            <column name="entity_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_value" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pluggable_task_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="mediation_errors">
+            <column name="accountcode" type="java.sql.Types.VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mediation_errors_pkey"/>
+            </column>
+            <column name="src" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="dst" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="dcontext" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="clid" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="channel" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="dstchannel" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="lastapp" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="lastdata" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="start_time" type="java.sql.Types.TIMESTAMP"/>
+            <column name="answer" type="java.sql.Types.TIMESTAMP"/>
+            <column name="end_time" type="java.sql.Types.TIMESTAMP"/>
+            <column name="duration" type="java.sql.Types.INTEGER"/>
+            <column name="billsec" type="java.sql.Types.INTEGER"/>
+            <column name="disposition" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="amaflags" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="userfield" type="java.sql.Types.VARCHAR(50)"/>
+            <column name="error_message" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="should_retry" type="java.sql.Types.BOOLEAN"/>
+        </createTable>
+        <createTable tableName="mediation_order_map">
+            <column name="mediation_process_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="mediation_process">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mediation_process_pkey"/>
+            </column>
+            <column name="configuration_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_datetime" type="java.sql.Types.TIMESTAMP"/>
+            <column name="orders_affected" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="mediation_record">
+            <column name="id_key" type="java.sql.Types.VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_datetime" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mediation_process_id" type="java.sql.Types.INTEGER"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mediation_record_pkey"/>
+            </column>
+        </createTable>
+        <createTable tableName="mediation_record_line">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mediation_record_line_pkey"/>
+            </column>
+            <column name="order_line_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_date" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="java.sql.Types.NUMERIC(22,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="java.sql.Types.VARCHAR(200)"/>
+            <column name="optlock" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mediation_record_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="pluggable_task_id" baseTableName="mediation_cfg"
+                                 constraintName="mediation_cfg_fk_1" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="pluggable_task" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="mediation_process_id" baseTableName="mediation_order_map"
+                                 constraintName="mediation_order_map_fk_1" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="mediation_process" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="mediation_order_map"
+                                 constraintName="mediation_order_map_fk_2" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="configuration_id" baseTableName="mediation_process"
+                                 constraintName="mediation_process_fk_1" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="mediation_cfg" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="mediation_process_id" baseTableName="mediation_record"
+                                 constraintName="mediation_record_fk_1" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="mediation_process" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="mediation_record"
+                                 constraintName="mediation_record_fk_2" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="generic_status" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="mediation_record_id" baseTableName="mediation_record_line"
+                                 constraintName="mediation_record_line_fk_1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="mediation_record"
+                                 referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="order_line_id" baseTableName="mediation_record_line"
+                                 constraintName="mediation_record_line_fk_2" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="order_line"
+                                 referencesUniqueColumn="false"/>
+
+        <insert tableName="jbilling_seqs">
+            <column name="name" value="mediation_cfg"/>
+            <column name="next_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="jbilling_seqs">
+            <column name="name" value="mediation_process"/>
+            <column name="next_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="jbilling_seqs">
+            <column name="name" value="mediation_record_line"/>
+            <column name="next_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="jbilling_seqs">
+            <column name="name" value="mediation_record"/>
+            <column name="next_id" valueNumeric="0"/>
+        </insert>
+        <insert tableName="generic_status_type">
+            <column name="id" value="mediation_record_status"/>
+        </insert>
+        <insert tableName="pluggable_task_type_category">
+            <column name="id" valueNumeric="15"/>
+            <column name="interface_name" value="com.sapienter.jbilling.server.mediation.task.IMediationReader"/>
+        </insert>
+        <insert tableName="pluggable_task_type_category">
+            <column name="id" valueNumeric="16"/>
+            <column name="interface_name" value="com.sapienter.jbilling.server.mediation.task.IMediationProcess"/>
+        </insert>
+        <insert tableName="pluggable_task_type_category">
+            <column name="id" valueNumeric="21"/>
+            <column name="interface_name" value="com.sapienter.jbilling.server.mediation.task.IMediationErrorHandler"/>
+        </insert>
+        <insert tableName="jbilling_table">
+            <column name="id" valueNumeric="82"/>
+            <column name="name" value="mediation_cfg"/>
+        </insert>
+        <insert tableName="jbilling_table">
+            <column name="id" valueNumeric="83"/>
+            <column name="name" value="mediation_process"/>
+        </insert>
+        <insert tableName="jbilling_table">
+            <column name="id" valueNumeric="86"/>
+            <column name="name" value="mediation_record_line"/>
+        </insert>
+        <insert tableName="jbilling_table">
+            <column name="id" valueNumeric="91"/>
+            <column name="name" value="mediation_record_status"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="32"/>
+            <column name="category_id" valueNumeric="15"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.SeparatorFileReader"/>
+            <column name="min_parameters" valueNumeric="2"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="33"/>
+            <column name="category_id" valueNumeric="16"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.TestMediationTask"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="34"/>
+            <column name="category_id" valueNumeric="15"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.FixedFileReader"/>
+            <column name="min_parameters" valueNumeric="2"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="44"/>
+            <column name="category_id" valueNumeric="15"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.JDBCReader"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="45"/>
+            <column name="category_id" valueNumeric="15"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.MySQLReader"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="71"/>
+            <column name="category_id" valueNumeric="21"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.SaveToFileMediationErrorHandler"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="73"/>
+            <column name="category_id" valueNumeric="21"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.SaveToJDBCMediationErrorHandler"/>
+            <column name="min_parameters" valueNumeric="1"/>
+        </insert>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueNumeric="81"/>
+            <column name="category_id" valueNumeric="22"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.mediation.task.MediationProcessTask"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+        <insert tableName="generic_status">
+            <column name="id" valueNumeric="29"/>
+            <column name="dtype" value="mediation_record_status"/>
+            <column name="status_value" valueNumeric="1"/>
+            <column name="can_login"/>
+        </insert>
+        <insert tableName="generic_status">
+            <column name="id" valueNumeric="30"/>
+            <column name="dtype" value="mediation_record_status"/>
+            <column name="status_value" valueNumeric="2"/>
+            <column name="can_login"/>
+        </insert>
+        <insert tableName="generic_status">
+            <column name="id" valueNumeric="31"/>
+            <column name="dtype" value="mediation_record_status"/>
+            <column name="status_value" valueNumeric="3"/>
+            <column name="can_login"/>
+        </insert>
+        <insert tableName="generic_status">
+            <column name="id" valueNumeric="32"/>
+            <column name="dtype" value="mediation_record_status"/>
+            <column name="status_value" valueNumeric="4"/>
+            <column name="can_login"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="23"/>
+            <column name="foreign_id" valueNumeric="15"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Mediation Reader"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="23"/>
+            <column name="foreign_id" valueNumeric="16"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Mediation Processor"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="23"/>
+            <column name="foreign_id" valueNumeric="21"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Mediation Error Handler"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="32"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This is a reader for the mediation process. It reads records from a text file whose fields are separated by a character (or string)."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="33"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Rules mediation processor"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="33"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This is a rules-based plug-in (see chapter 7). It takes an event record from the mediation process and executes external rules to translate the record into billing meaningful data. This is at the core of the mediation component, see the ?Telecom Guide? document for more information."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="34"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This is a reader for the mediation process. It reads records from a text file whose fields have fixed positions,and the record has a fixed length."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="44"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="JDBC Mediation Reader."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="44"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This is a reader for the mediation process. It reads records from a JDBC database source."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="45"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="MySQL Mediation Reader."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="45"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This is a reader for the mediation process. It is an extension of the JDBC reader, allowing easy configuration of a MySQL database source."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="79"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Mediation Process Task"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueNumeric="79"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="A scheduled task to execute the Mediation Process."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="47"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Last read mediation record id."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="41"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Set to '1' to allow the usage of the 'main subscription' flag for orders This flag is read only by the mediation process when determining where to place charges coming from external events."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="47"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="ID of the last record read by the mediation process. This is used to determine what records are 'new' and need to be read."/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="59"/>
+            <column name="foreign_id" valueNumeric="95"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Show mediation menu"/>
+        </insert>
+        <insert tableName="tab">
+            <column name="id" valueNumeric="7"/>
+            <column name="message_code" value="menu.link.mediation"/>
+            <column name="controller_name" value="mediation"/>
+            <column name="access_url" value="/mediation/list"/>
+            <column name="required_role" value=""/>
+            <column name="version" value="1"/>
+            <column name="default_order" valueNumeric="7" />
+        </insert>
+    </changeSet>
+
+    <changeSet id="jbilling-mediation-2.x-test" author="Vikas Bodani" context="test">
+        <insert tableName="pluggable_task">
+            <column name="id" valueComputed="(select max(t.id) + 1 from pluggable_task t)"/>
+            <column name="entity_id" valueNumeric="1"/>
+            <column name="type_id" valueNumeric="33"/>
+            <column name="processing_order" valueNumeric="1"/>
+            <column name="optlock" valueNumeric="1"/>
+            <column name="notes"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="jbilling-mediation-2.x-2" author="Vikas Bodani" context="base">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="cdrentries"/>
+            </not>
+        </preConditions>
+        <comment>This table may exists because it may have gotten created from previous builds</comment>
+        <createTable tableName="cdrentries">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cdrentries_pkey"/>
+            </column>
+            <column name="accountcode" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="src" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="dst" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="dcontext" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="clid" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="channel" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="dstchannel" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="lastapp" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="lastdatat" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="start_time" type="java.sql.Types.TIMESTAMP"/>
+            <column name="answer" type="java.sql.Types.TIMESTAMP"/>
+            <column name="end_time" type="java.sql.Types.TIMESTAMP"/>
+            <column name="duration" type="java.sql.Types.INTEGER"/>
+            <column name="billsec" type="java.sql.Types.INTEGER"/>
+            <column name="disposition" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="amaflags" type="java.sql.Types.VARCHAR(20)"/>
+            <column name="userfield" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="ts" type="java.sql.Types.TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="Chinese and INR currencies" author="Manisha Gupta" context="base">
+        <insert tableName="currency">
+            <column name="id" valueComputed="(select max(c.id)+1 from currency c)"/>
+            <column name="symbol" value="₹"/>
+            <column name="code" value="INR"/>
+            <column name="country_code" value="IN"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="4"/>
+            <column name="foreign_id" valueComputed="(select max(c.id) from currency c)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Indian Rupee"/>
+        </insert>
+        <insert tableName="currency_exchange">
+            <column name="id" valueComputed="(select max(ce.id)+1 from currency_exchange ce)"/>
+            <column name="entity_id" valueNumeric="0"/>
+            <column name="currency_id" valueComputed="(select max(c.id) from currency c)"/>
+            <column name="rate" valueNumeric="66.7431996993"/>
+            <column name="create_datetime" valueDate="2015-12-10T00:00:00.0"/>
+            <column name="valid_since" valueDate="1970-01-01"/>
+            <column name="optlock" valueNumeric="1"/>
+        </insert>
+        <insert tableName="currency">
+            <column name="id" valueComputed="(select max(c.id)+1 from currency c)"/>
+            <column name="symbol" value="¥"/>
+            <column name="code" value="CNY"/>
+            <column name="country_code" value="CN"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="4"/>
+            <column name="foreign_id" valueComputed="(select max(c.id) from currency c)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Chinese Yuan"/>
+        </insert>
+        <insert tableName="currency_exchange">
+            <column name="id" valueComputed="(select max(ce.id)+1 from currency_exchange ce)"/>
+            <column name="entity_id" valueNumeric="0"/>
+            <column name="currency_id" valueComputed="(select max(c.id) from currency c)"/>
+            <column name="rate" valueNumeric="10.3706269649"/>
+            <column name="create_datetime" valueDate="2015-12-10T00:00:00.0"/>
+            <column name="valid_since" valueDate="1970-01-01"/>
+            <column name="optlock" valueNumeric="1"/>
+        </insert>        
+
+        <update tableName="item_price">
+            <column name="start_date" value="1970-01-01" />
+        </update>
+
+        <modifyDataType tableName="batch_job_execution_params" columnName="date_val" newDataType="datetime"/>
+
+        <update tableName="pluggable_task_type_category">
+            <column name="interface_name" value="com.sapienter.jbilling.server.pricing.tasks.IPricing"/>
+            <where>interface_name = 'com.sapienter.jbilling.server.item.tasks.IPricing'</where>
+        </update>
+
+        <!-- usage based pricing plugin -->
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueComputed="(select max(t.id)+1 from pluggable_task_type t)"/>
+            <column name="category_id" valueNumeric="14"/>
+            <column name="class_name" value="in.webdataconsulting.jbilling.server.pricing.tasks.BasicUsageBasedPricingTask"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="(select max(t.id)+1 from pluggable_task_type t)"/>
+            <where>name='pluggable_task_type'</where>
+        </update>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(t.id) from pluggable_task_type t)"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Basic Pricing Task"/>
+        </insert>
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id"  valueComputed="(select max(t.id) from pluggable_task_type t)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This is handles the pricing calculation (default implementation) based on usage of the item."/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+You would only want to use SSL when your users (customers or administrator) access *j*billing through the Internet. If all the access to *j*billing is done in a local network (LAN), then SSL is of little use.
+
+The SSL protocol allows applications to communicate across a network in a way that is designed to prevent eavesdropping, tampering, and message forgery. SSL provides endpoint authentication and communications privacy over the Internet using cryptography.
+
+*j*billing does not implement or deal with SSL directly. Instead, it relies on Tomcat to do this, since it is the component that takes on serving the web pages of the jbilling webbased graphic user interface. Therefore, it is mostly Tomcat that you need to configure to use SSL.
+
+The documentation on how to configure tomcat is located [here|http://tomcat.apache.org/tomcat-3.3-doc/tomcat-ssl-howto.html]
+
+Let's go over some main points:
+
+* You need to have a key. You can generate it yourself, but the browsers will give a warning. Otherwise, you can buy one from a certificate authority.
+* Once you have a key (which is just a file), you need to edit the file server.xml located in jbilling\server\default\deploy\jbossweb-tomcat50.sar and change:
+
+# Uncomment the SSL section
+# Update the location and name of the key store
+# Update the password of the key store
+
+Once you have the ability to establish a secure connection with *j*billing, you will want to avoid anyone from having unsecured sessions. You can easily configure *j*billing so it does not allow unsecured connections by having the property force_https in the jbilling.properties file set to 'true.
+
+!jbilling.properties.png!
+
+!sslproperty.png!
+
+When this property is 'true', *j*billing will verify that every requests starts with 'https' rather than 'http'. If an unsecured (http) request is detected, it is forwarded as 'https'.

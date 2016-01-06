@@ -1,0 +1,5 @@
+In *j*billing, it is very important for you to be able to trace the key series of events for a billing process. Billing information accumulates over time, creating a history of events with your customers. *j*Billing wants you to know when something happened, and most importantly, why. When a customer is sent an invoice, this is done because they have bought something from you. These items are listed in the invoice.
+
+In *j*billing, the event of the purchase is backed by the purchase order document. Therefore, there cannot be an invoice without at least *one* purchase order. Payments and invoices have a similar relationship: a payment should pay an invoice. There should not be a payment without first having an invoice.
+
+!purchaseorderinvoicepaymentdiagram.png!

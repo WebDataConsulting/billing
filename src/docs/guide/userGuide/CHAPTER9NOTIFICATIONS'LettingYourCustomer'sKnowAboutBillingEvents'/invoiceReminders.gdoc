@@ -1,0 +1,36 @@
+This feature's purpose is to remind your customers that an invoice had been sent to them. It is called a reminder because the invoice has yet to be paid, but it is not past  
+its due date.
+
+When this option is selected, one or several e-mails will automatically be sent to your customers at intervals that you will have previously chosen. They will be sent after an  
+invoice has been generated and until that invoice is paid or  
+reaches its due date (whichever comes first).
+
+Keep in mind that invoice reminders are different than the notifications from the ageing process. In a nutshell, *j*Billing sends invoice reminders *before the due date* of an  
+invoice, while the ageing process takes over *after the due date*. Also, invoice reminders are just that, reminders; while the ageing process involves notifications and changing the status of the customer account.
+
+Click on Configuration at the top of the screen, and then on Email, which is located on the right hand side of the screen. 
+
+To activate the Invoice Reminders feature, check the 'Use Invoice Reminders' check-box.
+
+!useinvoicereminder.png!
+
+In the box below that, the 'First reminder' field, is where you indicate the number of days you wish to have between the generation of the invoice and the first reminder. The last line, the 'Next reminder', allows you to indicate the number of days you wish to have between the subsequent reminders, should you wish to have more than one. 
+
+!firstreminder.png!
+
+{note}
+Please note: be aware that if you put a small number in the 'Next reminder' box, your customer might receive too many reminders before the due date of their invoice. They  
+could end up tuning out the messages.
+{note}
+
+For example: *Trend* chooses to give to its clients 30 days before their invoice becomes overdue. *Trend* wishes to remind them up to 3 times before the due date that an invoice has been generated and should be paid as soon as possible.
+
+This is what Trend enters:
+
+!remindersexample.png!
+
+This is what will happen:
+
+Let's say that the invoice is generated on the first day of the month. If the client has not paid by the 15th, the previously composed text will be emailed. Should the client  
+still not pay, a message will be sent again 5 days later, on  
+the 20th, and again on the 25th of the month. If by the due date the client has failed to pay, their account will then switch over to the ageing process.
