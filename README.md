@@ -18,9 +18,9 @@ Cloning the Source Code from GitHub
 
 Install [Git](http://git-scm.com/download/). 
 
-Clone the repository from `git@github.com:emilc/enterprise.git` 
+Clone the repository from `git@github.com:WebDataConsulting/billing.git` 
 
-<pre><code>clone git@github.com:emilc/enterprise.git jbilling-enterprise</code></pre>
+<pre><code>git clone git@github.com:WebDataConsulting/billing.git jB-CE-4.1.1</code></pre>
 
 
 
@@ -47,6 +47,11 @@ CREATE DATABASE jbilling_test WITH OWNER jbilling;
 
 Setup
 -----
+
+JAVA_HOME -> /opt/lib/jdk1.8.0_60 or an equivalent
+GRAILS_HOME -> /opt/lib/grails-2.4.3 or equivalent
+
+Java and grails executables should be in your classpath.
 
 Run the grails `compile` target to compile the jBilling source code, then run the `prepare-test` target to load the reference database and prepare all the required resources.
 
