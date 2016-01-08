@@ -48,10 +48,12 @@ CREATE DATABASE jbilling_test WITH OWNER jbilling;
 Setup
 -----
 
-JAVA_HOME -> /opt/lib/jdk1.8.0_60 or an equivalent
-GRAILS_HOME -> /opt/lib/grails-2.4.3 or equivalent
+JAVA_HOME -> /opt/lib/jdk1.8.0_60 or an equivalent.
+
+GRAILS_HOME -> /opt/lib/grails-2.4.3 or equivalent.
 
 Java and grails executables should be in your classpath.
+
 
 Run the grails `compile` target to compile the jBilling source code, then run the `prepare-test` target to load the reference database and prepare all the required resources.
 
