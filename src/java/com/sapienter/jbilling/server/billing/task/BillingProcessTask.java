@@ -37,7 +37,7 @@ import org.quartz.impl.triggers.SimpleTriggerImpl;
 
 import java.util.Date;
 
-;
+
 
 /**
  * Scheduled billing process plug-in, executing the billing process on a simple schedule.

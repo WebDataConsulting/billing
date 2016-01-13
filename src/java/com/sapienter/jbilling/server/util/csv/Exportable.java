@@ -24,6 +24,9 @@ You may download the latest source from webdataconsulting.github.io.
 
 package com.sapienter.jbilling.server.util.csv;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Marks a class as being exportable in a simple format (such as CSV).
  *
@@ -31,7 +34,9 @@ package com.sapienter.jbilling.server.util.csv;
  * @since 03/03/11
  */
 public interface Exportable {
-
+	
+	public  List<String> metaFieldsNames = new ArrayList<>();
+	public  List<String> customerMetaFieldsNames = new ArrayList<>();
     public String[] getFieldNames();
     public Object[][] getFieldValues();
 

@@ -23,7 +23,7 @@
  */
 package com.sapienter.jbilling.server.system.event;
 
-;
+
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;

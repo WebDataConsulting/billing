@@ -33,8 +33,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-;
-
 import javax.sql.rowset.CachedRowSet;
 
 import com.lowagie.text.Document;
@@ -222,7 +220,7 @@ public class PaperInvoiceBatchBL {
         int preferencePaperSelfDelivery = 
         	PreferenceBL.getPreferenceValueAsIntegerOrZero(entityId, Constants.PREFERENCE_PAPER_SELF_DELIVERY);
         
-        Boolean selfDelivery = new Boolean(preferencePaperSelfDelivery == 1);
+        Boolean selfDelivery = Boolean.valueOf(preferencePaperSelfDelivery == 1);
         // If the entity doesn't want to delivery the invoices, then
         // sapienter has to. Entity 1 is always sapienter.
         Integer pritingEntity;

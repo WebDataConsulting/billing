@@ -27,6 +27,7 @@ package com.sapienter.jbilling.server.invoice;
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.entity.InvoiceLineDTO;
 import com.sapienter.jbilling.server.item.ItemDTOEx;
 import com.sapienter.jbilling.server.item.ItemTypeWS;
@@ -38,18 +39,19 @@ import com.sapienter.jbilling.server.process.db.PeriodUnitDTO;
 import com.sapienter.jbilling.server.user.MainSubscriptionWS;
 import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.user.UserWS;
-
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
+import com.sapienter.jbilling.server.util.RemoteContext;
 import com.sapienter.jbilling.server.util.api.JbillingAPI;
 import com.sapienter.jbilling.server.util.api.JbillingAPIFactory;
 
+import org.joda.time.DateMidnight;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static com.sapienter.jbilling.test.Asserts.*;
 import static org.testng.AssertJUnit.*;
-
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
 
 /**
  * @author Emil
@@ -69,7 +71,7 @@ public class WSTest {
 	@BeforeClass
 	public void setupClass() throws Exception {
 		api = JbillingAPIFactory.getAPI();
-		mordorApi = JbillingAPIFactory.getAPI("apiClientMordor");
+		mordorApi = JbillingAPIFactory.getAPI(RemoteContext.Name.API_CLIENT_MORDOR.name());
 		ORDER_CHANGE_STATUS_APPLY_ID = getOrCreateOrderChangeStatusApply(api).intValue();
 		ORDER_PERIOD_MONTHLY_ID = getOrCreateMonthlyOrderPeriod(api).intValue();
 	}
@@ -473,7 +475,7 @@ public class WSTest {
         try {
             api.createInvoice(user.getId(), false);
             fail("User belongs to entity 2");
-        } catch (SecurityException e) {
+        } catch (SessionInternalError e) {
         }
 
 	    //cleanup
@@ -1101,7 +1103,8 @@ public class WSTest {
 		String name = String.valueOf(millis) + new Random().nextInt(10000);
 		item.setDescription("Invoice, Product:" + name);
 		item.setPriceModelCompanyId(priceModelCompanyId);
-		item.setPrice(new BigDecimal("10"));
+		item.setPriceManual(0);
+		item.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("10.00"), new DateMidnight(1970, 1, 1).toDate(), priceModelCompanyId, Integer.valueOf(1)));
 		item.setNumber("INV-PRD-"+name);
 		item.setAssetManagementEnabled(0);
 		Integer typeIds[] = new Integer[] {itemTypeId};

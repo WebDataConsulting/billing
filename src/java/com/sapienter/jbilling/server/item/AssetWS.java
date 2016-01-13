@@ -16,24 +16,16 @@
 package com.sapienter.jbilling.server.item;
 
 import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
-import com.sapienter.jbilling.server.metafields.MetaFieldWS;
 import com.sapienter.jbilling.server.security.WSSecured;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * @author Gerhard
@@ -187,7 +179,7 @@ public class AssetWS implements WSSecured, Serializable {
 	}
 
 	public void setGlobal(boolean global) {
-		this.global = global ? true : false ;
+		this.global = global;
 	}
 	
 	public List<Integer> getEntities() {

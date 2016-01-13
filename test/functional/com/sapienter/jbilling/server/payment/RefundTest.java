@@ -48,7 +48,8 @@ import org.testng.annotations.Test;
 
 import static com.sapienter.jbilling.test.Asserts.*;
 import static org.testng.AssertJUnit.*;
-
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
+import org.joda.time.DateMidnight;
 /**
  * jUnit Test cases for jBilling's refund functionality
  * @author Vikas Bodani
@@ -756,7 +757,8 @@ public class RefundTest {
 		String name = String.valueOf(millis) + new Random().nextInt(10000);
 		item.setDescription("Invoice, Product:" + name);
 		item.setPriceModelCompanyId(api.getCallerCompanyId());
-		item.setPrice(new BigDecimal("10"));
+		item.setPriceManual(0);
+		item.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("10"), new DateMidnight(1970, 1, 1).toDate(), Integer.valueOf(1), CURRENCY_ID));
 		item.setNumber("RFN-PRD-"+name);
 		item.setAssetManagementEnabled(0);
 		Integer typeIds[] = new Integer[] {itemTypeId};

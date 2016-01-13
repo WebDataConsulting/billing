@@ -9,7 +9,7 @@
 	-->
 	<test name="web-services" preserve-order="true">
 	<classes>
-    <!--
+    
             <class name="com.sapienter.jbilling.server.order.WSTest"/>
             <class name="com.sapienter.jbilling.server.user.WSTest"/>
             <class name="com.sapienter.jbilling.server.user.CustomerNotesWSTest"/>
@@ -23,8 +23,8 @@
             <class name="com.sapienter.jbilling.server.metafield.WSTest"/>
             <class name="com.sapienter.jbilling.server.accountType.WSTest"/>
             <class name="com.sapienter.jbilling.server.order.OrderCancellationFeeTest"/>
-            <class name="com.sapienter.jbilling.server.ratecards.WSTest"/>
-            <class name="com.sapienter.jbilling.server.ratecards.Bug7935Test"/>
+       <!--      <class name="com.sapienter.jbilling.server.ratecards.WSTest"/>
+            <class name="com.sapienter.jbilling.server.ratecards.Bug7935Test"/> -->
 			<class name="com.sapienter.jbilling.server.user.AITTimelineTest"/>
             <class name="com.sapienter.jbilling.server.user.CommissionTest"/>
             <class name="com.sapienter.jbilling.server.pluggable.WSTest"/>
@@ -34,7 +34,7 @@
             <class name="com.sapienter.jbilling.server.orderChangeStatus.WSTest"/>
             <class name="com.sapienter.jbilling.server.paymentMethod.WSTest"/>
             <class name="com.sapienter.jbilling.server.item.AssetValidateTest"/>
-    -->
+   
 	</classes>
 	</test>
 

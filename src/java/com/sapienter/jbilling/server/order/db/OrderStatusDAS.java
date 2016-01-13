@@ -25,7 +25,6 @@ package com.sapienter.jbilling.server.order.db;
 
 import java.util.List;
 
-;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;

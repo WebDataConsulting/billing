@@ -69,12 +69,12 @@ public class AlphaNumericComparator implements Comparator <String> {
 
 		@Override
 		public int compare(String o1, String o2) {
-			 if (!(o1 instanceof String) || !(o2 instanceof String))
+			 if (!(o1 != null) || !(o2 != null))
 		        {
 		            return 0;
 		        }
-		        String s1 = (String)o1;
-		        String s2 = (String)o2;
+		        String s1 = o1;
+		        String s2 = o2;
 
 		        int thisMarker = 0;
 		        int thatMarker = 0;

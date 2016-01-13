@@ -23,8 +23,6 @@
  */
 package com.sapienter.jbilling.server.pluggableTask;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
 import com.sapienter.jbilling.server.payment.PaymentDTOEx;

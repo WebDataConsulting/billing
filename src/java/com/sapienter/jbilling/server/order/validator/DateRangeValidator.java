@@ -25,7 +25,7 @@
 package com.sapienter.jbilling.server.order.validator;
 
 import org.apache.commons.lang.WordUtils;
-;
+
 import com.sapienter.jbilling.common.FormatLogger;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

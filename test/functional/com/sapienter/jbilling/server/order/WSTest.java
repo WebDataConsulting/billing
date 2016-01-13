@@ -28,63 +28,44 @@
  */
 package com.sapienter.jbilling.server.order;
 
-import com.sapienter.jbilling.common.CommonConstants;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.common.Util;
-import com.sapienter.jbilling.server.discount.DiscountLineWS;
-import com.sapienter.jbilling.server.discount.DiscountWS;
-import com.sapienter.jbilling.server.discount.strategy.DiscountStrategyType;
+import com.sapienter.jbilling.server.accountType.builder.AccountTypeBuilder;
 import com.sapienter.jbilling.server.entity.InvoiceLineDTO;
 import com.sapienter.jbilling.server.invoice.InvoiceWS;
 import com.sapienter.jbilling.server.item.*;
-import com.sapienter.jbilling.server.metafields.EntityType;
-import com.sapienter.jbilling.server.metafields.MetaFieldBL;
-import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
-import com.sapienter.jbilling.server.metafields.MetaFieldWS;
-import com.sapienter.jbilling.server.metafields.DataType;
+import com.sapienter.jbilling.server.metafields.*;
 import com.sapienter.jbilling.server.order.OrderChangeWS;
 import com.sapienter.jbilling.server.order.OrderWS;
-import com.sapienter.jbilling.server.order.db.OrderChangeStatusDTO;
 import com.sapienter.jbilling.server.order.validator.OrderHierarchyValidator;
 import com.sapienter.jbilling.server.payment.PaymentAuthorizationDTOEx;
 import com.sapienter.jbilling.server.payment.PaymentInformationWS;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskWS;
+import com.sapienter.jbilling.server.pricing.PricingTestHelper;
 import com.sapienter.jbilling.server.process.db.PeriodUnitDTO;
 import com.sapienter.jbilling.server.user.*;
 import com.sapienter.jbilling.server.util.*;
-import com.sapienter.jbilling.server.item.ItemDTOEx;
-import com.sapienter.jbilling.server.item.PricingField;
-import com.sapienter.jbilling.server.order.OrderLineWS;
-import com.sapienter.jbilling.server.order.OrderPeriodWS;
-import com.sapienter.jbilling.server.order.OrderWS;
-import com.sapienter.jbilling.server.user.UserWS;
-import com.sapienter.jbilling.server.user.ValidatePurchaseWS;
-import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.api.JbillingAPI;
 import com.sapienter.jbilling.server.util.api.JbillingAPIFactory;
-import com.sapienter.jbilling.server.accountType.builder.AccountTypeBuilder;
 import com.sapienter.jbilling.test.Asserts;
-//import static com.sapienter.jbilling.test.Asserts.*;
-
+import com.sapienter.jbilling.tools.JArrays;
 
 import org.joda.time.DateMidnight;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import org.joda.time.format.DateTimeFormat;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.sapienter.jbilling.server.util.IWebServicesSessionBean;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
-//import static com.sapienter.jbilling.test.Asserts.assertEquals;
 import static org.testng.AssertJUnit.*;
+
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
+
+//import static com.sapienter.jbilling.test.Asserts.*;
+//import static com.sapienter.jbilling.test.Asserts.assertEquals;
 
 /**
  * @author Emil
@@ -148,16 +129,6 @@ public class WSTest {
         assertTrue(expected + " != " + actual, expected.setScale(2, RoundingMode.HALF_UP).compareTo(actual.setScale(2, RoundingMode.HALF_UP)) == 0);
     }
 
-    public static OrderChangePlanItemWS buildPlanChangeFromItem(ItemDTOEx item) {
-        OrderChangePlanItemWS orderChangePlanItem = new OrderChangePlanItemWS();
-        orderChangePlanItem.setAssetIds(new int[0]);
-        orderChangePlanItem.setItemId(item.getId());
-        orderChangePlanItem.setId(0);
-        orderChangePlanItem.setOptlock(0);
-        orderChangePlanItem.setDescription(item.getDescription());
-        return orderChangePlanItem;
-    }
-
     public static OrderChangeWS buildFromItem(ItemDTOEx item, OrderWS order, Integer statusId) {
         OrderChangeWS ws = new OrderChangeWS();
         ws.setOptLock(1);
@@ -197,7 +168,7 @@ public class WSTest {
         initializeAssetsStatuses(api);
 
         // Mordor entities
-        mordorApi = JbillingAPIFactory.getAPI("apiClientMordor");
+        mordorApi = JbillingAPIFactory.getAPI(RemoteContext.Name.API_CLIENT_MORDOR.name());
         MORDOR_ORDER_STATUS_INVOICE = getOrCreateOrderStatusInvoice(mordorApi);
         MORDOR_ORDER_CHANGE_STATUS_APPLY_ID = getOrCreateOrderChangeApplyStatus(mordorApi);
         MORDOR_ACCOUNT_TYPE_ID = new AccountTypeBuilder().create(mordorApi, true).getId();
@@ -205,7 +176,7 @@ public class WSTest {
         MORDOR_CATEGORY_ID = createItemCategory(mordorApi);
 
         // Reseller entities
-        resellerApi = JbillingAPIFactory.getAPI(RemoteContext.Name.API_CHILD_CLIENT.getName());
+        resellerApi = JbillingAPIFactory.getAPI(RemoteContext.Name.API_CHILD_CLIENT.name());
         RESELLER_ORDER_CHANGE_STATUS_APPLY_ID = getOrCreateOrderChangeApplyStatus(resellerApi);
         RESELLER_ACCOUNT_TYPE_ID = new AccountTypeBuilder().create(resellerApi, true).getId();
         RESELLER_USER_ID = createSimpleUser(RESELLER_ACCOUNT_TYPE_ID, null, Constants.PRIMARY_CURRENCY_ID, true, resellerApi).getId();
@@ -213,6 +184,7 @@ public class WSTest {
         
     }
 
+    
     @AfterTest
     public void cleanUp(){
 
@@ -369,15 +341,15 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(2, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(2, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         // Second Item
-        ItemDTOEx secondItem = createProduct(2, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(2, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer secondItemId = api.createItem(secondItem);
 
         // Third Item
-        ItemDTOEx thirdItem = createProduct(2, new BigDecimal("2.0"), "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(2, new BigDecimal("2.0"), "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer thirdItemId = api.createItem(thirdItem);
 
         // Add Lines
@@ -407,7 +379,7 @@ public class WSTest {
 
         // Create item and order in entity 2
         // Item
-        ItemDTOEx mordorTestItem = createProduct(1, BigDecimal.ONE, "Mordor Product", false);
+        ItemDTOEx mordorTestItem = createProduct(1, BigDecimal.ONE, "Mordor Product", false, new DateMidnight(2012, 6, 1).toDate());
         mordorTestItem.setEntityId(MORDOR_ENTITY_ID);
         // Persist
         Integer mordorItemId = mordorApi.createItem(mordorTestItem);
@@ -426,7 +398,7 @@ public class WSTest {
         try {
             api.getOrder(mordorOrderId);
             fail(String.format("Order %d belongs to entity 2!! Can not access foreign orders!!", mordorOrderId));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -449,7 +421,7 @@ public class WSTest {
         try{
             api.getOrderLine(mordorOrderLineId);
             fail(String.format("Order line %d belongs to entity 2", mordorOrderLineId));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -487,7 +459,7 @@ public class WSTest {
         try{
             api.updateOrderLine(retOrderLine);
             fail(String.format("Can not use order line in entity 2 order!!"));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -540,7 +512,7 @@ public class WSTest {
         try {
             api.updateOrder(retOrder, null);
             fail(String.format("Order %d belongs to entity 2", mordorOrderId));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -574,7 +546,7 @@ public class WSTest {
         try{
             retOrder = api.getLatestOrder(MORDOR_USER_ID);
             fail(String.format("User %d belongs to entity 2", MORDOR_USER_ID));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -595,7 +567,7 @@ public class WSTest {
         try{
             api.getLastOrders(MORDOR_USER_ID, new Integer(5));
             fail(String.format("User %d belongs to entity 2", MORDOR_USER_ID));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -608,7 +580,7 @@ public class WSTest {
         try {
             api.deleteOrder(mordorOrderId);
             fail(String.format("Order %d belongs to entity 2", mordorOrderId));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -625,7 +597,7 @@ public class WSTest {
         try{
             api.getOrderByPeriod(MORDOR_USER_ID, Constants.ORDER_PERIOD_ONCE);
             fail(String.format("User %d belongs to entity 2", MORDOR_USER_ID));
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             assertTrue("Invalid error message!!", se.getMessage().contains("Unauthorized access to entity 2"));
         }
 
@@ -680,15 +652,15 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(2, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(2, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         // Second Item
-        ItemDTOEx secondItem = createProduct(2, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(2, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer secondItemId = api.createItem(secondItem);
 
         // Third Item
-        ItemDTOEx thirdItem = createProduct(2, new BigDecimal("2.0"), "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(2, new BigDecimal("2.0"), "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer thirdItemId = api.createItem(thirdItem);
 
         // Add Lines
@@ -748,15 +720,15 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(3, null, "Product".concat(String.valueOf(System.currentTimeMillis())) ,false);
+        ItemDTOEx firstItem = createProduct(3, null, "Product".concat(String.valueOf(System.currentTimeMillis())) ,false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         // Second Item
-        ItemDTOEx secondItem = createProduct(3, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(3, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer secondItemId = api.createItem(secondItem);
 
         // Third Item
-        ItemDTOEx thirdItem = createProduct(3, new BigDecimal("2.0"), "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(3, new BigDecimal("2.0"), "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer thirdItemId = api.createItem(thirdItem);
 
         // Add Lines
@@ -803,11 +775,11 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(4, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(4, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         // Second Item
-        ItemDTOEx secondItem = createProduct(4, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(4, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer secondItemId = api.createItem(secondItem);
 
         // Add Lines
@@ -850,7 +822,7 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(5, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(5, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         // Add Lines
@@ -891,7 +863,7 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(6, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(6, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         // now add some lines
@@ -939,7 +911,7 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         // now add some lines
@@ -957,7 +929,7 @@ public class WSTest {
 
         // let's add a line
         // this is an item line
-        ItemDTOEx secondItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer secondItemId = api.createItem(secondItem);
 
         OrderLineWS linesArray[] = new OrderLineWS[2];
@@ -980,7 +952,7 @@ public class WSTest {
         initialCount = order.getOrderLines().length;
 
         // this is an item line
-        ItemDTOEx thirdItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer thirdItemId = api.createItem(thirdItem);
 
         OrderLineWS newLinesArray[] = new OrderLineWS[3];
@@ -1012,7 +984,7 @@ public class WSTest {
     /**
      * TODO Please explain the test case here in brief.
      * Question: Why is this test case important or required?
-     */
+     **/
     @Test
     public void test009Recreate() {
 
@@ -1025,7 +997,7 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(7, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
         lines[0] = buildOrderLine(firstItemId, Integer.valueOf(1), PRICE);
 
@@ -1039,7 +1011,6 @@ public class WSTest {
         order.setId(null);
         order.setParentOrder(null);
         order.setChildOrders(null);
-        order.setProvisioningCommands(null);
         
         // use it to create another one
         changes= OrderChangeBL.buildFromOrder(order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID);
@@ -1058,15 +1029,12 @@ public class WSTest {
 
         Calendar activeSinceDate = Calendar.getInstance();
         activeSinceDate.set(Calendar.DAY_OF_MONTH, 1);
-
         // Create Test Lemonade Product
-        ItemDTOEx testLemonade = createProduct(9, BigDecimal.TEN, "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
+        ItemDTOEx testLemonade = createProduct(9, BigDecimal.TEN, "Product".concat(String.valueOf(System.currentTimeMillis())),   false, activeSinceDate.getTime());
         Integer testLemonadeId = api.createItem(testLemonade);
-
         // Create Test Coffee Product
-        ItemDTOEx testCoffee = createProduct(9, new BigDecimal("15.0"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
+        ItemDTOEx testCoffee = createProduct(9, new BigDecimal("15.0"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false, activeSinceDate.getTime());
         Integer testCoffeeId = api.createItem(testCoffee);
-
         PluggableTaskWS plugin = new PluggableTaskWS();
         Map<String, String> parameters = new Hashtable<String, String>();
         parameters.put("fee_item_id", "" + testLemonadeId);
@@ -1075,7 +1043,6 @@ public class WSTest {
         plugin.setTypeId(ORDER_CANCELLATION_TASK_ID);
 
         Integer pluginId = api.createPlugin(plugin);
-
         OrderWS newOrder = buildOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_PRE_PAID, ORDER_PERIOD_MONTHLY);
         newOrder.setActiveSince(activeSinceDate.getTime());
         newOrder.setCancellationFee(5);
@@ -1223,640 +1190,13 @@ public class WSTest {
         api.deleteItem(testLemonadeId);
         api.deleteItem(testCoffeeId);
     }
-
-    @Test
-    public void test011Plan_nestedPlans() {
-
-        /*
-        Create Roaming Test Plan (monthly) which has the following product:
-            - Roaming Item (bundled quantity = 0, period = monthly)
-         */
-
-        // Create Roaming Item
-        ItemDTOEx roamingItem = createProduct(10, new BigDecimal("3.5"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer roamingItemId = api.createItem(roamingItem);
-
-        // Create Bundle (bundled quantity=0, period = monthly)
-        PlanItemWS bundledRoamingItem = createPlanItem(roamingItemId, BigDecimal.ZERO, ORDER_PERIOD_MONTHLY);
-
-        // Create nested plan monthly
-        PlanWS roamingPlan = createPlan(10, "RP", BigDecimal.TEN, Arrays.asList(bundledRoamingItem), api);
-        Integer roamingPlanSubscriptionItemId = roamingPlan.getPlanSubscriptionItemId();
-
-        /*
-        Create Tariff Test Plan (monthly) which has the following products:
-            - Phone (bundled quantity = 1, period = once)
-            - Roaming Plan (bundled quantity = 1, period = monthly)
-         */
-
-        // Create Phone number item
-        ItemDTOEx phoneItem = createProduct(10, new BigDecimal("150.0"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer phoneItemId = api.createItem(phoneItem);
-
-
-        // Bundle items into plan
-        // Phone (once)
-        PlanItemWS phonePlanItem = createPlanItem(phoneItemId, BigDecimal.ONE, Constants.ORDER_PERIOD_ONCE);
-        // Roaming Plan (monthly)
-        PlanItemWS roamingPlanItem = createPlanItem(roamingPlanSubscriptionItemId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY);
-
-        List<PlanItemWS> bundledItems = new ArrayList<PlanItemWS>();
-        bundledItems.add(phonePlanItem);
-        bundledItems.add(roamingPlanItem);
-
-        // Create Plan with two items
-        PlanWS tariffPlan = createPlan(10, "TP", BigDecimal.TEN, bundledItems, api);
-        Integer tariffPlanSubscriptionItemId = tariffPlan.getPlanSubscriptionItemId();
-
-        // create an order with the Tariff Test Plan
-        OrderWS mainOrder = createPlanOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_POST_PAID, ORDER_PERIOD_MONTHLY, tariffPlanSubscriptionItemId);
-        System.out.println("Creating plan order ...");
-        Integer mainOrderId = api.createOrder(mainOrder, OrderChangeBL.buildFromOrder(mainOrder, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-        assertNotNull("The order was not created", mainOrderId);
-
-        // take the last order
-        Integer orders[] = api.getLastOrders(PRANCING_PONY_USER_ID, Integer.valueOf(1));
-        System.out.println("the last order is " + Arrays.toString(orders));
-
-        // order with the plan
-        OrderWS parentOrder = api.getOrder(orders[0]);
-        assertEquals("subscription order should contain one Tariff Test Plan only!!", 1, parentOrder.getOrderLines().length);
-        assertEquals("subscription item id do not match", tariffPlanSubscriptionItemId, parentOrder.getOrderLines()[0].getItemId());
-        assertEquals("subscription order monthly", ORDER_PERIOD_MONTHLY, parentOrder.getPeriod());
-
-
-        OrderWS[] childOrders = parentOrder.getChildOrders();
-        assertEquals("The parental order must have 2 children", 2, childOrders.length);
-
-        // one time child order
-        OrderWS oneTimeOrder = null;
-        if (childOrders[0].getPeriod().equals(Constants.ORDER_PERIOD_ONCE)) {
-            oneTimeOrder = childOrders[0];
-        } else if (childOrders[1].getPeriod().equals(Constants.ORDER_PERIOD_ONCE)) {
-            oneTimeOrder = childOrders[1];
-        } else {
-            fail("There must be a one-time child order");
-        }
-
-        assertEquals("One time order should have one order line!", 1, oneTimeOrder.getOrderLines().length);
-        assertEquals("One time order should contain item " + phoneItemId, phoneItemId, oneTimeOrder.getOrderLines()[0].getItemId());
-
-        // order with the monthly subscription item
-        OrderWS monthlySubscriptionOrder = null;
-        if (childOrders[0].getPeriod() == ORDER_PERIOD_MONTHLY) {
-            monthlySubscriptionOrder = childOrders[0];
-        } else if (childOrders[1].getPeriod() == ORDER_PERIOD_MONTHLY) {
-            monthlySubscriptionOrder = childOrders[1];
-        } else {
-            fail("There must be a monthly child order");
-        }
-
-        assertEquals("Monthly order should have one order line!", 1, monthlySubscriptionOrder.getOrderLines().length);
-        assertEquals("Monthly order should contain nested plan id " + roamingPlanSubscriptionItemId, roamingPlan.getPlanSubscriptionItemId(), monthlySubscriptionOrder.getOrderLines()[0].getItemId());
-
-        // clean up first delete the child order
-        api.deleteOrder(monthlySubscriptionOrder.getId());
-        api.deleteOrder(oneTimeOrder.getId());
-        api.deleteOrder(mainOrderId);
-        api.deletePlan(roamingPlan.getId());
-        api.deleteItem(roamingPlanSubscriptionItemId);
-        api.deleteItem(roamingItemId);
-        api.deletePlan(tariffPlan.getId());
-        api.deleteItem(tariffPlanSubscriptionItemId);
-        api.deleteItem(phoneItemId);
-    }
-
-    @Test
-    public void test012Plan_nestedPlans_2() {
-
-
-//        I'm creating a (nested) Gold service plan which has the following products:
-//                - SMS Service (bundled quantity=1, period = monthly)
-//                - GPRS Service (bundled quantity=1, period = monthly)
-//                - SMS to NA (bundled quantity=1, period = monthly)
-
-        ItemDTOEx smsServiceItem = new ItemDTOEx();
-        smsServiceItem.setDescription("SMS Service");
-        smsServiceItem.setEntityId(PRANCING_PONY_ENTITY_ID);
-        smsServiceItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
-        smsServiceItem.setPrice("1");
-        smsServiceItem.setNumber("SMS");
-        Integer smsServiceItemId = api.createItem(smsServiceItem);
-
-        ItemDTOEx gprsServiceItem = new ItemDTOEx();
-        gprsServiceItem.setDescription("GPRS Service");
-        gprsServiceItem.setEntityId(PRANCING_PONY_ENTITY_ID);
-        gprsServiceItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
-        gprsServiceItem.setPrice("1");
-        gprsServiceItem.setNumber("GPRS");
-        Integer gprsServiceItemId = api.createItem(gprsServiceItem);
-
-        ItemDTOEx smsToNaItem = new ItemDTOEx();
-        smsToNaItem.setDescription("SMS to NA");
-        smsToNaItem.setEntityId(PRANCING_PONY_ENTITY_ID);
-        smsToNaItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
-        smsToNaItem.setPrice("1");
-        smsToNaItem.setNumber("SMSNA");
-        Integer smsToNaItemId = api.createItem(smsToNaItem);
-
-        ItemDTOEx goldServiceItem = new ItemDTOEx();
-        goldServiceItem.setDescription("Gold Service Plan");
-        goldServiceItem.setEntityId(PRANCING_PONY_ENTITY_ID);
-        goldServiceItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
-        goldServiceItem.setPrice("1");
-        goldServiceItem.setNumber("GSP");
-        Integer goldServiceItemId = api.createItem(goldServiceItem);
-
-        PriceModelWS priceModel = new PriceModelWS(PriceModelStrategy.FLAT.name(), BigDecimal.ONE, Constants.PRIMARY_CURRENCY_ID);
-        SortedMap<Date, PriceModelWS> models = new TreeMap<Date, PriceModelWS>();
-        models.put(Constants.EPOCH_DATE, priceModel);
-
-        PlanItemBundleWS bundle1 = new PlanItemBundleWS();
-        bundle1.setPeriodId(ORDER_PERIOD_MONTHLY);
-        bundle1.setQuantity(BigDecimal.ONE);
-        PlanItemWS pi1 = new PlanItemWS();
-        pi1.setItemId(smsServiceItemId);
-        pi1.setPrecedence(-1);
-        pi1.setModels(models);
-        pi1.setBundle(bundle1);
-
-        PlanItemBundleWS bundle2 = new PlanItemBundleWS();
-        bundle2.setPeriodId(ORDER_PERIOD_MONTHLY);
-        bundle2.setQuantity(BigDecimal.ONE);
-        PlanItemWS pi2 = new PlanItemWS();
-        pi2.setItemId(gprsServiceItemId);
-        pi2.setPrecedence(-1);
-        pi2.setModels(models);
-        pi2.setBundle(bundle2);
-
-        PlanItemBundleWS bundle3 = new PlanItemBundleWS();
-        bundle3.setPeriodId(ORDER_PERIOD_MONTHLY);
-        bundle3.setQuantity(BigDecimal.ONE);
-        PlanItemWS pi3 = new PlanItemWS();
-        pi3.setItemId(smsToNaItemId);
-        pi3.setPrecedence(-1);
-        pi3.setModels(models);
-        pi3.setBundle(bundle3);
-
-        PlanWS goldServicePlan = new PlanWS();
-        goldServicePlan.setItemId(goldServiceItemId);
-        goldServicePlan.setDescription("Gold Service Plan");
-        goldServicePlan.setPeriodId(ORDER_PERIOD_MONTHLY);
-        goldServicePlan.addPlanItem(pi1);
-        goldServicePlan.addPlanItem(pi2);
-        goldServicePlan.addPlanItem(pi3);
-        Integer goldServicePlanId = api.createPlan(goldServicePlan);
-
-//        I'm trying to create a main plan: Basic Tariff plan which includes the following:
-//                - Connection Fee product (bundled quantity=1, period = one-time)
-//                - Gold service plan (bundled quantity=1, period = monthly)
-//                - International call to North America (bundled quantity=0, period = monthly)
-
-
-        ItemDTOEx cfItem = new ItemDTOEx();
-        cfItem.setDescription("Connection Fee");
-        cfItem.setEntityId(PRANCING_PONY_ENTITY_ID);
-        cfItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
-        cfItem.setPrice("1");
-        cfItem.setNumber("CF");
-        Integer cfItemId = api.createItem(cfItem);
-
-        ItemDTOEx naCallsItem = new ItemDTOEx();
-        naCallsItem.setDescription("International call to North America");
-        naCallsItem.setEntityId(PRANCING_PONY_ENTITY_ID);
-        naCallsItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
-        naCallsItem.setPrice("1");
-        naCallsItem.setNumber("NA");
-        Integer naCallsItemId = api.createItem(naCallsItem);
-
-        ItemDTOEx basicTariffItem = new ItemDTOEx();
-        basicTariffItem.setDescription("Basic Tariff plan");
-        basicTariffItem.setEntityId(PRANCING_PONY_ENTITY_ID);
-        basicTariffItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
-        basicTariffItem.setPrice("1");
-        basicTariffItem.setNumber("BTP");
-        Integer basicTariffItemId = api.createItem(basicTariffItem);
-
-        PlanItemBundleWS bundle4 = new PlanItemBundleWS();
-        bundle4.setPeriodId(Constants.ORDER_PERIOD_ONCE);
-        bundle4.setQuantity(BigDecimal.ONE);
-        PlanItemWS pi4 = new PlanItemWS();
-        pi4.setItemId(cfItemId);
-        pi4.setPrecedence(-1);
-        pi4.setModels(models);
-        pi4.setBundle(bundle4);
-
-        PlanItemBundleWS bundle5 = new PlanItemBundleWS();
-        bundle5.setPeriodId(ORDER_PERIOD_MONTHLY);
-        bundle5.setQuantity(BigDecimal.ONE);
-        PlanItemWS pi5 = new PlanItemWS();
-        pi5.setItemId(goldServiceItemId);
-        pi5.setPrecedence(-1);
-        pi5.setModels(models);
-        pi5.setBundle(bundle5);
-
-        PlanItemBundleWS bundle6 = new PlanItemBundleWS();
-        bundle6.setPeriodId(ORDER_PERIOD_MONTHLY);
-        bundle6.setQuantity(BigDecimal.ZERO);
-        PlanItemWS pi6 = new PlanItemWS();
-        pi6.setItemId(naCallsItemId);
-        pi6.setPrecedence(-1);
-        pi6.setModels(models);
-        pi6.setBundle(bundle6);
-
-        PlanWS basicPlan = new PlanWS();
-        basicPlan.setItemId(basicTariffItemId);
-        basicPlan.setDescription("Basic Tariff plan");
-        basicPlan.setPeriodId(ORDER_PERIOD_MONTHLY);
-        basicPlan.addPlanItem(pi4);
-        basicPlan.addPlanItem(pi5);
-        basicPlan.addPlanItem(pi6);
-        Integer basicPlanPlanId = api.createPlan(basicPlan);
-
-        // I'm trying to create an monthly recurring order for a customer with this plan
-        OrderWS order = new OrderWS();
-        order.setUserId(PRANCING_PONY_USER_ID);
-        order.setBillingTypeId(Constants.ORDER_BILLING_POST_PAID);
-        order.setPeriod(ORDER_PERIOD_MONTHLY);
-        order.setCurrencyId(Constants.PRIMARY_CURRENCY_ID);
-        order.setActiveSince(new Date());
-        OrderLineWS orderLine = new OrderLineWS();
-        orderLine.setTypeId(Constants.ORDER_LINE_TYPE_ITEM);
-        orderLine.setDescription("Order line: " + orderLine.hashCode());
-        orderLine.setUseItem(true);
-        orderLine.setItemId(basicTariffItemId);
-        orderLine.setQuantity(1);
-        orderLine.setPrice(BigDecimal.ONE);
-        orderLine.setAmount(BigDecimal.ONE);
-        order.setOrderLines(new OrderLineWS[] { orderLine });
-
-        Integer orderId = api.createOrder(order, OrderChangeBL.buildFromOrder(order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-        assertNotNull(orderId);
-
-        order = api.getOrder(orderId);
-        assertEquals("parent order should be monthly", ORDER_PERIOD_MONTHLY, order.getPeriod());
-
-        sortOrderLines(order);
-        OrderLineWS[] parentOrderOrderLines = order.getOrderLines();
-        assertEquals("Order lines should contain only one order line!!", Integer.valueOf(1), Integer.valueOf(parentOrderOrderLines.length));
-        assertEquals("Order line should contain basic tariff plan item id", basicTariffItemId, parentOrderOrderLines[0].getItemId());
-
-        assertEquals(2, order.getChildOrders().length);
-        OrderWS[] childOrders = order.getChildOrders();
-        Arrays.sort(childOrders, new Comparator<OrderWS>() {
-            @Override
-            public int compare(OrderWS o1, OrderWS o2) {
-                return o1.getPeriod().compareTo(o2.getPeriod());
-            }
-        });
-
-        OrderWS childOrder1 = childOrders[0];
-        assertEquals("order should be one-time", Constants.ORDER_PERIOD_ONCE, childOrder1.getPeriod());
-        OrderLineWS[] orderLines1 = childOrder1.getOrderLines();
-        assertEquals("there should be 1 order line", 1, orderLines1.length);
-
-        assertEquals("CF", orderLines1[0].getProductCode());
-        assertEquals("Connection Fee", orderLines1[0].getDescription());
-        assertEquals(cfItemId, orderLines1[0].getItemId());
-
-
-        OrderWS childOrder2 = childOrders[1];
-        assertEquals("order should be monthly", ORDER_PERIOD_MONTHLY, childOrder2.getPeriod());
-        sortOrderLines(childOrder2);
-        OrderLineWS[] orderLines2 = childOrder2.getOrderLines();
-        assertEquals("there should be 4 order lines", 4, orderLines2.length);
-
-        Arrays.sort(orderLines2, new Comparator<OrderLineWS>() {
-            @Override
-            public int compare(OrderLineWS ol1, OrderLineWS ol2) {
-                return ol1.getProductCode().compareTo(ol2.getProductCode());
-            }
-        });
-        assertEquals("GPRS", orderLines2[0].getProductCode());
-        assertEquals(gprsServiceItemId, orderLines2[0].getItemId());
-        assertEquals("GSP", orderLines2[1].getProductCode());
-        assertEquals(goldServiceItemId, orderLines2[1].getItemId());
-        assertEquals("SMS", orderLines2[2].getProductCode());
-        assertEquals(smsServiceItemId, orderLines2[2].getItemId());
-        assertEquals("SMSNA", orderLines2[3].getProductCode());
-        assertEquals(smsToNaItemId, orderLines2[3].getItemId());
-
-        api.deleteOrder(childOrder1.getId());
-        api.deleteOrder(childOrder2.getId());
-        api.deleteOrder(order.getId());
-        api.deletePlan(basicPlanPlanId);
-        api.deleteItem(basicTariffItemId);
-        api.deletePlan(goldServicePlanId);
-        api.deleteItem(goldServiceItemId);
-        api.deleteItem(naCallsItemId);
-        api.deleteItem(cfItemId);
-        api.deleteItem(smsToNaItemId);
-        api.deleteItem(gprsServiceItemId);
-        api.deleteItem(smsServiceItemId);
-    }
-
-    @Test
-    public void test013Plan_percentageOrders() {
-
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(2008, 9, 3);
-
-        DiscountWS discount = new DiscountWS();
-        discount.setEntityId(PRANCING_PONY_ENTITY_ID);
-        String code = UUID.randomUUID().toString();
-        discount.setCode(code.substring(code.length() - 10));
-        Date yesterday = new Date(cal.getTimeInMillis() - TimeUnit.DAYS.toMillis(1));
-        discount.setStartDate(yesterday);
-        Date tomorrow = new Date(cal.getTimeInMillis() + TimeUnit.DAYS.toMillis(1));
-        discount.setEndDate(tomorrow);
-        discount.setDescription(code + " Elf discount 10%");
-        discount.setRate(BigDecimal.TEN);
-        discount.setType(DiscountStrategyType.ONE_TIME_PERCENTAGE.toString());
-
-        Integer discountId = api.createOrUpdateDiscount(discount);
-
-        /*
-        Create Long Distance Plan A - fixed rate (monthly) which has the following product:
-            - Long Distance Call (bundled quantity = 0, period = once)
-         */
-
-        // Create Long Distance Call Item
-        ItemDTOEx longDistanceCall = createProduct(10, new BigDecimal("0.2"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer longDistanceCallItemId = api.createItem(longDistanceCall);
-
-        // Bundle into future Long Distance Plan A and B
-        PlanItemWS longDistanceBundle = createPlanItem(longDistanceCallItemId, BigDecimal.ZERO, Constants.ORDER_PERIOD_ONCE);
-
-        // Create Long Distance Plan A
-        PlanWS longDistancePlanA = createPlan(10, "PA", new BigDecimal("25.0"), Arrays.asList(longDistanceBundle), api);
-        Integer longDistancePlanASubscriptionItemId = longDistancePlanA.getPlanSubscriptionItemId();
-
-        /*
-        Create Long Distance Plan B - fixed rate (monthly) which has the following product:
-            - Long Distance Call (bundled quantity = 0, period = once)
-         */
-
-        // Create Long Distance Plan B
-        PlanWS longDistancePlanB = createPlan(10, "PB", new BigDecimal("40.0"), Arrays.asList(longDistanceBundle), api);
-        Integer longDistancePlanBSubscriptionItemId = longDistancePlanB.getPlanSubscriptionItemId();
-
-        /*
-        Create Percentage Line Test Plan (monthly) which has the following product:
-            - Local Call (bundled quantity = 1, period = all orders)
-            - Long Distance Plan A (bundled quantity = 1, period = once)
-            - Long Distance Plan B (bundled quantity = 1, period = monthly)
-         */
-
-        // Create Long Distance Call Item
-        ItemDTOEx localCall = createProduct(10, new BigDecimal("3.5"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer localCallItemId = api.createItem(localCall);
-
-        // Bundle Local Call Item into future Percentage Line Test Plan
-        PlanItemWS localCallBundle = createPlanItem(localCallItemId, BigDecimal.ONE, Constants.ORDER_PERIOD_ALL_ORDERS);
-
-        // Bundle Long Distance Plan A into future Percentage Line Test Plan
-        PlanItemWS longDistancePlanABundle = createPlanItem(longDistancePlanASubscriptionItemId, BigDecimal.ONE, Constants.ORDER_PERIOD_ONCE);
-
-        // Bundle Long Distance Plan B into future Percentage Line Test Plan
-        PlanItemWS longDistancePlanBBundle = createPlanItem(longDistancePlanBSubscriptionItemId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY);
-
-        List<PlanItemWS> bundledItems = new ArrayList<PlanItemWS>();
-        bundledItems.add(localCallBundle);
-        bundledItems.add(longDistancePlanABundle);
-        bundledItems.add(longDistancePlanBBundle);
-
-        // Create Percentage Line Test Plan
-        PlanWS percentageLineTestPlan = createPlan(10, "PP", BigDecimal.ZERO, bundledItems, api);
-        Integer percentageLineTestPlanSubscriptionItemId = percentageLineTestPlan.getPlanSubscriptionItemId();
-
-        OrderWS newOrder = createPlanOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_POST_PAID, ORDER_PERIOD_MONTHLY, percentageLineTestPlanSubscriptionItemId);
-        DiscountLineWS discountLine = new DiscountLineWS();
-        discountLine.setDescription("Elf discount 10%");
-        discountLine.setDiscountId(discountId);
-        newOrder.setDiscountLines(new DiscountLineWS[] { discountLine });
-
-        System.out.println("Creating percentage plan order ...");
-        Integer newOrderId = api.createOrder(newOrder, OrderChangeBL.buildFromOrder(newOrder, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-        assertNotNull("The order was not created", newOrderId);
-
-        // take the last three orders
-        Integer percentageOrders[] = api.getLastOrders(PRANCING_PONY_USER_ID, Integer.valueOf(4));
-
-        List<OrderWS> createdOrders = new LinkedList<OrderWS>(Arrays.asList(api.getOrder(percentageOrders[0]),
-                        api.getOrder(percentageOrders[1]), api.getOrder(percentageOrders[2]),
-                        api.getOrder(percentageOrders[3])
-        ));
-        OrderWS parent =  findOrderWithItem(createdOrders, percentageLineTestPlanSubscriptionItemId, 2);
-        if (parent != null) {
-            createdOrders.remove(parent);
-        }
-        OrderWS setUpOrder = findOrderWithItem(createdOrders, longDistancePlanASubscriptionItemId, 2);
-        if (setUpOrder != null) {
-            createdOrders.remove(setUpOrder);
-        }
-        OrderWS subscription =  findOrderWithItem(createdOrders, longDistancePlanBSubscriptionItemId, 2);
-        if (subscription != null) {
-            createdOrders.remove(subscription);
-        }
-        OrderWS discountOrder =  createdOrders.get(0);
-
-        assertEquals("System generated Discount Order", discountOrder.getNotes());
-
-        assertEquals("There should be 2 lines in the order.", 2, setUpOrder.getOrderLines().length);
-        System.out.println("Checking that the Monthly item is in this order.");
-        assertEquals("This should be the item with id " + longDistancePlanASubscriptionItemId, longDistancePlanASubscriptionItemId, setUpOrder.getOrderLines()[0].getItemId());
-        assertEquals("This should be the All Orders item.", localCallItemId, setUpOrder.getOrderLines()[1].getItemId());
-        assertEquals("Period should be One-Time", Constants.ORDER_PERIOD_ONCE, setUpOrder.getPeriod());
-
-        sortOrderLines(subscription);
-        assertEquals("There should be 2 lines in the order.", 2, subscription.getOrderLines().length);
-        assertEquals("This should be the item with id " + longDistancePlanBSubscriptionItemId, longDistancePlanBSubscriptionItemId, subscription.getOrderLines()[0].getItemId());
-        assertEquals("This should be the All Orders.", localCallItemId, subscription.getOrderLines()[1].getItemId());
-        assertEquals("Period should be Monthly", ORDER_PERIOD_MONTHLY, subscription.getPeriod());
-
-        // #8931 - The items with "bundle period = all orders" will be added to all orders.
-        assertNotNull("There should be a parent order", parent);
-        assertEquals("There should be 2 lines in the order.", 2, parent.getOrderLines().length);
-
-        sortOrderLines(parent);
-        assertEquals("This should be the plan with id " + percentageLineTestPlanSubscriptionItemId, percentageLineTestPlanSubscriptionItemId, parent.getOrderLines()[0].getItemId());
-        assertEquals("This should be the plan with id " + localCallItemId, localCallItemId, parent.getOrderLines()[1].getItemId());
-        assertEquals("Period should be Monthly", ORDER_PERIOD_MONTHLY, parent.getPeriod());
-
-        /* Previous behaviour, made the Order to contain 3 lines, but now, the order should have
-         * had 2 lines.
-        System.out.println("Checking that the All Orders item is in this order.");
-        assertEquals("This should be the Discount.", 14, parent.getOrderLines()[0].getItemId().intValue());
-        assertEquals("This should be the All Orders item.", 2602, parent.getOrderLines()[1].getItemId().intValue());
-
-        */
-        // clean up first delete the child order
-        api.deleteOrder(discountOrder.getId());
-        api.deleteOrder(setUpOrder.getId());
-        api.deleteOrder(subscription.getId());
-        api.deleteOrder(parent.getId());
-        api.deletePlan(percentageLineTestPlan.getId());
-        api.deleteItem(percentageLineTestPlanSubscriptionItemId);
-        api.deleteItem(localCallItemId);
-        api.deletePlan(longDistancePlanB.getId());
-        api.deleteItem(longDistancePlanBSubscriptionItemId);
-        api.deletePlan(longDistancePlanA.getId());
-        api.deleteItem(longDistancePlanASubscriptionItemId);
-        api.deleteItem(longDistanceCallItemId);
-    }
-
-    @Test
-    public void test014Plan_bug4491() {
-
-        /*
-        Create Long Distance Plan A - fixed rate (monthly) which has the following product:
-            - Long Distance Call (bundled quantity = 0, period = once)
-         */
-
-        // Create Long Distance Call Item
-        ItemDTOEx longDistanceCall = createProduct(10, new BigDecimal("0.2"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer longDistanceCallItemId = api.createItem(longDistanceCall);
-
-        // Bundle into future Long Distance Plan A and B
-        PlanItemWS longDistanceBundle = createPlanItem(longDistanceCallItemId, BigDecimal.ZERO, Constants.ORDER_PERIOD_ONCE);
-
-        // Create Long Distance Plan A
-        PlanWS longDistancePlanA = createPlan(10, "Plan A", BigDecimal.TEN, Arrays.asList(longDistanceBundle), api);
-        Integer longDistancePlanASubscriptionItemId = longDistancePlanA.getPlanSubscriptionItemId();
-
-        /*
-        Create Cool Plan (monthly) which has the following product:
-            - Local Call (bundled quantity = 1, period = once)
-            - Long Distance Plan A (bundled quantity = 1, period = once)
-         */
-
-        // Create Long Distance Call Item
-        ItemDTOEx localCall = createProduct(10, new BigDecimal("20"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer localCallItemId = api.createItem(localCall);
-
-        // Bundle Local Call Item into future Cool Plan
-        PlanItemWS localCallBundle = createPlanItem(localCallItemId, BigDecimal.ONE, Constants.ORDER_PERIOD_ONCE);
-        localCallBundle.addModel(CommonConstants.EPOCH_DATE, new PriceModelWS(PriceModelStrategy.FLAT.name(), new BigDecimal("20.0"), Constants.PRIMARY_CURRENCY_ID));
-
-        // Bundle Long Distance Plan A into future Cool Plan
-        PlanItemWS longDistancePlanABundle = createPlanItem(longDistancePlanASubscriptionItemId, BigDecimal.ONE, Constants.ORDER_PERIOD_ONCE);
-        longDistancePlanABundle.addModel(CommonConstants.EPOCH_DATE, new PriceModelWS(PriceModelStrategy.FLAT.name(), BigDecimal.TEN, Constants.PRIMARY_CURRENCY_ID));
-
-        List<PlanItemWS> bundledItems = new ArrayList<PlanItemWS>();
-        bundledItems.add(localCallBundle);
-        bundledItems.add(longDistancePlanABundle);
-
-        // Create Cool Plan
-        PlanWS coolPlan = createPlan(10, "Cool Plan", new BigDecimal("99.99"), bundledItems, api);
-        Integer coolPlanSubscriptionItemId = coolPlan.getPlanSubscriptionItemId();
-
-
-        // Test Bug fix #4491 - When updating plan order the bundled item orders are not updated correctly.
-        OrderWS order = createPlanOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_POST_PAID, ORDER_PERIOD_MONTHLY, coolPlanSubscriptionItemId);
-        System.out.println("Creating plan order ...");
-        Integer mainOrderId = api.createOrder(order, OrderChangeBL.buildFromOrder(order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-        assertNotNull("The order was not created", mainOrderId);
-
-        // take the last 3 orders
-        Integer[] orderIds = api.getLastOrders(PRANCING_PONY_USER_ID, Integer.valueOf(3));
-        List<OrderWS> createdOrders = new LinkedList<OrderWS>();
-        createdOrders.add(api.getOrder(orderIds[0]));
-        createdOrders.add(api.getOrder(orderIds[1]));
-        createdOrders.add(api.getOrder(orderIds[2]));
-
-
-        OrderWS monthlyOrder = findOrderWithItem(createdOrders, coolPlanSubscriptionItemId, 1);
-        OrderWS firstOneTimeOrder = findOrderWithItem(createdOrders, localCallItemId, 1);
-        OrderWS oneTimeOrder = findOrderWithItem(createdOrders, longDistancePlanASubscriptionItemId, 1);
-
-        System.out.println("Checking the Monthly order");
-        assertNotNull("Monthly order not found", monthlyOrder);
-        assertEquals("There should be 1 line in the order.", 1, monthlyOrder.getOrderLines().length);
-        assertEquals("This should be the plan with id " + coolPlanSubscriptionItemId, coolPlanSubscriptionItemId, monthlyOrder.getOrderLines()[0].getItemId());
-        assertBigDecimalEquals(BigDecimal.ONE, monthlyOrder.getOrderLines()[0].getQuantityAsDecimal());
-        assertBigDecimalEquals(new BigDecimal("99.99"), monthlyOrder.getOrderLines()[0].getAmountAsDecimal());
-        assertEquals(ORDER_PERIOD_MONTHLY, monthlyOrder.getPeriod()); // Monthly
-
-        assertNotNull("SecondMonthlyOrder order not found", firstOneTimeOrder);
-        assertEquals("There should be 1 line in the order.", 1, firstOneTimeOrder.getOrderLines().length);
-        assertEquals("This should be the item with id " + localCallItemId, localCallItemId, firstOneTimeOrder.getOrderLines()[0].getItemId());
-        assertBigDecimalEquals(BigDecimal.ONE, firstOneTimeOrder.getOrderLines()[0].getQuantityAsDecimal());
-        assertBigDecimalEquals(new BigDecimal("20.00"), firstOneTimeOrder.getOrderLines()[0].getAmountAsDecimal());
-        assertEquals(Constants.ORDER_PERIOD_ONCE, firstOneTimeOrder.getPeriod()); // One time because bundle is one time
-
-        assertNotNull("OneTimeOrder order not found", oneTimeOrder);
-        assertEquals("There should be 1 line in the order.", 1, oneTimeOrder.getOrderLines().length);
-        System.out.println("Checking the One time order");
-        assertEquals("This should be the item with id " + longDistancePlanASubscriptionItemId, longDistancePlanASubscriptionItemId, oneTimeOrder.getOrderLines()[0].getItemId());
-        assertBigDecimalEquals(BigDecimal.ONE, oneTimeOrder.getOrderLines()[0].getQuantityAsDecimal());
-        assertBigDecimalEquals(new BigDecimal("10.00"), oneTimeOrder.getOrderLines()[0].getAmountAsDecimal());
-        assertEquals(Constants.ORDER_PERIOD_ONCE, oneTimeOrder.getPeriod()); // One time
-
-
-        // Change the plan's quantity to 3.
-        OrderLineWS orderLine = monthlyOrder.getOrderLines()[0];
-        OrderChangeWS orderChange = OrderChangeBL.buildFromLine(orderLine, null, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID);
-        orderChange.setQuantity(new BigDecimal("3.0").subtract(orderLine.getQuantityAsDecimal()));
-        api.updateOrder(monthlyOrder, new OrderChangeWS[]{orderChange});
-
-        monthlyOrder = api.getOrder(monthlyOrder.getId());
-        System.out.println("Checking the Monthly order after updating the quantity to 3.");
-        assertEquals("This should be the plan with id " + coolPlanSubscriptionItemId, coolPlanSubscriptionItemId, monthlyOrder.getOrderLines()[0].getItemId());
-        assertBigDecimalEquals(new BigDecimal("3"), monthlyOrder.getOrderLines()[0].getQuantityAsDecimal());
-        assertBigDecimalEquals(new BigDecimal("299.97"), monthlyOrder.getOrderLines()[0].getAmountAsDecimal());
-        assertEquals(Integer.valueOf(ORDER_PERIOD_MONTHLY), monthlyOrder.getPeriod()); // Monthly
-
-        firstOneTimeOrder = api.getOrder(firstOneTimeOrder.getId());
-        assertEquals("This should be the item with id " + localCallItemId, localCallItemId, firstOneTimeOrder.getOrderLines()[0].getItemId());
-        assertBigDecimalEquals(new BigDecimal("3"), firstOneTimeOrder.getOrderLines()[0].getQuantityAsDecimal());
-        assertBigDecimalEquals(new BigDecimal("60.00"), firstOneTimeOrder.getOrderLines()[0].getAmountAsDecimal());
-
-
-        // Change the plan's quantity to 2.
-        orderLine = monthlyOrder.getOrderLines()[0];
-        orderChange = OrderChangeBL.buildFromLine(orderLine, null, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID);
-        orderChange.setQuantity(new BigDecimal("2.0").subtract(orderLine.getQuantityAsDecimal()));
-        api.updateOrder(monthlyOrder, new OrderChangeWS[]{orderChange});
-
-        monthlyOrder = api.getOrder(monthlyOrder.getId());
-        System.out.println("Checking the Monthly order after updating the quantity to 2.");
-        assertEquals("This should be the plan with id " + coolPlanSubscriptionItemId, coolPlanSubscriptionItemId, monthlyOrder.getOrderLines()[0].getItemId());
-        assertBigDecimalEquals(new BigDecimal("2"), monthlyOrder.getOrderLines()[0].getQuantityAsDecimal());
-        assertBigDecimalEquals(new BigDecimal("199.98"), monthlyOrder.getOrderLines()[0].getAmountAsDecimal());
-        assertEquals(Integer.valueOf(ORDER_PERIOD_MONTHLY), monthlyOrder.getPeriod()); // Monthly
-
-        firstOneTimeOrder = api.getOrder(firstOneTimeOrder.getId());
-
-        System.out.println("Checking the One time order after updating the quantity to 2.");
-        assertEquals("This should be the item with id " + localCallItemId, localCallItemId, firstOneTimeOrder.getOrderLines()[0].getItemId());
-        assertBigDecimalEquals(new BigDecimal("2"), firstOneTimeOrder.getOrderLines()[0].getQuantityAsDecimal());
-        assertBigDecimalEquals(new BigDecimal("40.00"), firstOneTimeOrder.getOrderLines()[0].getAmountAsDecimal());
-
-        // clean up first delete the child order
-        api.deleteOrder(oneTimeOrder.getId());
-        api.deleteOrder(firstOneTimeOrder.getId());
-        api.deleteOrder(monthlyOrder.getId());
-        api.deletePlan(coolPlan.getId());
-        api.deleteItem(coolPlanSubscriptionItemId);
-        api.deleteItem(localCallItemId);
-        api.deletePlan(longDistancePlanA.getId());
-        api.deleteItem(longDistancePlanASubscriptionItemId);
-        api.deleteItem(longDistanceCallItemId);
-    }
-
+    
     @Test
     public void test015CurrentOrder() {
 
 
         // Create Test Item
-        ItemDTOEx testItem = createProduct(12, BigDecimal.TEN, "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
+        ItemDTOEx testItem = createProduct(12, BigDecimal.TEN, "Product".concat(String.valueOf(System.currentTimeMillis())),   false, new DateMidnight(2012, 6, 1).toDate());
         // Persist
         Integer testItemId = api.createItem(testItem);
 
@@ -1889,8 +1229,7 @@ public class WSTest {
         OrderLineWS createdLine = currentOrderAfter.getOrderLines()[0];
         assertEquals("Order line item ids", newLine.getItemId(),  createdLine.getItemId());
         assertEquals("Order line quantities", newLine.getQuantityAsDecimal(), createdLine.getQuantityAsDecimal());
-        com.sapienter.jbilling.test.Asserts.assertEquals("Order line price", new BigDecimal("10.00"), createdLine.getPriceAsDecimal().setScale(2));
-        com.sapienter.jbilling.test.Asserts.assertEquals("Order line total", new BigDecimal("220.00"), createdLine.getAmountAsDecimal().setScale(2));
+        com.sapienter.jbilling.test.Asserts.assertEquals("Order line price", new BigDecimal("10.00"), createdLine.getPriceAsDecimal().setScale(2));        com.sapienter.jbilling.test.Asserts.assertEquals("Order line total", new BigDecimal("220.00"), createdLine.getAmountAsDecimal().setScale(2));
 
         //
         // Test update current order with pricing fields and no
@@ -1898,12 +1237,12 @@ public class WSTest {
         //
 
         // Call info pricing fields. See ExampleMediationTask
-        PricingField duration = new PricingField("duration", 5); // 5 min
+       PricingField duration = new PricingField("duration", 5); // 5 min
         PricingField disposition = new PricingField("disposition", "ANSWERED");
         PricingField dst = new PricingField("dst", "12345678");
         currentOrderAfter = api.updateCurrentOrder(PRANCING_PONY_USER_ID,
                                                    null,
-                                                   new PricingField[] { duration, disposition, dst },
+                                                   PricingField.setPricingFieldsValue(new PricingField[] { duration, disposition, dst }),
                                                    new Date(),
                                                    "Event from WS");
 
@@ -1942,7 +1281,7 @@ public class WSTest {
 	    System.out.println("Sending event again");
 	    OrderWS currentOrderNext = api.updateCurrentOrder(PRANCING_PONY_USER_ID,
 			    null,
-			    new PricingField[] { duration, disposition, dst },
+			    PricingField.setPricingFieldsValue(new PricingField[] { duration, disposition, dst }),
 			    new Date(),
 			    "Same event from WS");
 
@@ -1971,7 +1310,7 @@ public class WSTest {
         try {
             api.updateCurrentOrder(MORDOR_USER_ID,
                                    new OrderLineWS[] { newLine },
-                                   new PricingField[] { },
+                                   PricingField.setPricingFieldsValue(new PricingField[] { }),
                                    new Date(),
                                    "Event from WS");
 
@@ -2000,7 +1339,7 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(15, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(15, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
         lines[0] = buildOrderLine(firstItemId, Integer.valueOf(1), PRICE);
 
@@ -2033,14 +1372,14 @@ public class WSTest {
 
         // Create Items for order lines
         // First Item
-        ItemDTOEx firstItem = createProduct(16, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(16, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         lines[0] = buildOrderLine(firstItemId, Integer.valueOf(1), PRICE);
 
         // let's add a line
         // this is an item line
-        ItemDTOEx secondItem = createProduct(16, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(16, null, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer secondItemId = api.createItem(secondItem);
 
         // take the description from the item
@@ -2073,7 +1412,7 @@ public class WSTest {
         api.updateUser(frenchUser);
 
         // Create Test Item with french description
-        ItemDTOEx testItem = createProduct(17, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
+        ItemDTOEx testItem = createProduct(17, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())),   false, new DateMidnight(2012, 6, 1).toDate());
         List<InternationalDescriptionWS> descriptions = new ArrayList<InternationalDescriptionWS>();
         InternationalDescriptionWS enDesc = new InternationalDescriptionWS(Constants.LANGUAGE_ENGLISH_ID, "itemDescription-en");
         InternationalDescriptionWS frDesc = new InternationalDescriptionWS(LANGUAGE_FR, "itemDescription-fr");
@@ -2112,86 +1451,6 @@ public class WSTest {
     }
 
     @Test
-    public void test019GraduatedPlanItems() {
-
-        // Create Item that is going to be included in two test plans
-        ItemDTOEx includedInPlansItem = createProduct(18, BigDecimal.ZERO, "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer includedInPlansItemId = api.createItem(includedInPlansItem);
-
-        /*
-        Create Test Plan (monthly) which has the following products:
-            - Included in plans item(graduated rate = 3.5, included qty = 1) (bundled quantity = 0, period = once)
-         */
-
-        // Price model for included product in plan
-        PriceModelWS priceModel = new PriceModelWS(PriceModelStrategy.GRADUATED.name(), new BigDecimal("3.5"), Constants.PRIMARY_CURRENCY_ID);
-        priceModel.addAttribute("included", "1");
-
-        // Create plan bundle
-        PlanItemWS itemBundle = createPlanItem(includedInPlansItemId, BigDecimal.ZERO, Constants.ORDER_PERIOD_ONCE);
-        itemBundle.addModel(CommonConstants.EPOCH_DATE, priceModel);
-
-        // Create and persist plan
-        PlanWS testPlan = createPlan(18, "TP1", BigDecimal.TEN, Arrays.asList(itemBundle), api);
-        Integer testPlanSubscriptionId = testPlan.getPlanSubscriptionItemId();
-
-        /*
-        Create Test Plan 2 (monthly) which has the following products:
-            - Test Plan (metered rate = 10) (bundled quantity = 0, period = once)
-         */
-
-        priceModel = new PriceModelWS(PriceModelStrategy.FLAT.name(), BigDecimal.TEN, Constants.PRIMARY_CURRENCY_ID);
-
-        // Create plan bundle
-        PlanItemWS planBundle = createPlanItem(testPlanSubscriptionId, BigDecimal.ZERO, Constants.ORDER_PERIOD_ONCE);
-        planBundle.addModel(CommonConstants.EPOCH_DATE, priceModel);
-
-        // Create and persist plan
-        PlanWS testPlan2 = createPlan(18, "TP2", new BigDecimal("20.0"), Arrays.asList(planBundle), api);
-        Integer testPlanSubscriptionId2 = testPlan2.getPlanSubscriptionItemId();
-
-        // Create Monthly order including these two plans
-        OrderWS plansOrder = createPlanOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_PRE_PAID, ORDER_PERIOD_MONTHLY, testPlanSubscriptionId, testPlanSubscriptionId2);
-        Integer planOrderId = api.createOrder(plansOrder, OrderChangeBL.buildFromOrder(plansOrder, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-
-        // add items to a user subscribed to Test Plan
-        System.out.println("Testing item swapping - included in plan");
-        OrderWS order = createPlanOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_POST_PAID, Constants.ORDER_PERIOD_ONCE, includedInPlansItemId);
-        order.getOrderLines()[0].setQuantity(new BigDecimal("100")); // doesn't exceed included plan quantity, priced at $0
-
-        int orderId = api.createOrder(order, OrderChangeBL.buildFromOrder(order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-        order = api.getOrder(orderId);
-
-        assertEquals("Order should have one line", 1, order.getOrderLines().length);
-        assertEquals("Order should have the included in plan line", includedInPlansItemId, order.getOrderLines()[0].getItemId());
-
-        // cleanup
-        api.deleteOrder(orderId);
-
-        // now a guy without the plan
-
-        System.out.println("Testing item swapping - NOT included in plan");
-        order = createPlanOrder(PRANCING_PONY_SPARE_USER_ID, Constants.ORDER_BILLING_POST_PAID, Constants.ORDER_PERIOD_ONCE, includedInPlansItemId);
-        order.getOrderLines()[0].setQuantity(new BigDecimal("100")); // full quantity priced at $0.30/unit
-
-        orderId = api.createOrder(order, OrderChangeBL.buildFromOrder(order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-        order = api.getOrder(orderId);
-
-        assertEquals("Order should have one line", 1, order.getOrderLines().length);
-        assertEquals("Order should have the priced item line", includedInPlansItemId, order.getOrderLines()[0].getItemId());
-
-        // cleanup
-        api.deleteOrder(orderId);
-        api.deleteOrder(planOrderId);
-        api.deletePlan(testPlan2.getId());
-        api.deleteItem(testPlanSubscriptionId2);
-        api.deletePlan(testPlan.getId());
-        api.deleteItem(testPlanSubscriptionId);
-        api.deleteItem(includedInPlansItemId);
-    }
-
-    @Test
     public void test019RateCard() throws Exception {
         System.out.println("#test019RateCard");
         //JbillingAPI api = JbillingAPIFactory.getAPI();
@@ -2220,7 +1479,7 @@ public class WSTest {
                 new PricingField("disposition", "ANSWERED")
         };
 
-        OrderWS currentOrder = api.updateCurrentOrder(userId, null, pf, new Date(), "Event from WS");
+        OrderWS currentOrder = api.updateCurrentOrder(userId, null, PricingField.setPricingFieldsValue(pf), new Date(), "Event from WS");
 
         assertEquals("1 order line", 1, currentOrder.getOrderLines().length);
         OrderLineWS line = currentOrder.getOrderLines()[0];
@@ -2234,7 +1493,7 @@ public class WSTest {
 
         // should be priced at 0.08 (see row 1753)
         pf[0].setStrValue("55000");
-        currentOrder = api.updateCurrentOrder(userId,null, pf, new Date(), "Event from WS");
+        currentOrder = api.updateCurrentOrder(userId,null, PricingField.setPricingFieldsValue(pf), new Date(), "Event from WS");
 
         assertEquals("1 order line", 1, currentOrder.getOrderLines().length);
         line = currentOrder.getOrderLines()[0];
@@ -2300,7 +1559,7 @@ public class WSTest {
 
         // current balance: 100 - 0.41 = 99.59
         // quantity available expected: 99.59 / 0.47
-        ValidatePurchaseWS result = api.validatePurchase(userId, null, pf);
+        ValidatePurchaseWS result = api.validatePurchase(userId, null, PricingField.setPricingFieldsValue(pf));
         assertEquals("validate purchase success", Boolean.valueOf(true), result.getSuccess());
         assertEquals("validate purchase authorized", Boolean.valueOf(true), result.getAuthorized());
         com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity", new BigDecimal("211.89"), result.getQuantityAsDecimal());
@@ -2320,7 +1579,7 @@ public class WSTest {
     @Test
     public void test020CreateUpdateDeleteAsset() {
 
-        ItemDTOEx firstItem = createProduct(20, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true);
+        ItemDTOEx firstItem = createProduct(20, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
         String firstAssetIdentifier = "Asset020-First".concat(String.valueOf(System.currentTimeMillis()));
         String secondAssetIdentifier = "Asset020-Second".concat(String.valueOf(System.currentTimeMillis()));
@@ -2499,7 +1758,7 @@ public class WSTest {
     @Test
     public void test022AssetValidationOnUpdate() {
 
-        ItemDTOEx dummyItem = createProduct(22, BigDecimal.ONE, "Dummy", false);
+        ItemDTOEx dummyItem = createProduct(22, BigDecimal.ONE, "Dummy", false, new DateMidnight(2012, 6, 1).toDate());
         Integer dummyItemId = api.createItem(dummyItem);
 
         OrderWS newOrder = buildOneTimePostPaidOrder(PRANCING_PONY_USER_ID);
@@ -2517,7 +1776,7 @@ public class WSTest {
 
     private void createUpdateAssetTest(OrderWS order, boolean create, Integer testNumber) {
 
-        ItemDTOEx firstItem = createProduct(testNumber, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true);
+        ItemDTOEx firstItem = createProduct(testNumber, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         String firstAssetIdentifier = "Asset"+testNumber+"-First".concat(String.valueOf(System.currentTimeMillis()));
@@ -2551,7 +1810,7 @@ public class WSTest {
 
         System.out.println("Item without asset management");
 
-        ItemDTOEx secondItem = createProduct(testNumber, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(testNumber, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         Integer secondItemId = api.createItem(secondItem);
         try {
             // Item without asset management and not a plan
@@ -2598,7 +1857,7 @@ public class WSTest {
     @Test
     public void test023MoveAssetBetweenLinesOnUpdate() {
 
-        ItemDTOEx firstItem = createProduct(23, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true);
+        ItemDTOEx firstItem = createProduct(23, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
         String firstAssetIdentifier = "Asset23-First".concat(String.valueOf(System.currentTimeMillis()));
         String secondAssetIdentifier = "Asset23-Second".concat(String.valueOf(System.currentTimeMillis()));
@@ -2660,7 +1919,7 @@ public class WSTest {
     @Test
     public void test024CreateAssetGroupWithAssetInOrder() {
 
-        ItemDTOEx firstItem = createProduct(24, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true);
+        ItemDTOEx firstItem = createProduct(24, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), true, new DateMidnight(2012, 6, 1).toDate());
         Integer firstItemId = api.createItem(firstItem);
 
         String firstAssetIdentifier = "Asset24-First".concat(String.valueOf(System.currentTimeMillis()));
@@ -2699,162 +1958,15 @@ public class WSTest {
     }
 
     @Test
-    public void test025CreateEditablePlanOrderStory() {
-
-
-        // SMS Product
-        ItemDTOEx smsItem = createProduct(20, new BigDecimal("0.1"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer smsItemId = api.createItem(smsItem);
-
-        // Create a plan item with sms product
-        PlanItemWS smsPlanItem = createPlanItem(smsItemId, new BigDecimal("100"), ORDER_PERIOD_MONTHLY);
-        // Use product price model
-        smsPlanItem.addModel(Constants.EPOCH_DATE, smsItem.getDefaultPrice());
-
-        // User Story 1
-        /*
-        Create Local Mobile Plan (monthly) which has the following products:
-            - Local Call (metered rate = 1) (bundled quantity = 100, period = monthly)
-         */
-
-        // Create Local Call Item
-        ItemDTOEx localCallItem = createProduct(20, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer localCallItemId = api.createItem(localCallItem);
-
-        // Add Local Call Item to a plan bundle
-        PlanItemWS localCallBundle = createPlanItem(localCallItemId, new BigDecimal("100"), ORDER_PERIOD_MONTHLY);
-        // Use product price model
-        localCallBundle.addModel(CommonConstants.EPOCH_DATE, localCallItem.getDefaultPrice());
-
-        // Create Local Mobile Plan
-        PlanWS localMobilePlan = createPlan(20, "LMP", new BigDecimal("25"), Arrays.asList(localCallBundle), api);
-        Integer localMobilePlanSubscriptionId = localMobilePlan.getPlanSubscriptionItemId();
-
-        // Add sms plan item
-        PlanWS planWS = api.getPlanWS(localMobilePlan.getId());
-        planWS.addPlanItem(smsPlanItem);
-        planWS.setEditable(1);
-
-        api.updatePlan(planWS);
-
-        PlanWS fetchedPlan = api.getPlanWS(localMobilePlan.getId());
-        assertEquals(planWS.getEditable(), fetchedPlan.getEditable());
-        assertEquals(planWS.getPlanItems().size(), fetchedPlan.getPlanItems().size());
-
-        // User Story 2
-        /*
-        Create International Mobile Plan (monthly) which has the following products:
-            - International Call (metered rate = 5) (bundled quantity = 10, period = monthly)
-         */
-
-        // Create Local Call Item
-        ItemDTOEx internationalCallItem = createProduct(20, new BigDecimal("5"), "Product".concat(String.valueOf(System.currentTimeMillis())),   false);
-        // Persist
-        Integer internationalCallItemId = api.createItem(internationalCallItem);
-
-        // Add International Call Item to a plan bundle
-        PlanItemWS internationalCallBundle = createPlanItem(internationalCallItemId, new BigDecimal("10"), ORDER_PERIOD_MONTHLY);
-        // Use product price model
-        internationalCallBundle.addModel(CommonConstants.EPOCH_DATE, internationalCallItem.getDefaultPrice());
-
-        // Create International Mobile Plan
-        PlanWS internationalMobilePlan = createPlan(20, "IMP", new BigDecimal("50"), Arrays.asList(internationalCallBundle), api);
-        Integer internationalMobilePlanSubscriptionId = internationalMobilePlan.getPlanSubscriptionItemId();
-
-
-        PlanWS fetchedPlan2 = api.getPlanWS(internationalMobilePlan.getId());
-        fetchedPlan2.addPlanItem(smsPlanItem);
-
-        api.updatePlan(fetchedPlan2);
-
-        fetchedPlan2 = api.getPlanWS(internationalMobilePlan.getId());
-
-        System.out.println("Creating new Order");
-
-        OrderWS newOrder = buildOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_POST_PAID, ORDER_PERIOD_MONTHLY);
-
-        // now add some lines
-        OrderLineWS[] lines = new OrderLineWS[fetchedPlan2.getPlanItems().size()];
-        int indexCounter = 0;
-        for(PlanItemWS tmpPlanItemWS: fetchedPlan2.getPlanItems()) {
-            OrderLineWS orderLineWS = new OrderLineWS();
-            ItemDTOEx tmpItem = api.getItem(tmpPlanItemWS.getItemId(), PRANCING_PONY_USER_ID, null);
-            orderLineWS.setPrice(tmpItem.getPrice());
-            orderLineWS.setTypeId(Constants.ORDER_LINE_TYPE_ITEM);
-            orderLineWS.setQuantity(new BigDecimal(tmpPlanItemWS.getBundle() != null?tmpPlanItemWS.getBundle().getQuantity():"0"));
-            orderLineWS.setAmount(tmpPlanItemWS.getModel().getRateAsDecimal());
-            orderLineWS.setDescription(tmpItem.getDescription());
-            orderLineWS.setItemId(tmpItem.getId());
-
-            lines[indexCounter] = orderLineWS;
-            indexCounter++;
-        }
-
-        newOrder.setOrderLines(lines);
-
-        System.out.println("Creating order ... " + newOrder);
-        Integer orderId = api.createOrder(newOrder, OrderChangeBL.buildFromOrder(newOrder, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-
-        assertNotNull("The order was not created ", orderId);
-
-        OrderWS orderWS = api.getOrder(orderId);
-
-        for(OrderLineWS tmpOrderLineWS: orderWS.getOrderLines()) {
-            assertNotNull(tmpOrderLineWS.getPrice());
-            assertNotNull(tmpOrderLineWS.getQuantity());
-            assertNotNull(tmpOrderLineWS.getAmount());
-            assertNotNull(tmpOrderLineWS.getDescription());
-        }
-
-        api.deleteOrder(orderId);
-
-        // User story 3
-        OrderWS newOrder3 = buildOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_POST_PAID, ORDER_PERIOD_MONTHLY);
-
-//        PlanWS planWS3 = api.getPlanWS(4); // Why do we need this?? It is not used..
-
-        // dummy values to be overwrite
-        OrderLineWS orderLineWS3 = buildOrderLine(smsItemId, Integer.valueOf(1), new BigDecimal("30"));
-
-        newOrder3.setOrderLines(new OrderLineWS[] {orderLineWS3});
-
-        System.out.println("Creating order ... " + newOrder3);
-        Integer orderId3 = api.createOrder(newOrder3, OrderChangeBL.buildFromOrder(newOrder3, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-
-        assertNotNull("The order was not created ", orderId3);
-
-        OrderWS orderWS3 = api.getOrder(orderId3);
-        for(OrderLineWS tmpOrderLineWS: orderWS3.getOrderLines()) {
-            assertNotNull(tmpOrderLineWS.getPrice());
-            assertNotNull(tmpOrderLineWS.getQuantity());
-            assertNotNull(tmpOrderLineWS.getAmount());
-            assertNotNull(tmpOrderLineWS.getDescription());
-        }
-
-        api.deleteOrder(orderId3);
-        System.out.println("Order deleted: " + orderId3);
-
-        api.deletePlan(internationalMobilePlan.getId());
-        api.deleteItem(internationalMobilePlanSubscriptionId);
-        api.deleteItem(internationalCallItemId);
-        api.deletePlan(localMobilePlan.getId());
-        api.deleteItem(localMobilePlanSubscriptionId);
-        api.deleteItem(localCallItemId);
-        api.deleteItem(smsItemId);
-    }
-
-    @Test
     public void test26ProductDependenciesValidation() {
 
 
-        ItemDTOEx productB = createProduct(21, BigDecimal.ONE, "ProductB".concat(String.valueOf(System.currentTimeMillis())),   false);
+        ItemDTOEx productB = createProduct(21, BigDecimal.ONE, "ProductB".concat(String.valueOf(System.currentTimeMillis())),   false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + productB);
         Integer retB = api.createItem(productB);
         assertNotNull("Product B should be created", retB);
 
-        ItemDTOEx productA = createProduct(21, BigDecimal.ONE, "ProductA".concat(String.valueOf(System.currentTimeMillis())),   false);
+        ItemDTOEx productA = createProduct(21, BigDecimal.ONE, "ProductA".concat(String.valueOf(System.currentTimeMillis())),   false, new DateMidnight(2012, 6, 1).toDate());
         setDependency(productA, retB, 2, 3);
 
         System.out.println("Creating item ..." + productA);
@@ -2923,7 +2035,6 @@ public class WSTest {
         assertEquals("Order line 1 should have line 2 as child", order.getOrderLines()[0].getChildLines()[0], order.getOrderLines()[1]);
 
         api.deleteOrder(retOrder1);
-
 	    //TODO: this here removes the dependency by hand,
 	    // but should be managed automatically by delete
 	    ItemDTOEx itemA = api.getItem(retA, null, null);
@@ -2931,8 +2042,10 @@ public class WSTest {
 	    api.updateItem(itemA);
 
 		//now delete the items
-        api.deleteItem(retB);
-        api.deleteItem(retA);
+	    api.deleteItem(retA);
+	    api.deleteItem(retB);
+        
+        
     }
 
     private void setDependency(ItemDTOEx product, Integer itemId, Integer min, Integer max) {
@@ -2956,12 +2069,12 @@ public class WSTest {
     @Test
     public void test27ProductDependenciesWithSuborderValidation() {
 
-        ItemDTOEx productB = createProduct(22, BigDecimal.ONE, "ProductB".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productB = createProduct(22, BigDecimal.ONE, "ProductB".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + productB);
         Integer retB = api.createItem(productB);
         assertNotNull("Product B should be created", retB);
 
-        ItemDTOEx productA = createProduct(22, BigDecimal.ONE, "ProductA".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productA = createProduct(22, BigDecimal.ONE, "ProductA".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         setDependency(productA, retB, 1, null);
         System.out.println("Creating item ..." + productA);
         Integer retA = api.createItem(productA);
@@ -3022,9 +2135,9 @@ public class WSTest {
         order.getOrderLines()[0].setChildLines(null);
 
         api.updateOrder(order, OrderChangeBL.buildFromOrder(order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID));
-
-        api.deleteOrder(childOrderId);
+        
         api.deleteOrder(retOrder1);
+        api.deleteOrder(childOrderId);
         api.deleteItem(retA);
         api.deleteItem(retB);
     }
@@ -3032,18 +2145,18 @@ public class WSTest {
     @Test
     public void test28ProductDependenciesWithThreeLevelHierarchyValidation() {
 
-        ItemDTOEx productB = createProduct(23, BigDecimal.ONE, "ProductB".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productB = createProduct(23, BigDecimal.ONE, "ProductB".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + productB);
         Integer retB = api.createItem(productB);
         assertNotNull("Product B should be created", retB);
 
-        ItemDTOEx productA = createProduct(23, BigDecimal.ONE, "ProductA".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productA = createProduct(23, BigDecimal.ONE, "ProductA".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         setDependency(productA, retB, 1, null);
         System.out.println("Creating item ..." + productA);
         Integer retA = api.createItem(productA);
         assertNotNull("Product A should be created", retA);
 
-        ItemDTOEx productC = createProduct(23, BigDecimal.ONE, "ProductC".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productC = createProduct(23, BigDecimal.ONE, "ProductC".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + productC);
         Integer retC = api.createItem(productC);
         assertNotNull("Product B should be created", retC);
@@ -3115,10 +2228,10 @@ public class WSTest {
         // Parent order
         order.setChildOrders(null);
         order.getOrderLines()[0].setChildLines(null);
-
+        
+        api.deleteOrder(retOrder1);
         api.deleteOrder(childOrderId);
         api.deleteOrder(secondLevelOrderId);
-        api.deleteOrder(retOrder1);
         api.deleteItem(retC);
         api.deleteItem(retA);
         api.deleteItem(retB);
@@ -3128,12 +2241,12 @@ public class WSTest {
     @Test
     public void test29ProductDependenciesInverseHierarchyValidation() {
 
-        ItemDTOEx firstItem = createProduct(24, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(24, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
 
-        ItemDTOEx secondItem = createProduct(24, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(24, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         setDependency(secondItem, firstItemId, 1, null);
         System.out.println("Creating item ..." + secondItem);
         Integer secondItemId = api.createItem(secondItem);
@@ -3187,12 +2300,12 @@ public class WSTest {
     @Test
     public void test30OrderCycleValidation() {
 
-        ItemDTOEx firstItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
 
-        ItemDTOEx secondItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + secondItem);
         Integer secondItemId = api.createItem(secondItem);
         assertNotNull("Second Product should be created", secondItemId);
@@ -3230,7 +2343,7 @@ public class WSTest {
     @Test
     public void test31HierarchyActiveSinceValidation() {
 
-        ItemDTOEx firstItem = createProduct(26, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(26, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
@@ -3272,7 +2385,7 @@ public class WSTest {
     @Test
     public void test32HierarchyActiveUntilValidation() {
 
-        ItemDTOEx firstItem = createProduct(27, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(27, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
@@ -3323,7 +2436,7 @@ public class WSTest {
             final Integer PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID = getOrCreateOrderChangeApplyStatus(clientApi);
             Integer userId = clientApi.getCallerCompanyId().equals(PRANCING_PONY_ENTITY_ID) ? PRANCING_PONY_USER_ID : MORDOR_USER_ID;
 
-            ItemDTOEx firstItem = createProduct(28, BigDecimal.ONE, "Product1",  false);
+            ItemDTOEx firstItem = createProduct(28, BigDecimal.ONE, "Product1",  false, new DateMidnight(2012, 6, 1).toDate());
             firstItem.setEntityId(clientApi.getCallerCompanyId());
             firstItem.setEntities(Arrays.asList(clientApi.getCallerCompanyId()));
             System.out.println("Creating item ..." + firstItem);
@@ -3436,17 +2549,17 @@ public class WSTest {
     @Test
     public void test034OrderDeleteFromHierarchy() {
 
-        ItemDTOEx firstItem = createProduct(29, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(29, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
 
-        ItemDTOEx secondItem = createProduct(25,BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(25,BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + secondItem);
         Integer secondItemId = api.createItem(secondItem);
         assertNotNull("Second Product should be created", secondItemId);
 
-        ItemDTOEx thirdItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + thirdItem);
         Integer thirdItemId = api.createItem(thirdItem);
         assertNotNull("Third Product should be created", thirdItemId);
@@ -3523,17 +2636,17 @@ public class WSTest {
     @Test
     public void test035UpdateOrderHierarchy() {
 
-        ItemDTOEx secondItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + secondItem);
         Integer secondItemId = api.createItem(secondItem);
         assertNotNull("Second Product should be created", secondItemId);
 
-        ItemDTOEx firstItem = createProduct(29, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(29, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
 
-        ItemDTOEx thirdItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(25, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + thirdItem);
         Integer thirdItemId = api.createItem(thirdItem);
         assertNotNull("Third Product should be created", thirdItemId);
@@ -3702,17 +2815,17 @@ public class WSTest {
     @Test
     public void test036CreateUpdateOrder() {
 
-        ItemDTOEx secondItem = createProduct(31, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(31, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + secondItem);
         Integer secondItemId = api.createItem(secondItem);
         assertNotNull("Second Product should be created", secondItemId);
 
-        ItemDTOEx firstItem = createProduct(31, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(31, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
 
-        ItemDTOEx thirdItem = createProduct(31, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(31, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + thirdItem);
         Integer thirdItemId = api.createItem(thirdItem);
         assertNotNull("Third Product should be created", thirdItemId);
@@ -3833,17 +2946,17 @@ public class WSTest {
     @Test
     public void test037CreateUpdateOrder() {
 
-        ItemDTOEx secondItem = createProduct(32, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(32, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + secondItem);
         Integer secondItemId = api.createItem(secondItem);
         assertNotNull("Second Product should be created", secondItemId);
 
-        ItemDTOEx firstItem = createProduct(32, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(32, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
 
-        ItemDTOEx thirdItem = createProduct(32, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx thirdItem = createProduct(32, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + thirdItem);
         Integer thirdItemId = api.createItem(thirdItem);
         assertNotNull("Third Product should be created", thirdItemId);
@@ -3987,34 +3100,25 @@ public class WSTest {
 
     @Test
 	public void test039AutoCreateOrderForParent_DifferentialPricing() {
-
+    	
+    	List<ItemPriceDTOEx> itemPrices = new ArrayList<ItemPriceDTOEx>();
+    	itemPrices.add(setItemPrice(new BigDecimal(5), new DateMidnight(1970, 1, 1).toDate(), PRANCING_PONY_ENTITY_ID, Integer.valueOf(1)));
+    	itemPrices.add(setItemPrice(new BigDecimal(10), new DateMidnight(1970, 1, 1).toDate(), RESELLER_ENTITY_ID, Integer.valueOf(1)));
+    	
         ItemDTOEx newItem = new ItemDTOEx();
         newItem.setDescription("An item for Reseller Category.");
         newItem.setNumber("RP-1".concat(String.valueOf(System.currentTimeMillis())));
 
-        PriceModelWS parentEntityPrice = new PriceModelWS(PriceModelStrategy.GRADUATED.name(), new BigDecimal("10.00"), Constants.PRIMARY_CURRENCY_ID);
-        parentEntityPrice.addAttribute("included", "0");  // 0 units included
         newItem.setPriceModelCompanyId(PRANCING_PONY_ENTITY_ID);
 
-        newItem.addDefaultPrice(CommonConstants.EPOCH_DATE, parentEntityPrice);
         newItem.setTypes(new Integer[]{RESELLER_CATEGORY_ID});
+        newItem.setPrices(itemPrices);
+        //TODO ROHIT Create ItemPriceDTOEx and set it into the Item
+        //Price is 10 for Reseller user company id
+        //5 for prancing pony, i.e. the parent company
+
         Integer itemId = api.createItem(newItem);
-
-        // set child entity price
-        ItemDTOEx updated = api.getItem(itemId, RESELLER_USER_ID, null);
-
-        PriceModelWS childEntityPrice = new PriceModelWS(PriceModelStrategy.GRADUATED.name(), new BigDecimal("5.00"), Constants.PRIMARY_CURRENCY_ID);
-        childEntityPrice.addAttribute("included", "0");  // 0 units included
-
-        SortedMap<Date, PriceModelWS> prices = new TreeMap<Date, PriceModelWS>();
-        prices.put(CommonConstants.EPOCH_DATE, childEntityPrice);
-
-        updated.setDefaultPrices(prices);
-
-        updated.setPriceModelCompanyId(RESELLER_ENTITY_ID);
-
-        api.updateItem(updated);
-
+       
         //create order and invoice
         OrderWS newOrder = buildOneTimePostPaidOrder(RESELLER_USER_ID);
         newOrder.setActiveSince(new Date());
@@ -4036,10 +3140,10 @@ public class WSTest {
 
         assertNotNull("Order for reseller should exist", resellerOrder);
 
-        // invoice should have balance 5
-        assertBigDecimalEquals(new BigDecimal("5.00"), invoice.getBalanceAsDecimal());
+        // invoice should have balance 10
+        assertBigDecimalEquals(new BigDecimal("10.00"), invoice.getBalanceAsDecimal());
         //reseller order must be created at reseller entity's price
-        assertBigDecimalEquals(new BigDecimal("10.00"), resellerOrder.getTotalAsDecimal());
+        assertBigDecimalEquals(new BigDecimal("5.00"), resellerOrder.getTotalAsDecimal());
 
         resellerApi.deleteInvoice(invoiceId);
         resellerApi.deleteOrder(orderId);
@@ -4058,17 +3162,17 @@ public class WSTest {
     @Test
     public void test40CreateUpdateApplyOrderChanges() {
 
-        ItemDTOEx productA = createProduct(40, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productA = createProduct(40, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + productA);
         Integer retA = api.createItem(productA);
         assertNotNull("Product A should be created", retA);
 
-        ItemDTOEx productC = createProduct(40, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productC = createProduct(40, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + productC);
         Integer retC = api.createItem(productC);
         assertNotNull("Product C should be created", retC);
 
-        ItemDTOEx productB = createProduct(40, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx productB = createProduct(40, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         setDependency(productB, retC, 1, 5);
         System.out.println("Creating item ..." + productB);
         Integer retB = api.createItem(productB);
@@ -4209,9 +3313,9 @@ public class WSTest {
 	    api.updateItem(productB);
 
 	    //delete items
+	    api.deleteItem(retA);
+	    api.deleteItem(retB);
         api.deleteItem(retC);
-        api.deleteItem(retB);
-        api.deleteItem(retA);
     }
 
     @Test
@@ -4219,7 +3323,7 @@ public class WSTest {
 
         ItemDTOEx newItem = new ItemDTOEx();
         newItem.setDescription("OrderLineMetaFields test");
-        newItem.setPrice(new BigDecimal("29.5"));
+        newItem.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("29.50"), new DateMidnight(1970, 1, 1).toDate(), Integer.valueOf(1), Integer.valueOf(1)));
         newItem.setNumber("OM-100");
         newItem.setTypes(new Integer[]{PRANCING_PONY_CATEGORY_ID});
 
@@ -4294,7 +3398,7 @@ public class WSTest {
         //CREATE ORDER 2
 
         // Create New Test Item
-        ItemDTOEx testItem = createProduct(41, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx testItem = createProduct(41, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         // Persist
         Integer testItemId = api.createItem(testItem);
 
@@ -4368,17 +3472,20 @@ public class WSTest {
         if(testItemId.intValue() == orderChange.getItemId()) {
             orderChange = changes.get(1);
         }
-        assertEquals(0, orderChange.getMetaFields().length);
+        System.out.println("Order Change Metafield  " +orderChange.getMetaFields()[0].getFieldName());
+        // meta field name "Item OM-100 orderLinesMetaField_1"
+        assertEquals(1, orderChange.getMetaFields().length);
 
         api.deleteOrder(orderId);
         api.deleteItem(testItemId);
         api.deleteItem(itemId);
     }
+    
 
     @Test
     public void test042CreateOrderForUsageProductInFuture() {
 
-        ItemDTOEx firstItem = createProduct(42, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(42, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("Second Product should be created", firstItemId);
@@ -4413,13 +3520,13 @@ public class WSTest {
     public void test043UpdateOrderSecurityTest() {
 
         // Create Test item
-        ItemDTOEx firstItem = createProduct(43, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(43, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("First Product should be created", firstItemId);
 
         // Create second test item
-        ItemDTOEx secondItem = createProduct(43, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx secondItem = createProduct(43, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         secondItem.setEntityId(MORDOR_ENTITY_ID);
         System.out.println("Creating item ..." + secondItem);
         Integer secondItemId = mordorApi.createItem(secondItem);
@@ -4451,7 +3558,7 @@ public class WSTest {
         try {
             api.updateOrder(testOrder, null);
             fail("Should throw a exception!!");
-        } catch (SecurityException se){
+        } catch (SessionInternalError se){
             System.out.println("Exception thrown!!\n" + se.getMessage());
 
         } finally {
@@ -4465,7 +3572,7 @@ public class WSTest {
     @Test
     public void test044SaveLegacyOrder() {
 
-        ItemDTOEx firstItem = createProduct(35, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false);
+        ItemDTOEx firstItem = createProduct(35, BigDecimal.ONE, "Product".concat(String.valueOf(System.currentTimeMillis())), false, new DateMidnight(2012, 6, 1).toDate());
         System.out.println("Creating item ..." + firstItem);
         Integer firstItemId = api.createItem(firstItem);
         assertNotNull("Second Product should be created", firstItemId);
@@ -4512,117 +3619,11 @@ public class WSTest {
     }
 
 	@Test
-    public void test039OrderPlanSwap() throws Exception {
-        System.out.println("test039OrderPlanSwap");
-
-        String uuid = "_" + new Date().getTime();
-        ItemDTOEx smsActivation = createProduct(39, new BigDecimal(39), "SMS Service Activation" + uuid, false);
-        Integer smsActivationId = api.createItem(smsActivation);
-        smsActivation.setId(smsActivationId);
-
-        ItemDTOEx gprsActivation = createProduct(39, new BigDecimal(39), "GPRS Service Activation" + uuid, false);
-        Integer gprsActivationId = api.createItem(gprsActivation);
-        gprsActivation.setId(gprsActivationId);
-
-        ItemDTOEx gggActivation = createProduct(39, new BigDecimal(39), "3G Service Activation" + uuid, false);
-        Integer gggActivationId = api.createItem(gggActivation);
-        gggActivation.setId(gggActivationId);
-
-        ItemDTOEx smsToAmerica = createProduct(39, new BigDecimal(39), "SMS to North America" + uuid, false);
-        Integer smsToAmericaId = api.createItem(smsToAmerica);
-        smsToAmerica.setId(smsToAmericaId);
-
-        List<PlanItemWS> planItems = new LinkedList<PlanItemWS>();
-        planItems.add(createPlanItem(smsActivationId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY));
-        planItems.add(createPlanItem(gprsActivationId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY));
-        planItems.add(createPlanItem(smsToAmericaId, BigDecimal.ZERO, ORDER_PERIOD_MONTHLY));
-        PlanWS goldPlan = createPlan(39, "Gold plan", BigDecimal.TEN, planItems, api);
-
-        ItemDTOEx goldPlanItem = api.getItem(goldPlan.getItemId(), GANDALF_USER_ID, new PricingField[]{});
-
-
-        OrderWS order = createOrder(39, "Order with plan");
-        order.setPeriod(ORDER_PERIOD_MONTHLY);
-        List<OrderChangeWS> changes = new LinkedList<OrderChangeWS>();
-        OrderChangeWS planItemChange = buildFromItem(goldPlanItem, order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID);
-        OrderChangePlanItemWS smsActivationChange = buildPlanChangeFromItem(smsActivation);
-        OrderChangePlanItemWS gprsActivationChange = buildPlanChangeFromItem(gprsActivation);
-        OrderChangePlanItemWS smsToAmericaChange = buildPlanChangeFromItem(smsToAmerica);
-
-        planItemChange.setOrderChangePlanItems(new OrderChangePlanItemWS[]{smsActivationChange, gprsActivationChange, smsToAmericaChange});
-        changes.add(planItemChange);
-
-        Integer orderId = api.createUpdateOrder(order, changes.toArray(new OrderChangeWS[changes.size()]));
-        assertNotNull("Order should be created", orderId);
-        order = api.getOrder(orderId);
-
-        assertEquals("Incorrect count of Order lines", 3, order.getOrderLines().length);
-        assertEquals("Incorrect order status", Constants.DEFAULT_ORDER_INVOICE_STATUS_ID, order.getOrderStatusWS().getId());
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), goldPlanItem.getId()));
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), smsActivation.getId()));
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), gprsActivation.getId()));
-
-        //create another plan and subscribe to it
-        planItems = new LinkedList<PlanItemWS>();
-        planItems.add(createPlanItem(smsActivationId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY));
-        planItems.add(createPlanItem(gggActivationId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY));
-        planItems.add(createPlanItem(smsToAmericaId, BigDecimal.ZERO, ORDER_PERIOD_MONTHLY));
-        PlanWS titaniumPlan = createPlan(39, "Titanium plan", new BigDecimal("20"), planItems, api);
-
-        ItemDTOEx titaniumPlanItem = api.getItem(titaniumPlan.getItemId(), GANDALF_USER_ID, new PricingField[]{});
-
-
-        OrderChangeWS[] changesToSwap = api.calculateSwapPlanChanges(order, goldPlanItem.getId(), titaniumPlanItem.getId(), SwapMethod.DIFF, Util.truncateDate(new Date()));
-        assertNotNull("Swap changes should be calculated", changesToSwap);
-        assertEquals("Swap changes count is incorrect for DEFAULT method", 3, changesToSwap.length);
-        OrderChangeWS changeForPlan = findOrderChangeWithItem(changesToSwap, titaniumPlanItem.getId());
-        assertEquals("OrderChangePlanItemWS should be found", 1, changeForPlan.getOrderChangePlanItems().length);
-
-        api.createUpdateOrder(order, changesToSwap);
-        order = api.getOrder(orderId);
-
-        assertEquals("Incorrect count of Order lines after swap", 3, order.getOrderLines().length);
-        assertEquals("Incorrect order status", Constants.DEFAULT_ORDER_INVOICE_STATUS_ID, order.getOrderStatusWS().getId());
-        assertNull("Line for item Gold plan should not be found", findOrderLineWithItem(order.getOrderLines(), goldPlanItem.getId()));
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), titaniumPlanItem.getId()));
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), smsActivation.getId()));
-        assertNull("Line for item GPGS activation should not be found", findOrderLineWithItem(order.getOrderLines(), gprsActivation.getId()));
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), gggActivation.getId()));
-
-        OrderChangeWS[] changesToSwap2 = api.calculateSwapPlanChanges(order, titaniumPlanItem.getId(), goldPlanItem.getId(), SwapMethod.DEFAULT, Util.truncateDate(new Date()));
-        assertNotNull("Swap changes should be calculated", changesToSwap2);
-        assertEquals("Swap changes count is incorrect for DEFAULT method", 4, changesToSwap2.length);
-        changeForPlan = findOrderChangeWithItem(changesToSwap2, goldPlanItem.getId());
-        assertEquals("OrderChangePlanItemWS should be found", 2, changeForPlan.getOrderChangePlanItems().length);
-
-
-        api.createUpdateOrder(order, changesToSwap2);
-        order = api.getOrder(orderId);
-
-        assertEquals("Incorrect count of Order lines after swap", 3, order.getOrderLines().length);
-        assertEquals("Incorrect order status", Constants.DEFAULT_ORDER_INVOICE_STATUS_ID, order.getOrderStatusWS().getId());
-        assertNotNull("Line for item Gold plan should be found now", findOrderLineWithItem(order.getOrderLines(), goldPlanItem.getId()));
-        assertNull("Line for item should not be found", findOrderLineWithItem(order.getOrderLines(), titaniumPlanItem.getId()));
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), smsActivation.getId()));
-        assertNotNull("Line for item GPGS activation should be found", findOrderLineWithItem(order.getOrderLines(), gprsActivation.getId()));
-        assertNull("Line for item should not be found", findOrderLineWithItem(order.getOrderLines(), gggActivation.getId()));
-
-		//cleanup
-		api.deleteOrder(orderId);
-		api.deleteItem(titaniumPlan.getItemId());
-		api.deleteItem(goldPlan.getItemId());
-		api.deleteItem(smsToAmerica.getId());
-		api.deleteItem(gggActivation.getId());
-		api.deleteItem(gprsActivation.getId());
-		api.deleteItem(smsActivation.getId());
-    }
-
-	@Test
     public void test40ApplyOrderChangeWithMetaFieldsFromType() throws Exception {
         System.out.println("test40ApplyOrderChangeWithMetaFieldsFromType");
 
         String uuid = "_" + new Date().getTime();
-        ItemDTOEx smsidn = createProduct(40, new BigDecimal(40), "SMSISDN" + uuid, true);
+        ItemDTOEx smsidn = createProduct(40, new BigDecimal(40), "SMSISDN" + uuid, true, new DateMidnight(2012, 6, 1).toDate());
         Integer smsidnId = api.createItem(smsidn);
         smsidn.setId(smsidnId);
 
@@ -4699,7 +3700,7 @@ public class WSTest {
 
         ///JbillingAPI api = JbillingAPIFactory.getAPI();
 
-        ItemDTOEx isdn = createProduct(40, new BigDecimal(40), "SMSISDN".concat(String.valueOf(System.currentTimeMillis())), true);
+        ItemDTOEx isdn = createProduct(40, new BigDecimal(40), "SMSISDN".concat(String.valueOf(System.currentTimeMillis())), true, new DateMidnight(2012, 6, 1).toDate());
         Integer isdnId = api.createItem(isdn);
         isdn.setId(isdnId);
 
@@ -4770,7 +3771,7 @@ public class WSTest {
         api.createUserCode(uc);
 
         // Create New Test Item
-        ItemDTOEx testItem = CreateObjectUtil.createItem(PRANCING_PONY_ENTITY_ID, BigDecimal.ONE, Constants.PRIMARY_CURRENCY_ID, PRANCING_PONY_CATEGORY_ID, "Test Product");
+        ItemDTOEx testItem = CreateObjectUtil.createItem(PRANCING_PONY_ENTITY_ID, BigDecimal.ONE, Constants.PRIMARY_CURRENCY_ID, PRANCING_PONY_CATEGORY_ID, "Test Product", new DateMidnight(2012, 6, 1).toDate());
         // Persist
         Integer testItemId = api.createItem(testItem);
 
@@ -4846,12 +3847,7 @@ public class WSTest {
         ItemTypeWS itemType = new ItemTypeWS();
         itemType.setDescription("Subscription Category:"+random);
         itemType.setOrderLineTypeId(5);
-
-        try {
-        	api.createItemCategory(itemType);
-        	fail("Item category must not have been created, Subscription category must allow asset management");
-        } catch (Exception e) {
-        }
+        // Now its not mandatory to add asset management with Subscription Category
 
         itemType.setAllowAssetManagement(1);
 
@@ -4863,7 +3859,7 @@ public class WSTest {
         System.out.println("Subscription category created");
 
         // create subscription product
-        ItemDTOEx item = createProduct(40, BigDecimal.ONE, "40:"+random, true);
+        ItemDTOEx item = createProduct(40, BigDecimal.ONE, "40:"+random, true, new DateMidnight(2012, 6, 1).toDate());
         item.setTypes(new Integer[]{itemTypeId});
         Integer itemId = api.createItem(item);
 
@@ -4956,7 +3952,7 @@ public class WSTest {
         System.out.println("Subscription category created");
 
         // create subscription product
-        ItemDTOEx item = createProduct(40, BigDecimal.ONE, "41:"+random, true);
+        ItemDTOEx item = createProduct(40, BigDecimal.ONE, "41:"+random, true, new DateMidnight(2012, 6, 1).toDate());
         item.setTypes(new Integer[]{itemTypeId});
         Integer itemId = api.createItem(item);
 
@@ -4990,9 +3986,8 @@ public class WSTest {
         OrderChangeWS[] changes = OrderChangeBL.buildFromOrder(newOrder, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID);
         System.out.println("Creating subscription account and order ... ");
 
-        List<OrderChangeWS> changesList = new ArrayList<OrderChangeWS>(Arrays.asList(changes));
-
-        Integer[] orderIds = api.createSubscriptionAccountAndOrder(user.getId(), newOrder, true, changesList);
+        List<OrderChangeWS> orderChanges = JArrays.toArrayList(changes);
+        Integer[] orderIds = api.createSubscriptionAccountAndOrder(user.getId(), newOrder, true, orderChanges);
         assertNotNull("The order should have been created", orderIds);
         assertNotNull("There should only be one order left", orderIds.length == 1);
 
@@ -5010,8 +4005,8 @@ public class WSTest {
 		api.deleteItemCategory(itemTypeId);
 		api.deleteUser(parent.getChildIds()[0]);
 		api.deleteUser(parent.getId());
-    }
-
+    }	
+    
     private void addDefaultStatusesToCategory(ItemTypeWS itemType) {
         AssetStatusDTOEx status = new AssetStatusDTOEx();
         status.setDescription("Default");
@@ -5033,88 +4028,6 @@ public class WSTest {
         status.setIsDefault(0);
         status.setIsOrderSaved(0);
         itemType.getAssetStatuses().add(status);
-    }
-
-    @Test
-    public void test046CreateOrderWithPlanViaPlanItemChanges() {
-
-        ItemDTOEx smsActivation = createProduct(46, BigDecimal.ONE, "SMS Service Activation", false);
-        Integer smsActivationId = api.createItem(smsActivation);
-        smsActivation.setId(smsActivationId);
-
-        ItemDTOEx gprsActivation = createProduct(46, BigDecimal.ONE, "GPRS Service Activation", false);
-        Integer gprsActivationId = api.createItem(gprsActivation);
-        gprsActivation.setId(gprsActivationId);
-
-        ItemDTOEx gggActivation = createProduct(46, BigDecimal.ONE, "3G Service Activation", false);
-        Integer gggActivationId = api.createItem(gggActivation);
-        gggActivation.setId(gggActivationId);
-
-        ItemDTOEx smsToAmerica = createProduct(46, BigDecimal.ONE, "SMS to North America", false);
-        Integer smsToAmericaId = api.createItem(smsToAmerica);
-        smsToAmerica.setId(smsToAmericaId);
-
-        List<PlanItemWS> planItems = new LinkedList<PlanItemWS>();
-        planItems.add(createPlanItem(smsActivationId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY));
-        planItems.add(createPlanItem(gprsActivationId, BigDecimal.ONE, ORDER_PERIOD_MONTHLY));
-        planItems.add(createPlanItem(smsToAmericaId, BigDecimal.ZERO, ORDER_PERIOD_MONTHLY));
-        PlanWS goldPlan = createPlan(46, "Gold plan".concat(String.valueOf(System.currentTimeMillis())), BigDecimal.TEN, planItems, api);
-
-        ItemDTOEx goldPlanItem = api.getItem(goldPlan.getItemId(), PRANCING_PONY_USER_ID, new PricingField[]{});
-
-        OrderWS order = buildOrder(PRANCING_PONY_USER_ID, Constants.ORDER_BILLING_POST_PAID, ORDER_PERIOD_MONTHLY);
-        List<OrderChangeWS> changes = new LinkedList<OrderChangeWS>();
-        OrderChangeWS planItemChange = buildFromItem(goldPlanItem, order, PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID);
-        OrderChangePlanItemWS smsActivationPlanItemChange = buildPlanChangeFromItem(smsActivation);
-        OrderChangePlanItemWS gprsActivationPlanItemChange = buildPlanChangeFromItem(gprsActivation);
-        OrderChangePlanItemWS smsToAmericaPlanItemChange = buildPlanChangeFromItem(smsToAmerica);
-
-        planItemChange.setOrderChangePlanItems(new OrderChangePlanItemWS[] {smsActivationPlanItemChange});
-        // edit description to non-standard
-        smsActivationPlanItemChange.setDescription("Test description to sms activation plan change");
-        // edit change date to prevent apply
-        planItemChange.setStartDate(Util.truncateDate(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 2L)));
-
-        changes.add(planItemChange);
-
-        Integer orderId = api.createUpdateOrder(order, changes.toArray(new OrderChangeWS[changes.size()]));
-        assertNotNull("Order should be created", orderId);
-        order = api.getOrder(orderId);
-
-        assertEquals("Incorrect count of Order lines: should not be created", 0, order.getOrderLines().length);
-
-        List<OrderChangeWS> persistedChanges = Arrays.asList(api.getOrderChanges(orderId));
-        assertEquals("Change should be persisted", 1, persistedChanges.size());
-        assertEquals("Change plan items should be persisted", 1, persistedChanges.get(0).getOrderChangePlanItems().length);
-        planItemChange = persistedChanges.get(0);
-        List<OrderChangePlanItemWS> planItemChanges = new LinkedList<OrderChangePlanItemWS>();
-        planItemChanges.add(planItemChange.getOrderChangePlanItems()[0]);
-        smsToAmericaPlanItemChange.setDescription("Description 2 test for sma to America");
-        planItemChanges.add(smsToAmericaPlanItemChange);
-        planItemChange.setOrderChangePlanItems(planItemChanges.toArray(new OrderChangePlanItemWS[planItemChanges.size()]));
-        // set date to apply change
-        planItemChange.setStartDate(Util.truncateDate(new Date()));
-        planItemChange.setStatusId(PRANCING_PONY_ORDER_CHANGE_STATUS_APPLY_ID);
-        api.createUpdateOrder(order, new OrderChangeWS[]{planItemChange});
-
-        order = api.getOrder(orderId);
-        assertEquals("Incorrect count of Order lines: should be created now", 3, order.getOrderLines().length);
-
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), goldPlanItem.getId()));
-        assertNotNull("Line for item not found", findOrderLineWithItem(order.getOrderLines(), smsActivation.getId()));
-        assertNotNull("Line for item not found, but was in plan, without change", findOrderLineWithItem(order.getOrderLines(), gprsActivation.getId()));
-        assertNull("Line for item should not be found (ZERO bundle)", findOrderLineWithItem(order.getOrderLines(), smsToAmerica.getId()));
-
-        assertEquals("Description of line should be from planItemOrderChange", smsActivationPlanItemChange.getDescription(), findOrderLineWithItem(order.getOrderLines(), smsActivation.getId()).getDescription());
-
-        api.deleteOrder(orderId);
-        api.deletePlan(goldPlan.getId());
-        api.deleteItem(goldPlanItem.getId());
-        api.deleteItem(gggActivationId);
-        api.deleteItem(gprsActivationId);
-        api.deleteItem(smsActivationId);
-        api.deleteItem(smsToAmericaId);
-
     }
 
     private AssetWS getAssetWS() {
@@ -5305,10 +4218,10 @@ public class WSTest {
         return newUser;
     }
 
-    private ItemDTOEx createProduct(int testNumber, BigDecimal price, String productNumber, boolean assetsManagementEnabled) {
+    private ItemDTOEx createProduct(int testNumber, BigDecimal price, String productNumber, boolean assetsManagementEnabled, Date startDate) {
         ItemDTOEx product = CreateObjectUtil.createItem(
 		        PRANCING_PONY_ENTITY_ID, price, Constants.PRIMARY_CURRENCY_ID, PRANCING_PONY_CATEGORY_ID,
-		        trimToLength("OrderWS " + testNumber + "-" + productNumber, 35));
+		        trimToLength("OrderWS " + testNumber + "-" + productNumber, 35), startDate);
         product.setNumber(trimToLength("OrderWS " + testNumber + "-" + productNumber, 50));
         product.setAssetManagementEnabled(assetsManagementEnabled ? 1 : 0);
         return product;
@@ -5464,35 +4377,35 @@ public class WSTest {
         return api.getOrderChangeTypeById(id);
     }
 
-    private PlanWS createPlan(int testNumber,
-                              String planName,
-                              BigDecimal price,
-                              List<PlanItemWS> planBundleItems,
-                              JbillingAPI api) {
-        ItemDTOEx planItem = createProduct(testNumber, price, planName, false);
-        planItem.setId(api.createItem(planItem));
-        PlanWS plan = new PlanWS();
-        plan.setEditable(0);
-        plan.setPeriodId(ORDER_PERIOD_MONTHLY);
-        plan.setItemId(planItem.getId());
-        plan.setPlanItems(planBundleItems);
-        Integer planId = api.createPlan(plan);
-        return api.getPlanWS(planId);
-    }
-
-    private PlanItemWS createPlanItem(Integer itemId,
-                                      BigDecimal quantity, Integer periodId) {
-        PlanItemWS planItemWS = new PlanItemWS();
-        PlanItemBundleWS bundle = new PlanItemBundleWS();
-        bundle.setPeriodId(periodId);
-        bundle.setQuantity(quantity);
-        planItemWS.setItemId(itemId);
-        planItemWS.setBundle(bundle);
-        planItemWS.addModel(CommonConstants.EPOCH_DATE,
-                new PriceModelWS(PriceModelStrategy.ZERO.name(), BigDecimal.ZERO, Constants.PRIMARY_CURRENCY_ID));
-                //new PriceModelWS(PriceModelStrategy.ZERO.name(), BigDecimal.ONE, Constants.PRIMARY_CURRENCY_ID));
-        return planItemWS;
-    }
+//    private PlanWS createPlan(int testNumber,
+//                              String planName,
+//                              BigDecimal price,
+//                              List<PlanItemWS> planBundleItems,
+//                              JbillingAPI api) {
+//        ItemDTOEx planItem = createProduct(testNumber, price, planName, false);
+//        planItem.setId(api.createItem(planItem));
+//        PlanWS plan = new PlanWS();
+//        plan.setEditable(0);
+//        plan.setPeriodId(ORDER_PERIOD_MONTHLY);
+//        plan.setItemId(planItem.getId());
+//        plan.setPlanItems(planBundleItems);
+//        Integer planId = api.createPlan(plan);
+//        return api.getPlanWS(planId);
+//    }
+//
+//    private PlanItemWS createPlanItem(Integer itemId,
+//                                      BigDecimal quantity, Integer periodId) {
+//        PlanItemWS planItemWS = new PlanItemWS();
+//        PlanItemBundleWS bundle = new PlanItemBundleWS();
+//        bundle.setPeriodId(periodId);
+//        bundle.setQuantity(quantity);
+//        planItemWS.setItemId(itemId);
+//        planItemWS.setBundle(bundle);
+//        planItemWS.addModel(CommonConstants.EPOCH_DATE,
+//                new PriceModelWS(PriceModelStrategy.ZERO.name(), BigDecimal.ZERO, Constants.PRIMARY_CURRENCY_ID));
+//                //new PriceModelWS(PriceModelStrategy.ZERO.name(), BigDecimal.ONE, Constants.PRIMARY_CURRENCY_ID));
+//        return planItemWS;
+//    }
 
     private String trimToLength(String value, int length) {
         if (value == null || value.length() < length) return value;
@@ -5694,5 +4607,15 @@ public class WSTest {
         monthly.setDescriptions(Arrays.asList(new InternationalDescriptionWS(Constants.LANGUAGE_ENGLISH_ID, "ORD:MONTHLY")));
         return api.createOrderPeriod(monthly);
     }
+    
+    public static ItemPriceDTOEx setItemPrice(BigDecimal price, Date startDate, Integer entityId, Integer currencyId) {
+    	ItemPriceDTOEx itemPrice = new ItemPriceDTOEx();
+    		itemPrice.setCurrencyId(currencyId);
+    		itemPrice.setPrice(price);
+    		itemPrice.setValidDate(startDate);
+    		itemPrice.setEntityId(entityId);
+    	return itemPrice;	
+    		
+    }	
 
 }

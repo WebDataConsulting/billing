@@ -24,14 +24,11 @@
 
 package com.sapienter.jbilling.server.util.db;
 
-import java.io.Serializable;
-
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.Constants;
-;
-
-import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.Context;
+
+import java.io.Serializable;
 
 public abstract class AbstractDescription implements Serializable {
 

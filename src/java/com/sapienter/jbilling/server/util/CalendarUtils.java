@@ -30,7 +30,6 @@ import com.sapienter.jbilling.server.process.IBillingProcessSessionBean;
 import com.sapienter.jbilling.server.process.db.PeriodUnitDTO;
 
 import com.sapienter.jbilling.server.user.db.UserDTO;
-;
 import org.joda.time.*;
 import org.joda.time.base.BaseSingleFieldPeriod;
 

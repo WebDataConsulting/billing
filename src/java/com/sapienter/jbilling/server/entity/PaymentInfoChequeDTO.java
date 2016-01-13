@@ -170,7 +170,7 @@ public class PaymentInfoChequeDTO implements Serializable {
     {
         StringBuffer str = new StringBuffer("{");
 
-        str.append("id=" + getId() + " " + "bank=" + getBank() + " " + "number=" + getNumber() + " " + "date=" + getDate());
+        str.append("id=").append(getId()).append(" ").append("bank=").append(getBank()).append(" ").append("number=").append(getNumber()).append(" ").append("date=").append(getDate());
         str.append('}');
 
         return(str.toString());

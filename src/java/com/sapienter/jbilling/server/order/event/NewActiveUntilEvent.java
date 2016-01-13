@@ -26,8 +26,6 @@ package com.sapienter.jbilling.server.order.event;
 
 import java.util.Date;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.order.OrderBL;
 import com.sapienter.jbilling.server.system.event.Event;

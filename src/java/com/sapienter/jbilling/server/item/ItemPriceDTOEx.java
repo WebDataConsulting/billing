@@ -104,7 +104,7 @@ public class ItemPriceDTOEx implements Serializable {
 
     public String itemPriceDtoToString() {
         StringBuffer str = new StringBuffer("{");
-        str.append("id=" + getId() + " " + "price=" + getPrice() + " " + "currencyId=" + getCurrencyId());
+        str.append("id=").append(getId()).append(" ").append("price=").append(getPrice()).append(" ").append("currencyId=").append(getCurrencyId());
         str.append('}');
 
         return (str.toString());

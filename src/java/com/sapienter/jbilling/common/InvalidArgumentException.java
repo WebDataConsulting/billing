@@ -23,8 +23,6 @@
  */
 package com.sapienter.jbilling.common;
 
-;
-
 public class InvalidArgumentException extends RuntimeException {
     private final Integer code;
     private final Exception e;

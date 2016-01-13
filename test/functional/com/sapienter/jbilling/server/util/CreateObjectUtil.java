@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.sapienter.jbilling.server.item.ItemDTOEx;
+import com.sapienter.jbilling.server.item.ItemPriceDTOEx;
+import com.sapienter.jbilling.server.item.db.ItemPriceDTO;
 import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
 import com.sapienter.jbilling.server.metafields.DataType;
 import com.sapienter.jbilling.server.order.OrderLineWS;
@@ -357,17 +359,27 @@ public class CreateObjectUtil {
 	* @param itemType
 	* @return ItemDTOEx
 	*/
-    public static ItemDTOEx createItem(Integer entityId, BigDecimal cost, Integer currencyID, Integer itemType, String description) {
+    public static ItemDTOEx createItem(Integer entityId, BigDecimal cost, Integer currencyID, Integer itemType, String description, Date startDate ) {
 	     ItemDTOEx item = new ItemDTOEx();
 	     item.setNumber(String.valueOf(new Date().getTime()));
 	     item.setEntityId(entityId);
 	     item.setDescription(description + Constants.SINGLE_SPACE + new Date().getTime());
 	     item.setCurrencyId(currencyID);
 	     item.setTypes(new Integer[] { itemType });
-	     item.setPrice(cost);
+	     item.setPrices(setItemPrice(cost, startDate, entityId, currencyID));
 	     return item;
     }
     
+    public static 	List<ItemPriceDTOEx> setItemPrice(BigDecimal price, Date startDate, Integer entityId, Integer currencyId) {
+    	List<ItemPriceDTOEx> itemPriceDto = new ArrayList<ItemPriceDTOEx>();
+    	ItemPriceDTOEx itemPrice = new ItemPriceDTOEx();
+			itemPrice.setPrice(price);
+			itemPrice.setCurrencyId(currencyId); 
+			itemPrice.setEntityId(entityId);
+			itemPrice.setValidDate(startDate);
+		itemPriceDto.add(itemPrice);	
+    	return itemPriceDto;
+    }
     public static ItemDTOEx createPercentageItem(Integer entityId, BigDecimal percentage, Integer currencyID, Integer itemType, String description) {
 	     ItemDTOEx item = new ItemDTOEx();
 	     item.setNumber(String.valueOf(new Date().getTime()));
@@ -375,8 +387,7 @@ public class CreateObjectUtil {
 	     item.setDescription("Percentage Item: " + description + Constants.SINGLE_SPACE + new Date().getTime());
 	     item.setCurrencyId(currencyID);
 	     item.setTypes(new Integer[] { itemType });
-         item.getDefaultPrices().put(new DateTime(2014, 12, 15, 0, 0, 0, 0).withTime(0, 0, 0, 0).toDate(), new PriceModelWS(PriceModelStrategy.LINE_PERCENTAGE
-                .name(), percentage, currencyID));
+         
 	     return item;
     }   
     

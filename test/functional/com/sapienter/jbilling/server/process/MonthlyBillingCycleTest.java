@@ -45,10 +45,9 @@ import com.sapienter.jbilling.server.user.MainSubscriptionWS;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.CustomerDAS;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
-import com.sapienter.jbilling.server.util.BillingProcessTestCase;
+import com.sapienter.jbilling.server.process.BillingProcessTestCase;
 import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.server.entity.InvoiceLineDTO;
 import com.sapienter.jbilling.server.invoice.InvoiceWS;
 import com.sapienter.jbilling.server.order.OrderWS;
 import com.sapienter.jbilling.server.user.UserWS;
@@ -481,10 +480,10 @@ public class MonthlyBillingCycleTest extends BillingProcessTestCase {
         logger.info(S("Total Invoice lines  :{}", invoice.getInvoiceLines().length));
         assertEquals("Invoice Lines should be 2 ", 2, invoice.getInvoiceLines().length);
         api.getOrderProcessesByInvoice(invoice.getId());
-        for (InvoiceLineDTO line : invoice.getInvoiceLines()) {
+        for (com.sapienter.jbilling.server.entity.InvoiceLineDTO line : invoice.getInvoiceLines()) {
             logger.info(S("Getting all invoice lines : {}", line));
         }
-        InvoiceLineDTO line = invoice.getInvoiceLines()[0];
+        com.sapienter.jbilling.server.entity.InvoiceLineDTO line = invoice.getInvoiceLines()[0];
         assertEquals("1st description for Invoice should be: ",
                 S("Order line: {} Period from 12/15/2009 to 12/31/2009", line.getItemId()),
                 line.getDescription());
@@ -505,11 +504,11 @@ public class MonthlyBillingCycleTest extends BillingProcessTestCase {
         logger.info(S("Total Invoice lines  :{}", invoice.getInvoiceLines().length));
         assertEquals("Invoice Lines should be 5=2+3(due) ", 5, invoice.getInvoiceLines().length);
         api.getOrderProcessesByInvoice(invoice.getId());
-        for (InvoiceLineDTO line : invoice.getInvoiceLines()) {
+        for (com.sapienter.jbilling.server.entity.InvoiceLineDTO line : invoice.getInvoiceLines()) {
             logger.info(S("Getting all invoice lines : {}", line));
         }
         // skipped 3 due invoice lines
-        InvoiceLineDTO line = invoice.getInvoiceLines()[3];
+        com.sapienter.jbilling.server.entity.InvoiceLineDTO line = invoice.getInvoiceLines()[3];
         assertEquals("1st description for Invoice should be: ",
                 S("Order line: {} Period from 04/02/2010 to 04/08/2010", line.getItemId()),
                 line.getDescription());
@@ -546,7 +545,7 @@ public class MonthlyBillingCycleTest extends BillingProcessTestCase {
             }
             assertEquals(S("Should have last invoice for {}", order), 1, invoiceIds.length);
             InvoiceWS invoice = api.getInvoiceWS(invoiceIds[0]);
-            InvoiceLineDTO[] lines = invoice.getInvoiceLines();
+            com.sapienter.jbilling.server.entity.InvoiceLineDTO[] lines = invoice.getInvoiceLines();
 
             logger.info(S("Generated Invoice Id for {}:{}", order, invoice.getId()));
             logger.info(S("Total Invoice lines for  {}:{}", invoice.getId(), lines.length));
@@ -554,7 +553,7 @@ public class MonthlyBillingCycleTest extends BillingProcessTestCase {
                     S("{} Invoice Lines count for {} should be {} + due lines {}", invoice.getCreateDateTime(), order,
                             invoiceLines, dueInvoiceLines), invoiceLines + dueInvoiceLines, lines.length);
 
-            for (InvoiceLineDTO line : invoice.getInvoiceLines()) {
+            for (com.sapienter.jbilling.server.entity.InvoiceLineDTO line : invoice.getInvoiceLines()) {
                 if (line.getItemId() == null) {
                     continue;
                 }

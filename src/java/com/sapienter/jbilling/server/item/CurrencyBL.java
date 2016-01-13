@@ -40,7 +40,6 @@ import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 import com.sapienter.jbilling.server.util.db.CurrencyExchangeDAS;
 import com.sapienter.jbilling.server.util.db.CurrencyExchangeDTO;
 
-;
 import org.springmodules.cache.CachingModel;
 import org.springmodules.cache.FlushingModel;
 import org.springmodules.cache.provider.CacheProviderFacade;
@@ -178,7 +177,7 @@ public class CurrencyBL {
                 company.getCurrencies().remove(currency);
             }
 
-            invalidateCache();;
+            invalidateCache();
 
         } else {
             LOG.error("Cannot update, CurrencyDTO not found or not set!");
@@ -220,7 +219,7 @@ public class CurrencyBL {
         }
 
         exchangeRate.setRate(amount);
-        invalidateCache();;
+        invalidateCache();
         return exchangeRate;
     }
 
@@ -325,7 +324,7 @@ public class CurrencyBL {
             }
         }
 
-        invalidateCache();;
+        invalidateCache();
     }
 
     public static List<Date> getUsedTimePoints(Integer entityId) {

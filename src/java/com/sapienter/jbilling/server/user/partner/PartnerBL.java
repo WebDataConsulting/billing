@@ -38,7 +38,6 @@ import javax.sql.rowset.CachedRowSet;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;

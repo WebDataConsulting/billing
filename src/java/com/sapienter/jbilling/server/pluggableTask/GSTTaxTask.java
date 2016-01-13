@@ -24,10 +24,6 @@
 
 package com.sapienter.jbilling.server.pluggableTask;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.db.ItemDTO;
 import com.sapienter.jbilling.server.order.OrderBL;
@@ -35,6 +31,8 @@ import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
 import com.sapienter.jbilling.server.util.Constants;
+
+import java.math.BigDecimal;
 
 /**
  * Basic tasks that takes the quantity and multiplies it by the price to 
@@ -60,7 +58,7 @@ public class GSTTaxTask extends PluggableTask implements OrderProcessingTask {
 
     public void doProcessing(OrderDTO order) throws TaskException {
         BigDecimal orderTotal = order.getTotal();
-        BigDecimal taxRate = new BigDecimal(parameters.get(PARAMETER_RATE.getName()).toString());
+        BigDecimal taxRate = new BigDecimal(parameters.get(PARAMETER_RATE.getName()));
         BigDecimal gstTax = orderTotal.divide(new BigDecimal("100"), Constants.BIGDECIMAL_SCALE, Constants.BIGDECIMAL_ROUND).multiply(taxRate);
         
         OrderLineDTO taxLine = new OrderLineDTO();

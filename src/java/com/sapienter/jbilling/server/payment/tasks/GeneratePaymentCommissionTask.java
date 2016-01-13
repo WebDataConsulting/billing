@@ -33,7 +33,7 @@ import com.sapienter.jbilling.server.system.event.Event;
 import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.user.partner.db.PaymentCommissionDAS;
 import com.sapienter.jbilling.server.user.partner.db.PaymentCommissionDTO;
-;
+
 
 import java.math.BigDecimal;
 

@@ -31,8 +31,6 @@ package com.sapienter.jbilling.server.pluggableTask;
 import java.util.GregorianCalendar;
 
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.process.db.BillingProcessDTO;

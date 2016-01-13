@@ -102,6 +102,7 @@ import static com.sapienter.jbilling.test.Asserts.*;
 import static org.testng.AssertJUnit.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
 
 /**
  * @author Bilal Nasir
@@ -179,7 +180,8 @@ public class OrderCancellationFeeTest {
         descriptions.add(enDesc);
 
         newItem.setDescriptions(descriptions);
-        newItem.setPrice(new BigDecimal(1));
+        newItem.setPriceManual(0);
+        newItem.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal(1), new DateMidnight(1970, 1, 1).toDate(), PRANCING_PONY, Integer.valueOf(1)));
         newItem.setNumber("FP");
         newItem.setTypes(new Integer[]{itemTypeId});
 
@@ -193,7 +195,8 @@ public class OrderCancellationFeeTest {
         descriptions1.add(enDesc1);
 
         newItem1.setDescriptions(descriptions);
-        newItem1.setPrice(new BigDecimal(25));
+        newItem1.setPriceManual(0);
+        newItem1.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal(25), new DateMidnight(1970, 1, 1).toDate(), PRANCING_PONY, Integer.valueOf(1)));
         newItem1.setNumber("CP");
         newItem1.setTypes(new Integer[]{itemTypeId});
 

@@ -25,15 +25,11 @@
 package com.sapienter.jbilling.server.user;
 
 import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.common.JNDILookup;
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.server.notification.NotificationBL;
 import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
-import com.sapienter.jbilling.server.payment.PaymentBL;
 import com.sapienter.jbilling.server.payment.PaymentInformationBL;
-import com.sapienter.jbilling.server.payment.db.PaymentDTO;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.payment.db.PaymentInformationDTO;
+import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.process.AgeingBL;
 import com.sapienter.jbilling.server.user.db.*;
 import com.sapienter.jbilling.server.user.partner.PartnerBL;
@@ -46,9 +42,6 @@ import com.sapienter.jbilling.server.util.PreferenceBL;
 import com.sapienter.jbilling.server.util.audit.db.EventLogDAS;
 import com.sapienter.jbilling.server.util.audit.db.EventLogDTO;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
-import com.sapienter.jbilling.server.util.db.LanguageDAS;
-
-;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -62,12 +55,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+;
 
 /**
  *
@@ -276,9 +268,9 @@ public class UserSessionBean implements IUserSessionBean, ApplicationContextAwar
             UserBL user = new UserBL(userId);
             Integer isParent = user.getEntity().getCustomer().getIsParent();
             if (isParent == null || isParent.intValue() == 0) {
-                return new Boolean(false);
+                return Boolean.FALSE;
             } else {
-                return new Boolean(true);
+                return Boolean.TRUE;
             }
         } catch (Exception e) {
             throw new SessionInternalError(e);

@@ -24,10 +24,69 @@
 
 package com.sapienter.jbilling.server.notification;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.common.SessionInternalError;
+import com.sapienter.jbilling.server.invoice.InvoiceBL;
+import com.sapienter.jbilling.server.invoice.InvoiceLineComparator;
+import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
+import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
+import com.sapienter.jbilling.server.item.CurrencyBL;
+import com.sapienter.jbilling.server.list.ResultList;
+import com.sapienter.jbilling.server.metafields.MetaFieldBL;
+import com.sapienter.jbilling.server.metafields.MetaFieldType;
+import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
+import com.sapienter.jbilling.server.metafields.db.MetaFieldDAS;
+import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
+import com.sapienter.jbilling.server.notification.db.*;
+import com.sapienter.jbilling.server.payment.PaymentBL;
+import com.sapienter.jbilling.server.payment.PaymentDTOEx;
+import com.sapienter.jbilling.server.payment.PaymentInformationBL;
+import com.sapienter.jbilling.server.payment.PaymentInformationWS;
+import com.sapienter.jbilling.server.payment.db.PaymentInformationDTO;
+import com.sapienter.jbilling.server.payment.db.PaymentResultDTO;
+import com.sapienter.jbilling.server.pluggableTask.NotificationTask;
+import com.sapienter.jbilling.server.pluggableTask.PaperInvoiceNotificationTask;
+import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
+import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
+import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
+import com.sapienter.jbilling.server.user.ContactBL;
+import com.sapienter.jbilling.server.user.ContactDTOEx;
+import com.sapienter.jbilling.server.user.EntityBL;
+import com.sapienter.jbilling.server.user.UserBL;
+import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
+import com.sapienter.jbilling.server.user.db.CompanyDAS;
+import com.sapienter.jbilling.server.user.db.UserDAS;
+import com.sapienter.jbilling.server.user.db.UserDTO;
+import com.sapienter.jbilling.server.user.partner.PartnerBL;
+import com.sapienter.jbilling.server.util.Constants;
+import com.sapienter.jbilling.server.util.Context;
+import com.sapienter.jbilling.server.util.PreferenceBL;
+import com.sapienter.jbilling.server.util.Util;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.tools.Scope;
+import org.apache.velocity.tools.ToolContext;
+import org.apache.velocity.tools.ToolboxFactory;
+import org.apache.velocity.tools.config.EasyFactoryConfiguration;
+import org.hibernate.collection.PersistentSet;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.sql.DataSource;
+import javax.sql.rowset.CachedRowSet;
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,91 +94,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
-import com.sapienter.jbilling.server.invoice.InvoiceLineComparator;
-import com.sapienter.jbilling.server.item.CurrencyBL;
-import com.sapienter.jbilling.server.metafields.MetaFieldBL;
-import com.sapienter.jbilling.server.metafields.MetaFieldType;
-import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
-import com.sapienter.jbilling.server.metafields.db.MetaFieldDAS;
-import com.sapienter.jbilling.server.metafields.MetaFieldType;
-import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
-import com.sapienter.jbilling.server.payment.PaymentInformationBL;
-import com.sapienter.jbilling.server.payment.PaymentInformationWS;
-import com.sapienter.jbilling.server.payment.db.PaymentResultDTO;
-import com.sapienter.jbilling.server.order.db.OrderLineDTO;
-import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
-import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
-import com.sapienter.jbilling.server.user.db.*;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
 ;
-import org.apache.velocity.tools.Scope;
-import org.apache.velocity.tools.ToolContext;
-import org.apache.velocity.tools.ToolboxFactory;
-import org.apache.velocity.tools.config.EasyFactoryConfiguration;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.collection.PersistentSet;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.springframework.jdbc.datasource.DataSourceUtils;
-
-import javax.sql.rowset.CachedRowSet;
-
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.server.invoice.InvoiceBL;
-import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
-import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
-import com.sapienter.jbilling.server.list.ResultList;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageDAS;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageDTO;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageLineDAS;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageLineDTO;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageSectionDAS;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageSectionDTO;
-import com.sapienter.jbilling.server.payment.PaymentBL;
-import com.sapienter.jbilling.server.payment.PaymentDTOEx;
-import com.sapienter.jbilling.server.payment.db.PaymentInformationDTO;
-import com.sapienter.jbilling.server.pluggableTask.NotificationTask;
-import com.sapienter.jbilling.server.pluggableTask.PaperInvoiceNotificationTask;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
-import com.sapienter.jbilling.server.user.ContactBL;
-import com.sapienter.jbilling.server.user.ContactDTOEx;
-import com.sapienter.jbilling.server.user.EntityBL;
-import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.UserWS;
-import com.sapienter.jbilling.server.user.partner.PartnerBL;
-import com.sapienter.jbilling.server.util.Constants;
-import com.sapienter.jbilling.server.util.Context;
-import com.sapienter.jbilling.server.util.PreferenceBL;
-import com.sapienter.jbilling.server.util.Util;
-
-import java.io.StringWriter;
-
-import javax.sql.DataSource;
-
-import org.apache.velocity.app.VelocityEngine;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 public class NotificationBL extends ResultList implements NotificationSQL {
     //
@@ -162,7 +137,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
 
         retValue.setLanguageId(messageRow.getLanguage().getId());
         retValue.setTypeId(messageRow.getNotificationMessageType().getId());
-        retValue.setUseFlag(new Boolean(messageRow.getUseFlag() == 1));
+        retValue.setUseFlag(Boolean.valueOf(messageRow.getUseFlag() == 1));
 
         setContent(retValue);
 
@@ -348,7 +323,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
             Integer invoiceId = (Integer) dto.getInvoiceIds().get(0);
             InvoiceBL invoice = new InvoiceBL(invoiceId);
             message.addParameter("invoice_number", invoice.getEntity()
-                    .getPublicNumber().toString());
+                    .getPublicNumber());
             message.addParameter("invoice", invoice.getEntity());
         }
         message.addParameter("payment", dto);
@@ -419,7 +394,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
             Integer invoiceId = (Integer) dto.getInvoiceIds().get(0);
             InvoiceBL invoice = new InvoiceBL(invoiceId);
             message.addParameter("invoice_number", invoice.getEntity()
-                    .getPublicNumber().toString());
+                    .getPublicNumber());
             message.addParameter("invoice", invoice.getEntity());
         }
         message.addParameter("payment", dto);

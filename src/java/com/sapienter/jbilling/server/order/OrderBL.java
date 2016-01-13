@@ -87,7 +87,6 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 ;
-;
 
 /**
  * @author Emil
@@ -137,7 +136,7 @@ public class OrderBL extends ResultList
             OrderLineTypeDAS das = new OrderLineTypeDAS();
             OrderLineTypeDTO typeBean = das.find(type);
 
-            editable = new Boolean(typeBean.getEditable().intValue() == 1);
+            editable = Boolean.valueOf(typeBean.getEditable().intValue() == 1);
         } catch (Exception e) {
             LOG.fatal(
                     "Exception looking up the editable flag of an order line type. Type = " + type,
@@ -2001,10 +2000,10 @@ public class OrderBL extends ResultList
 			if (bundledOrder.getId() == null) {
 				String pricingFieldStr = null;
 				if (null != bundledOrder.getPricingFields()) {
-					pricingFieldStr = PricingField
-							.setPricingFieldsValue(bundledOrder
-									.getPricingFields().toArray(
-											new PricingField[0]));
+                    List<PricingField> var = bundledOrder
+                            .getPricingFields();
+                    pricingFieldStr = PricingField
+							.setPricingFieldsValue(var.toArray(new PricingField[var.size()]));
 				}
 				OrderBL orderBL = new OrderBL();
 				orderBL.processLines(bundledOrder, baseUser

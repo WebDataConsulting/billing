@@ -35,7 +35,6 @@ import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
 import com.sapienter.jbilling.server.order.TimePeriod;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.process.PeriodOfTime;
-;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

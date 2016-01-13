@@ -36,12 +36,10 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.system.event.Event;
 import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
-import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.user.event.NewContactEvent;
 import com.sapienter.jbilling.server.util.Context;
 
-;
+
 
 /**
  * Event custom notification task.

@@ -19,7 +19,7 @@ package com.sapienter.jbilling.server.item;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.item.db.AssetTransitionDAS;
 import com.sapienter.jbilling.server.item.db.AssetTransitionDTO;
-;
+
 
 import java.util.Collection;
 import java.util.List;

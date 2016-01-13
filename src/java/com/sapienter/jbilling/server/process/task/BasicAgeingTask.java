@@ -24,21 +24,6 @@
 
 package com.sapienter.jbilling.server.process.task;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.lang.time.DateUtils;
-;
-import org.hibernate.ScrollableResults;
-import org.springframework.dao.EmptyResultDataAccessException;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;
@@ -62,17 +47,17 @@ import com.sapienter.jbilling.server.user.event.AgeingNotificationEvent;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.PreferenceBL;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.time.DateUtils;
-;
 import org.hibernate.ScrollableResults;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.sql.SQLException;
 import java.util.*;
+
+;
 
 /**
  * BasicAgeingTask
@@ -297,7 +282,7 @@ public class BasicAgeingTask extends PluggableTask implements IAgeingTask {
         // status changed from active to suspended
         // suspend customer orders
         if (nextAgeingStep != null && nextAgeingStep.getSuspend() == 1) {
-            LOG.debug("Suspending orders for user " + user.getUserId());;
+            LOG.debug("Suspending orders for user " + user.getUserId());
 
             OrderBL orderBL = new OrderBL();
             ScrollableResults orders = new OrderDAS().findByUser_Status(user.getId(), OrderStatusFlag.INVOICE);

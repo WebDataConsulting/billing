@@ -41,8 +41,6 @@ import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 
-;
-
 import java.math.BigDecimal;
 import java.util.Date;
 

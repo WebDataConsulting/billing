@@ -1,29 +1,5 @@
 package com.sapienter.jbilling.server.item.batch;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.sapienter.jbilling.server.user.db.CompanyDAS;
-
-import org.apache.commons.collections.CollectionUtils;
-;
-import org.joda.time.format.DateTimeFormat;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ExecutionContext;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.file.ResourceAwareItemWriterItemStream;
-import org.springframework.batch.item.file.transform.FieldSet;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.AssetBL;
@@ -37,9 +13,24 @@ import com.sapienter.jbilling.server.metafields.MetaFieldBL;
 import com.sapienter.jbilling.server.metafields.MetaFieldHelper;
 import com.sapienter.jbilling.server.metafields.db.MetaField;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
+import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
-
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.format.DateTimeFormat;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.file.ResourceAwareItemWriterItemStream;
+import org.springframework.batch.item.file.transform.FieldSet;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * The ItemProcessor adds all the relationships to the AssetDTO objects and does validation.

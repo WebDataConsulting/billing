@@ -29,7 +29,6 @@ import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.util.Context;
 
 import org.apache.commons.lang.StringEscapeUtils;
-;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
@@ -84,7 +83,7 @@ public class NotificationSessionBean implements INotificationSessionBean {
             retValue = notify(user.getEntity(), message);
 
         } catch (NotificationNotFoundException e) {
-            retValue = new Boolean(false);
+            retValue = Boolean.FALSE;
         }
 
         return retValue;
@@ -109,10 +108,10 @@ public class NotificationSessionBean implements INotificationSessionBean {
                     payment.getEntity().getPaymentResult().getId());
             retValue = notify(user.getEntity(), message);
         } catch (NotificationNotFoundException e) {
-            retValue = new Boolean(false);
+            retValue = Boolean.FALSE;
         } catch (Exception e) {
         	LOG.error("Error creating/sending Payment Notification: \n%s", e.getMessage());
-            retValue = new Boolean(false);
+            retValue = Boolean.FALSE;
         } 
         
         return retValue;
@@ -152,7 +151,7 @@ public class NotificationSessionBean implements INotificationSessionBean {
     public Boolean asyncNotify(UserDTO user, MessageDTO message)
             throws SessionInternalError {
         LOG.debug("Entering notify()");
-        Boolean retValue = new Boolean(true);
+        Boolean retValue = Boolean.TRUE;
         try {
             // verify that the message is good
             if (message.validate() == false) {

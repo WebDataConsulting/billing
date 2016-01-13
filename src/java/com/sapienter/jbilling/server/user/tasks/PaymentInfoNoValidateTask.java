@@ -26,8 +26,6 @@ package com.sapienter.jbilling.server.user.tasks;
 
 import java.util.Date;
 
-;
-
 import com.sapienter.jbilling.common.CommonConstants;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
@@ -63,7 +61,7 @@ public class PaymentInfoNoValidateTask
      */
     public PaymentDTOEx getPaymentInfo(Integer userId) 
             throws TaskException {
-        PaymentDTOEx retValue = new PaymentDTOEx();;
+        PaymentDTOEx retValue = new PaymentDTOEx();
         PaymentInformationBL paymentBL = new PaymentInformationBL();
         try {
             UserBL userBL = new UserBL(userId);

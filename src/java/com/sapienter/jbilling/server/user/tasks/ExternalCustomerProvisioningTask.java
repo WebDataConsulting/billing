@@ -30,7 +30,7 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.system.event.Event;
 import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.user.event.NewContactEvent;
-;
+
 
 /**
  *  Provision partner customers to external system.

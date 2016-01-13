@@ -23,22 +23,14 @@
  */
 package com.sapienter.jbilling.server.pluggableTask.admin;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.db.AbstractDescription;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "pluggable_task_type")
@@ -124,9 +116,8 @@ public class PluggableTaskTypeDTO extends AbstractDescription implements Seriali
 
     public String toString() {
         StringBuffer str = new StringBuffer("{");
-        str.append("-" + this.getClass().getName() + "-");
-        str.append("id=" + getPk() + " " + "className=" + getClassName() + " " +
-                "minParameters=" + getMinParameters() + " " + "category=" + getCategory());
+        str.append("-").append(this.getClass().getName()).append("-");
+        str.append("id=").append(getPk()).append(" ").append("className=").append(getClassName()).append(" ").append("minParameters=").append(getMinParameters()).append(" ").append("category=").append(getCategory());
         str.append('}');
 
         return (str.toString());

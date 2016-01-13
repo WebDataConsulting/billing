@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;

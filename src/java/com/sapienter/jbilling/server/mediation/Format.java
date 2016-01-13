@@ -36,7 +36,7 @@ public class Format {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         for (FormatField field: fields) {
-            sb.append("field: " + field.toString() + "\n");
+            sb.append("field: ").append(field.toString()).append("\n");
         }
         return sb.toString();
     }

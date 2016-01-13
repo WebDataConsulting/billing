@@ -28,7 +28,6 @@ import com.sapienter.jbilling.common.Util;
 import junit.framework.TestCase;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +37,7 @@ import java.util.List;
  */
 public class ScpUploadTaskTest extends TestCase {
 
-    private static final String BASE_DIR = Util.getSysProp("base_dir");
+    private static final String BASE_DIR = Util.getBaseDir();
 
     private ScpUploadTask task = new ScpUploadTask(); // task under test
 
@@ -66,7 +65,7 @@ public class ScpUploadTaskTest extends TestCase {
         List<File> files = task.collectFiles(path, ".*designs.*\\.jasper", true);
         Collections.sort(files);
 
-        assertEquals(6, files.size());
+        assertEquals(8, files.size());
         assertEquals("invoice_design.jasper", files.get(0).getName());
         assertEquals("invoice_design_page2.jasper", files.get(1).getName());
         assertEquals("invoice_design_sub.jasper", files.get(2).getName());
@@ -83,14 +82,16 @@ public class ScpUploadTaskTest extends TestCase {
         List<File> files = task.collectFiles(path, "(.*designs.*\\.jasper|.*\\.jpg)", true);
         Collections.sort(files);
 
-        assertEquals(7, files.size());
+        assertEquals(9, files.size());
         assertEquals("invoice_design.jasper", files.get(0).getName());
         assertEquals("invoice_design_page2.jasper", files.get(1).getName());
         assertEquals("invoice_design_sub.jasper", files.get(2).getName());
         assertEquals("payment_notification_attachment.jasper", files.get(3).getName());
         assertEquals("simple_invoice.jasper", files.get(4).getName());
         assertEquals("simple_invoice_b2b.jasper", files.get(5).getName());
-        assertEquals("entity-1.jpg", files.get(6).getName());
+        assertEquals("telco_invoice_vikas.jasper", files.get(6).getName());
+        assertEquals("telco_invoice_vikas_events.jasper", files.get(7).getName());
+        assertEquals("entity-1.jpg", files.get(8).getName());
     }
 
 /*

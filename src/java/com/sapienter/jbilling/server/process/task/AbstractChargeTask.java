@@ -34,12 +34,11 @@ import com.sapienter.jbilling.server.pluggableTask.InvoiceCompositionTask;
 import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
 import com.sapienter.jbilling.server.pluggableTask.TaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
-import com.sapienter.jbilling.server.process.PeriodOfTime;
 import com.sapienter.jbilling.server.util.Constants;
-;
 
 import java.math.BigDecimal;
-import java.util.Date;
+
+;
 
 /**
  * This plug-in calculates taxes for invoice.
@@ -181,7 +180,7 @@ public abstract class AbstractChargeTask extends PluggableTask implements Invoic
 
             // Remove TAX ITEMS from Invoice to avoid calculating tax on tax
             for (int i = 0; i < invoice.getResultLines().size(); i++) {
-                InvoiceLineDTO invoiceLine = (InvoiceLineDTO) invoice.getResultLines().get(i);
+                InvoiceLineDTO invoiceLine = invoice.getResultLines().get(i);
                 if (null != invoiceLine.getInvoiceLineType() && invoiceLine.getInvoiceLineType().getId() == Constants.INVOICE_LINE_TYPE_TAX) {
                     invoiceAmountSum = invoiceAmountSum.subtract(invoiceLine.getAmount());
                 }

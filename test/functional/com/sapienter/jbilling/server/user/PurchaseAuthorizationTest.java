@@ -25,6 +25,7 @@ import com.sapienter.jbilling.server.payment.PaymentWS;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.api.JbillingAPI;
 import com.sapienter.jbilling.server.util.api.JbillingAPIFactory;
+
 import org.joda.time.DateMidnight;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
@@ -37,6 +38,8 @@ import static com.sapienter.jbilling.test.Asserts.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
+
 @Test(groups = { "web-services", "purchase-auth" })
 public class PurchaseAuthorizationTest {
 
@@ -45,10 +48,14 @@ public class PurchaseAuthorizationTest {
 @Test
 public void testPurchaseAuthorization(){
     System.out.println("#test013RulesValidatePurchaseTask");
+    Integer itemId = null;
+    Integer myId = null;
+    Integer orderId = null;
+    JbillingAPI api = null;
     try {
-        JbillingAPI api = JbillingAPIFactory.getAPI();
+        api = JbillingAPIFactory.getAPI();
         UserWS myUser = com.sapienter.jbilling.server.user.WSTest.createUser(true, null, null);
-        Integer myId = myUser.getUserId();
+        myId = myUser.getUserId();
         // update credit limit
         myUser.setCreditLimit(new BigDecimal("10"));
         myUser.setPassword(null);
@@ -79,13 +86,14 @@ public void testPurchaseAuthorization(){
         System.out.println("User's dynamic balance earlier was "+user.getDynamicBalanceAsDecimal());
         ItemDTOEx newItem = new ItemDTOEx();
         newItem.setDescription("TEST Item");
-        newItem.setPrice(new BigDecimal("20"));
+        newItem.setPriceManual(0);
+        newItem.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("20.00"), new DateMidnight(1970, 1, 1).toDate(), Integer.valueOf(1), Integer.valueOf(1)));
         newItem.setNumber("WS-001");
         Integer types[] = new Integer[1];
         types[0] = new Integer(1);
         newItem.setTypes(types);
         System.out.println("Creating item ..." + newItem);
-        Integer itemId = api.createItem(newItem);
+        itemId = api.createItem(newItem);
         //credit_limit(10)+balance(10)=order total(20)
         ValidatePurchaseWS result=api.validatePurchase(myId,itemId,null);
         AssertJUnit.assertEquals("validate purchase success 1", Boolean.valueOf(true), result.getSuccess());
@@ -95,7 +103,7 @@ public void testPurchaseAuthorization(){
         OrderWS order = com.sapienter.jbilling.server.user.WSTest.getOrder();
         order.setUserId(myId);
         System.out.println("creating one time order");
-        Integer orderId = api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
+        orderId = api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
         System.out.println("Validating new balance");
         myUser = api.getUserWS(myId);
         assertEquals("user should have -ve 10 balance", new BigDecimal("10.0").negate(), myUser.getDynamicBalanceAsDecimal());
@@ -105,10 +113,13 @@ public void testPurchaseAuthorization(){
         AssertJUnit.assertEquals("validate purchase authorized 2", Boolean.valueOf(false), result.getAuthorized());
         assertEquals("validate purchase quantity 1", new BigDecimal("0.00"), result.getQuantityAsDecimal());
 
-        api.deleteUser(myId);
     } catch (Exception e) {
         e.printStackTrace();
         fail("Exception caught:" + e);
+    } finally {
+    	api.deleteUser(myId);
+        api.deleteOrder(orderId);
+        api.deleteItem(itemId);
     }
 
 

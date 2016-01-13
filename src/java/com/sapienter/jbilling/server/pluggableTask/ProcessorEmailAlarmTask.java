@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.notification.NotificationBL;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;

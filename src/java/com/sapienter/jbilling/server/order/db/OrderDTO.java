@@ -24,37 +24,6 @@
 package com.sapienter.jbilling.server.order.db;
 
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
-;
-import org.hibernate.annotations.*;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.discount.db.DiscountLineDTO;
@@ -71,12 +40,22 @@ import com.sapienter.jbilling.server.user.UserCodeAssociate;
 import com.sapienter.jbilling.server.user.db.UserCodeLinkDTO;
 import com.sapienter.jbilling.server.user.db.UserCodeOrderLinkDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
+import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Util;
 import com.sapienter.jbilling.server.util.csv.Exportable;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
-
 import com.sapienter.jbilling.server.util.time.PeriodUnit;
-import com.sapienter.jbilling.server.util.Constants;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.OrderBy;
+
+import javax.persistence.CascadeType;
+import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Entity
 @org.hibernate.annotations.Entity(dynamicUpdate = true)
@@ -909,7 +888,7 @@ public class OrderDTO extends CustomizedEntity implements Serializable, Exportab
                 " lines:[");
 
         for (OrderLineDTO line: getLines()) {
-            str.append(line.toString() + "-");
+            str.append(line.toString()).append("-");
         }
         str.append(']');/*
         str.append(", parentOrder =").append(parentOrder != null ? parentOrder : null ).append(',');
@@ -931,7 +910,7 @@ public class OrderDTO extends CustomizedEntity implements Serializable, Exportab
 
     @Transient
     public String[] getFieldNames() {
-        return new String[] {
+        String headers[]= new String[] {
                 "id",
                 "userId",
                 "userName",
@@ -956,6 +935,13 @@ public class OrderDTO extends CustomizedEntity implements Serializable, Exportab
                 "lineAmount",
                 "lineDescription"
         };
+        
+        List<String> list = new ArrayList<>(Arrays.asList(headers));
+        for(String name : metaFieldsNames) {
+        	list.add(name);
+        }
+        
+        return list.toArray(new String[list.size()]);
     }
 
     @Transient
@@ -1015,7 +1001,21 @@ public class OrderDTO extends CustomizedEntity implements Serializable, Exportab
                 );
             }
         }
-
+        
+        Object value[] = new Object[metaFieldsNames.size()];
+        int index = 0;
+        for(String name : metaFieldsNames) {
+        	MetaFieldValue metavalue = getMetaField(name);
+        	if(metavalue == null) {
+        		value[index] = null;
+        	}
+        	else {
+        		value[index] = metavalue;
+        	}
+        	index++;
+        }
+        values.add(value);
+        
         return values.toArray(new Object[values.size()][]);
     }
 

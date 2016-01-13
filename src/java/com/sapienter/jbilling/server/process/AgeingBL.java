@@ -37,15 +37,9 @@ import com.sapienter.jbilling.server.process.db.AgeingEntityStepDTO;
 import com.sapienter.jbilling.server.process.task.BasicAgeingTask;
 import com.sapienter.jbilling.server.process.task.IAgeingTask;
 import com.sapienter.jbilling.server.user.EntityBL;
-import com.sapienter.jbilling.server.user.UserDTOEx;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
-import com.sapienter.jbilling.server.user.db.UserDAS;
-import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.user.db.UserStatusDAS;
-import com.sapienter.jbilling.server.user.db.UserStatusDTO;
+import com.sapienter.jbilling.server.user.db.*;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
-;
 import org.hibernate.ScrollableResults;
 
 import javax.naming.NamingException;

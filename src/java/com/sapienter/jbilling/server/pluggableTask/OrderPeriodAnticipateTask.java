@@ -34,8 +34,6 @@ import com.sapienter.jbilling.server.order.db.OrderDTO;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-;
-
 /**
  * @author Emil
  *

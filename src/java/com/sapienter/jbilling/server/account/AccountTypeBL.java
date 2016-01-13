@@ -1,6 +1,7 @@
 package com.sapienter.jbilling.server.account;
 
 import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDeliveryMethodDAS;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDeliveryMethodDTO;
 import com.sapienter.jbilling.server.payment.db.PaymentMethodTypeDAS;
@@ -13,11 +14,16 @@ import com.sapienter.jbilling.server.user.db.AccountTypeDAS;
 import com.sapienter.jbilling.server.user.db.AccountTypeDTO;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.Constants;
+import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
 import com.sapienter.jbilling.server.util.db.LanguageDAS;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
+
+;
 
 public class AccountTypeBL {
 
@@ -101,39 +107,47 @@ public class AccountTypeBL {
             accountTypeDTO.setId(ws.getId());
         }
 
-        accountTypeDTO.setCompany(new CompanyDTO(entityId));
+		accountTypeDTO.setCompany(new CompanyDTO(entityId));
 
-        accountTypeDTO.setCreditLimit(ws.getCreditLimitAsDecimal());
-        accountTypeDTO.setCreditNotificationLimit1(ws
-                .getCreditNotificationLimit1AsDecimal());
-        accountTypeDTO.setCreditNotificationLimit2(ws
-                .getCreditNotificationLimit2AsDecimal());
-        accountTypeDTO.setInvoiceDesign(ws.getInvoiceDesign());
-        accountTypeDTO.setBillingCycle(UserBL.convertMainSubscriptionFromWS(
-                ws.getMainSubscription(), entityId));
-        accountTypeDTO.setLanguage(new LanguageDAS().find(ws.getLanguageId()));
-        accountTypeDTO.setCurrency(new CurrencyDAS().find(ws.getCurrencyId()));
-        accountTypeDTO.setInvoiceDeliveryMethod(new InvoiceDeliveryMethodDTO(ws
-                .getInvoiceDeliveryMethodId()));
-        accountTypeDTO.setPreferredNotificationAitId(ws
-                .getpreferredNotificationAitId());
-        // set payment method types
-        if (ws.getPaymentMethodTypeIds() != null) {
-            Set<PaymentMethodTypeDTO> paymentMethodTypes = new HashSet<PaymentMethodTypeDTO>(
-                    0);
-            PaymentMethodTypeDAS das = new PaymentMethodTypeDAS();
+		accountTypeDTO.setCreditLimit(ws.getCreditLimitAsDecimal());
+		accountTypeDTO.setCreditNotificationLimit1(ws
+				.getCreditNotificationLimit1AsDecimal());
+		accountTypeDTO.setCreditNotificationLimit2(ws
+				.getCreditNotificationLimit2AsDecimal());
+		accountTypeDTO.setInvoiceDesign(ws.getInvoiceDesign());
+		accountTypeDTO.setBillingCycle(UserBL.convertMainSubscriptionFromWS(
+				ws.getMainSubscription(), entityId));
+		accountTypeDTO.setLanguage(new LanguageDAS().find(ws.getLanguageId()));
+		accountTypeDTO.setCurrency(new CurrencyDAS().find(ws.getCurrencyId()));
+		accountTypeDTO.setInvoiceDeliveryMethod(new InvoiceDeliveryMethodDTO(ws
+				.getInvoiceDeliveryMethodId()));
+		accountTypeDTO.setPreferredNotificationAitId(ws
+				.getpreferredNotificationAitId());
+		// set payment method types
+		if (ws.getPaymentMethodTypeIds() != null) {
+			Set<PaymentMethodTypeDTO> paymentMethodTypes = new HashSet<PaymentMethodTypeDTO>(
+					0);
+			PaymentMethodTypeDAS das = new PaymentMethodTypeDAS();
 
-            for (Integer paymentMethodTypeId : ws.getPaymentMethodTypeIds()) {
-                paymentMethodTypes.add(das.find(paymentMethodTypeId));
+			for (Integer paymentMethodTypeId : ws.getPaymentMethodTypeIds()) {
+				paymentMethodTypes.add(das.find(paymentMethodTypeId));
+			}
+			accountTypeDTO.setPaymentMethodTypes(paymentMethodTypes);
+		}
+
+		List<PaymentMethodTypeDTO> globalPaymentMethods = new PaymentMethodTypeDAS()
+				.findByAllAccountType(entityId);
+		for (PaymentMethodTypeDTO globalPaymentMethod : globalPaymentMethods) {
+			accountTypeDTO.getPaymentMethodTypes().add(globalPaymentMethod);
+		}
+
+        if (CollectionUtils.isNotEmpty(ws.getDescriptions())) {
+            for (InternationalDescriptionWS desc: ws.getDescriptions()) {
+                accountTypeDTO.setDescription(desc.getContent(), desc.getLanguageId());
             }
-            accountTypeDTO.setPaymentMethodTypes(paymentMethodTypes);
         }
-        List<PaymentMethodTypeDTO> globalPaymentMethods = new PaymentMethodTypeDAS()
-                .findByAllAccountType(entityId);
-        for (PaymentMethodTypeDTO globalPaymentMethod : globalPaymentMethods) {
-            accountTypeDTO.getPaymentMethodTypes().add(globalPaymentMethod);
-        }
-        return accountTypeDTO;
+
+		return accountTypeDTO;
     }
 
     public AccountTypeBL() {
@@ -197,8 +211,7 @@ public class AccountTypeBL {
         accountTypeDAS.clear();
     }
 
-    public boolean isAccountTypeUnique(Integer entityId, String name, boolean isNew) {
-
+    public static boolean isAccountTypeUnique(Integer entityId, String name, boolean isNew) {
         List<AccountTypeDTO> accountTypeDTOList = new AccountTypeDAS().findAll(entityId);
         List<String> descriptionList = new ArrayList<String>();
         for (AccountTypeDTO accountType1 : accountTypeDTOList) {
@@ -212,4 +225,45 @@ public class AccountTypeBL {
             return Collections.frequency(descriptionList, name) < 2;
         }
     }
+
+    public static void validateAccountType(AccountTypeWS accountType, Integer entityId, boolean isNew) {
+
+        if (CollectionUtils.isNotEmpty(accountType.getDescriptions())) {
+            accountType.getDescriptions().forEach( desc -> {
+                // verify if description is non empty and unique
+                if (StringUtils.isEmpty(StringUtils.trim(desc.getContent()))) {
+                    String[] errmsgs = new String[1];
+                    errmsgs[0] = "AccountTypeWS,descriptions,accountTypeWS.error.blank.name";
+                    throw new SessionInternalError(
+                            "There is an error in  data.", errmsgs);
+                } else if (!AccountTypeBL.isAccountTypeUnique(entityId, desc.getContent(), isNew)) {
+                    String[] errmsgs = new String[1];
+                    errmsgs[0] = "AccountTypeWS,descriptions,accountTypeWS.error.unique.name";
+                    throw new SessionInternalError(
+                            "There is an error in  data.", errmsgs);
+                }
+            });
+
+            BigDecimal creditLimit = accountType.getCreditLimitAsDecimal();
+            BigDecimal notification1 = accountType
+                    .getCreditNotificationLimit1AsDecimal();
+            if (creditLimit != null && notification1 != null
+                    && !(creditLimit.compareTo(notification1) >= 0)) {
+                String[] errmsgs = new String[1];
+                errmsgs[0] = "AccountTypeWS,creditNotificationLimit1,accountTypeWS.error.credit.limit";
+                throw new SessionInternalError("There is an error in  data.",
+                        errmsgs);
+            }
+            BigDecimal notification2 = accountType
+                    .getCreditNotificationLimit2AsDecimal();
+            if (creditLimit != null && notification2 != null
+                    && !(creditLimit.compareTo(notification2) >= 0)) {
+                String[] errmsgs = new String[1];
+                errmsgs[0] = "AccountTypeWS,creditNotificationLimit2,accountTypeWS.error.credit.limit";
+                throw new SessionInternalError("There is an error in  data.",
+                        errmsgs);
+            }
+        }
+    }
+
 }

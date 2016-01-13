@@ -33,10 +33,8 @@ import javax.xml.bind.annotation.XmlType;
  * Value object for PaymentAuthorizationEntity.
  */
 @XmlType(name = "payment-authorization")
-public class PaymentAuthorizationDTO
-   extends java.lang.Object
-   implements java.io.Serializable 
-{
+public class PaymentAuthorizationDTO implements java.io.Serializable {
+
    private java.lang.Integer id;
    private boolean idHasBeenSet = false;
    private Integer paymentId;
@@ -338,7 +336,7 @@ public class PaymentAuthorizationDTO
    {
       StringBuffer str = new StringBuffer("{");
 
-      str.append("id=" + getId() + " paymentId=" + paymentId + " " + "processor=" + getProcessor() + " " + "code1=" + getCode1() + " " + "code2=" + getCode2() + " " + "code3=" + getCode3() + " " + "approvalCode=" + getApprovalCode() + " " + "AVS=" + getAVS() + " " + "transactionId=" + getTransactionId() + " " + "MD5=" + getMD5() + " " + "cardCode=" + getCardCode() + " " + "createDate=" + getCreateDate() + " " + "responseMessage=" + getResponseMessage());
+      str.append("id=").append(getId()).append(" paymentId=").append(paymentId).append(" ").append("processor=").append(getProcessor()).append(" ").append("code1=").append(getCode1()).append(" ").append("code2=").append(getCode2()).append(" ").append("code3=").append(getCode3()).append(" ").append("approvalCode=").append(getApprovalCode()).append(" ").append("AVS=").append(getAVS()).append(" ").append("transactionId=").append(getTransactionId()).append(" ").append("MD5=").append(getMD5()).append(" ").append("cardCode=").append(getCardCode()).append(" ").append("createDate=").append(getCreateDate()).append(" ").append("responseMessage=").append(getResponseMessage());
       str.append('}');
 
       return(str.toString());

@@ -3,7 +3,6 @@ package com.sapienter.jbilling.server.notification;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.Context;
-;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;

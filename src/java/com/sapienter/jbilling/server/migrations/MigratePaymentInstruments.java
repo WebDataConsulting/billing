@@ -1,5 +1,18 @@
 package com.sapienter.jbilling.server.migrations;
 
+import com.sapienter.jbilling.server.metafields.DataType;
+import com.sapienter.jbilling.server.metafields.EntityType;
+import com.sapienter.jbilling.server.metafields.MetaFieldType;
+import com.sapienter.jbilling.server.util.Constants;
+import liquibase.database.Database;
+import liquibase.exception.CustomChangeException;
+import liquibase.logging.LogFactory;
+import liquibase.logging.Logger;
+import liquibase.statement.SqlStatement;
+import liquibase.statement.core.InsertStatement;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,20 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import liquibase.database.Database;
-import liquibase.exception.CustomChangeException;
-import liquibase.logging.LogFactory;
-import liquibase.logging.Logger;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.InsertStatement;
-
-import com.sapienter.jbilling.server.metafields.DataType;
-import com.sapienter.jbilling.server.metafields.EntityType;
-import com.sapienter.jbilling.server.metafields.MetaFieldType;
-import com.sapienter.jbilling.server.util.Constants;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * @author Khobab
@@ -75,7 +74,7 @@ public class MigratePaymentInstruments extends AbstractCustomSqlChange {
         String query = "select count(*) from credit_card";
         PreparedStatement count = connection.prepareStatement(query);
         ResultSet result = count.executeQuery();
-        boolean migrate = (result.next() ? 0 != result.getInt(1) : false);
+        boolean migrate = (result.next() && 0 != result.getInt(1));
 
         if(migrate) {
             // there are cards that needs to be migrated
@@ -112,7 +111,7 @@ public class MigratePaymentInstruments extends AbstractCustomSqlChange {
         String query = "select count(*) from ach";
         PreparedStatement count = connection.prepareStatement(query);
         ResultSet result = count.executeQuery();
-        boolean migrate = (result.next() ? 0 != result.getInt(1) : false);
+        boolean migrate = (result.next() && 0 != result.getInt(1));
 
         if(migrate) {
             // there are cards that needs to be migrated
@@ -148,7 +147,7 @@ public class MigratePaymentInstruments extends AbstractCustomSqlChange {
         String query = "select count(*) from payment_info_cheque";
         PreparedStatement count = connection.prepareStatement(query);
         ResultSet result = count.executeQuery();
-        boolean migrate = (result.next() ? 0 != result.getInt(1) : false);
+        boolean migrate = (result.next() && 0 != result.getInt(1));
 
         if(migrate) {
             // there are cards that needs to be migrated
@@ -185,7 +184,7 @@ public class MigratePaymentInstruments extends AbstractCustomSqlChange {
         String query = "select count(*) from blacklist where credit_card_id is not null";
         PreparedStatement count = connection.prepareStatement(query);
         ResultSet result = count.executeQuery();
-        boolean migrate = (result.next() ? 0 != result.getInt(1) : false);
+        boolean migrate = (result.next() && 0 != result.getInt(1));
 
         if(migrate) {
 
@@ -254,7 +253,7 @@ public class MigratePaymentInstruments extends AbstractCustomSqlChange {
         String query = "select count(*) from payment where credit_card_id = " + creditCardId;
         PreparedStatement count = connection.prepareStatement(query);
         ResultSet result = count.executeQuery();
-        boolean create = (result.next() ? 0 != result.getInt(1) : false);
+        boolean create = (result.next() && 0 != result.getInt(1));
         result.close();
 
         statements.add(buildInsertStatement("payment_information")
@@ -359,7 +358,7 @@ public class MigratePaymentInstruments extends AbstractCustomSqlChange {
         String query = "select count(*) from payment where ach_id = " + achId;
         PreparedStatement count = connection.prepareStatement(query);
         ResultSet result = count.executeQuery();
-        boolean create = (result.next() ? 0 != result.getInt(1) : false);
+        boolean create = (result.next() && 0 != result.getInt(1));
         result.close();
 
         statements.add(buildInsertStatement("payment_information")

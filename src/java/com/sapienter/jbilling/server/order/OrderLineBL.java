@@ -33,8 +33,6 @@ import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
 import com.sapienter.jbilling.server.user.UserBL;
 
-;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;

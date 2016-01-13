@@ -24,23 +24,18 @@
 
 package com.sapienter.jbilling.server.process.task;
 
-
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang.StringUtils;
-;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.SimpleTrigger;
-import org.quartz.impl.JobDetailImpl;
-import org.quartz.impl.triggers.SimpleTriggerImpl;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.order.TimePeriod;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.util.Constants;
-import org.quartz.impl.JobDetailImpl;
+import org.apache.commons.lang.StringUtils;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.SimpleTrigger;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple Scheduled process plug-in, executing the extending process class on a simple schedule.

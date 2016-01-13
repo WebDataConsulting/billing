@@ -24,9 +24,7 @@
 package com.sapienter.jbilling.server.util.db;
 
 import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.order.db.OrderChangeStatusDTO;
 import com.sapienter.jbilling.server.util.Context;
-;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;

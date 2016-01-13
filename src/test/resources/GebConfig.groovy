@@ -1,14 +1,17 @@
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 
-println "LAODING tests..."
+println "LOADING tests..."
 
 baseUrl = "http://localhost:8080/jbilling/"
 reportsDir ="test-reports/geb"
+autoClearCookies = false
 
-driver = {
-    FirefoxProfile profile = new FirefoxProfile()
-    new FirefoxDriver(profile)
-}
 
+
+System.setProperty("baseUrl", baseUrl)
 	
+waiting {
+	timeout = 120
+	retryInterval = 1.0
+}

@@ -88,7 +88,7 @@ public class BillingProcessJobListener implements JobExecutionListener {
         Integer entityId = Integer.parseInt(jobParams.getString(Constants.BATCH_JOB_PARAM_ENTITY_ID));
         Integer periodType = Integer.parseInt(jobParams.getString(Constants.BATCH_JOB_PARAM_PERIOD_TYPE));
         Integer periodValue = Integer.parseInt(jobParams.getString(Constants.BATCH_JOB_PARAM_PERIOD_VALUE));
-        boolean review = jobParams.getString(Constants.BATCH_JOB_PARAM_REVIEW) == "1";
+        boolean review = "1".equals(jobParams.getString(Constants.BATCH_JOB_PARAM_REVIEW)) ;
         Date billingDate = jobParams.getDate(Constants.BATCH_JOB_PARAM_BILLING_DATE);
 
         ConfigurationBL conf = new ConfigurationBL(entityId);

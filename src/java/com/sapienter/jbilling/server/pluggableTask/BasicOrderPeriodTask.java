@@ -45,7 +45,7 @@ import com.sapienter.jbilling.server.util.time.PeriodUnit;
 import java.time.LocalDate;
 import java.util.*;
 
-;
+
 
 public class BasicOrderPeriodTask
     extends PluggableTask

@@ -87,7 +87,7 @@ public class MetaField  extends AbstractDescription  implements Serializable {
     private MetaFieldValue defaultValue = null;
 
     private ValidationRule validationRule;
-
+    
     //indicate whether the metafield is a primary field and can be used for creation of metafield groups and for providing
     //    a meta-fields to be populated for the entity type they belong to
     //Metafields created from the Configuration - MetaField menu will be considered as primary metafields by default. 
@@ -101,7 +101,9 @@ public class MetaField  extends AbstractDescription  implements Serializable {
     private Integer versionNum;
 
     private String filename;
-
+    // indicate that metafield is unique or not for a EntityType
+    private boolean unique = false;
+    
     public MetaField() {
     }
 
@@ -271,9 +273,23 @@ public class MetaField  extends AbstractDescription  implements Serializable {
     public String getFilename() {
         return filename;
     }
+    
+    @Column(name = "is_unique")
+    public boolean isUnique() {
+        return unique;
+    }
+
+    public void setUnique(boolean unique) {
+        this.unique = unique;
+    }
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	return this.name.equals(((MetaField)obj).getName());
     }
 
 }

@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-;
+
 //import com.sapienter.jbilling.client.util.Constants;
 
 /**
@@ -171,7 +171,7 @@ public class BillingProcessSucceededTasklet implements Tasklet, InitializingBean
     }
 
     public void setReview(String review) {
-        this.review = Integer.parseInt(review) == 1 ? true : false;
+        this.review = Integer.parseInt(review) == 1;
     }
 
     /**

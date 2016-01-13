@@ -3,7 +3,6 @@ package com.sapienter.jbilling.server.discounts;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import com.sapienter.jbilling.server.item.PlanItemWS;
 import com.sapienter.jbilling.server.order.OrderChangeBL;
 import com.sapienter.jbilling.server.order.OrderChangeWS;
 import org.joda.time.DateMidnight;
@@ -92,9 +91,9 @@ public class RateOrderDiscountTest extends BaseDiscountApiTest {
 		this.amountBasedDiscount = createAmountBasedDiscount(120);
 		this.percentageBasedDiscount = createPercentageBasedDiscount(120);
 		
-		ItemDTOEx testItem1 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN, CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 1");
+		ItemDTOEx testItem1 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN, CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 1", new DateMidnight(1970, 1, 1).toDate());
 		Integer testItem1Id = api.createItem(testItem1);
-		ItemDTOEx testItem2 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN.add(BigDecimal.ONE), CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 2");
+		ItemDTOEx testItem2 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN.add(BigDecimal.ONE), CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 2", new DateMidnight(1970, 1, 1).toDate());
 		Integer testItem2Id = api.createItem(testItem2);
 		
 		System.out.println("Item Ids 1 & 2 " + testItem1Id + " " + testItem2Id);
@@ -233,9 +232,9 @@ public class RateOrderDiscountTest extends BaseDiscountApiTest {
 		this.amountBasedDiscount = createAmountBasedDiscount(121);
 		this.percentageBasedDiscount = createPercentageBasedDiscount(121);
 		
-		ItemDTOEx testItem1 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN, CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 1");
+		ItemDTOEx testItem1 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN, CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 1", new DateMidnight(1970, 1, 1).toDate());
 		Integer testItem1Id = api.createItem(testItem1);
-		ItemDTOEx testItem2 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN.add(BigDecimal.ONE), CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 2");
+		ItemDTOEx testItem2 = CreateObjectUtil.createItem(TEST_ENTITY_ID, BigDecimal.TEN.add(BigDecimal.ONE), CURRENCY_USD, TEST_ITEM_CATEGORY, "Test Item 2", new DateMidnight(1970, 1, 1).toDate());
 		Integer testItem2Id = api.createItem(testItem2);
 		
 		// create order and lines with items

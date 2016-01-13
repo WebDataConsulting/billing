@@ -3,10 +3,8 @@ package com.sapienter.jbilling.server.user.tasks;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.item.PricingField;
 import com.sapienter.jbilling.server.item.db.ItemDTO;
-import com.sapienter.jbilling.server.order.Usage;
 import com.sapienter.jbilling.server.user.ValidatePurchaseWS;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
-;
 
 import java.math.BigDecimal;
 import java.util.List;

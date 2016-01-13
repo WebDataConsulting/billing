@@ -23,16 +23,6 @@ You may download the latest source from webdataconsulting.github.io.
  */
 package com.sapienter.jbilling.server.payment.tasks;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Calendar;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
 import com.sapienter.jbilling.server.payment.PaymentAuthorizationBL;
@@ -46,6 +36,16 @@ import com.sapienter.jbilling.server.pluggableTask.TaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.user.ContactBL;
 import com.sapienter.jbilling.server.util.Constants;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Calendar;
+
+;
 
 public class PaymentBeanstreamTask extends PaymentTaskWithTimeout implements
         PaymentTask {
@@ -230,59 +230,42 @@ public class PaymentBeanstreamTask extends PaymentTaskWithTimeout implements
             cal.setTime(piBl.getDateMetaFieldByType(paymentInfo.getInstrument(), MetaFieldType.DATE));
 
             StringBuffer postVars = new StringBuffer("requestType=BACKEND&");
-            postVars.append("merchant_id=" + merchantId + "&");
-            postVars.append("username=" + username + "&");
-            postVars.append("trnCardOwner="
-                    + piBl.getStringMetaFieldByType(paymentInfo.getInstrument(), MetaFieldType.TITLE) + "&");
-            postVars.append("trnCardNumber="
-                    + piBl.getStringMetaFieldByType(paymentInfo.getInstrument(), MetaFieldType.PAYMENT_CARD_NUMBER) + "&");
-            postVars.append("trnExpMonth="
-                    + ((cal.get(Calendar.MONTH) < 10) ? ("0" + cal
-                            .get(Calendar.MONTH)) : cal.get(Calendar.MONTH))
-                    + "&");
-            postVars.append("trnExpYear="
-                    + (Integer.toString(cal.get(Calendar.YEAR)))
-                            .substring(2, 4) + "&");
-            postVars.append("trnOrderNumber=" + paymentInfo.getId() + "&");
-            postVars.append("trnAmount=" + paymentInfo.getAmount() + "&");
-            postVars.append("trnType=" + paymentType + "&");
-            postVars.append("trnId=" + getString(transactionId));
-            postVars.append("ordName="
-                    + (contact.getEntity().getFirstName() + " " + contact
-                            .getEntity().getLastName()) + "&");
-            postVars.append("ordEmailAddress="
-                    + getString(contact.getEntity().getEmail()) + "&");
-            postVars.append("ordPhoneNumber="
-                    + getString(contact.getEntity().getPhoneNumber()) + "&");
-            postVars.append("ordAddress1="
-                    + getString(contact.getEntity().getAddress1()) + "&");
-            postVars.append("ordAddress2="
-                    + getString(contact.getEntity().getAddress2()) + "&");
-            postVars.append("ordCity="
-                    + getString(contact.getEntity().getCity()) + "&");
-            postVars.append("ordProvince="
-                    + getString(contact.getEntity().getStateProvince()) + "&");
-            postVars.append("ordPostalCode="
-                    + getString(contact.getEntity().getPostalCode()) + "&");
-            postVars.append("ordCountry="
-                    + getString(contact.getEntity().getCountryCode()) + "&");
-            postVars.append("cavEnabled=" + cav_enabled + "&");
+            postVars.append("merchant_id=").append(merchantId).append("&");
+            postVars.append("username=").append(username).append("&");
+            postVars.append("trnCardOwner=").append(piBl.getStringMetaFieldByType(paymentInfo.getInstrument(), MetaFieldType.TITLE)).append("&");
+            postVars.append("trnCardNumber=").append(piBl.getStringMetaFieldByType(paymentInfo.getInstrument(), MetaFieldType.PAYMENT_CARD_NUMBER)).append("&");
+            postVars.append("trnExpMonth=").append((cal.get(Calendar.MONTH) < 10) ? ("0" + cal
+                    .get(Calendar.MONTH)) : cal.get(Calendar.MONTH)).append("&");
+            postVars.append("trnExpYear=").append((Integer.toString(cal.get(Calendar.YEAR)))
+                    .substring(2, 4)).append("&");
+            postVars.append("trnOrderNumber=").append(paymentInfo.getId()).append("&");
+            postVars.append("trnAmount=").append(paymentInfo.getAmount()).append("&");
+            postVars.append("trnType=").append(paymentType).append("&");
+            postVars.append("trnId=").append(getString(transactionId));
+            postVars.append("ordName=").append(contact.getEntity().getFirstName()).append(" ").append(contact
+                    .getEntity().getLastName()).append("&");
+            postVars.append("ordEmailAddress=").append(getString(contact.getEntity().getEmail())).append("&");
+            postVars.append("ordPhoneNumber=").append(getString(contact.getEntity().getPhoneNumber())).append("&");
+            postVars.append("ordAddress1=").append(getString(contact.getEntity().getAddress1())).append("&");
+            postVars.append("ordAddress2=").append(getString(contact.getEntity().getAddress2())).append("&");
+            postVars.append("ordCity=").append(getString(contact.getEntity().getCity())).append("&");
+            postVars.append("ordProvince=").append(getString(contact.getEntity().getStateProvince())).append("&");
+            postVars.append("ordPostalCode=").append(getString(contact.getEntity().getPostalCode())).append("&");
+            postVars.append("ordCountry=").append(getString(contact.getEntity().getCountryCode())).append("&");
+            postVars.append("cavEnabled=").append(cav_enabled).append("&");
             postVars.append((cav_passcode != null) ? ("cavPassCode="
                     + cav_passcode + "&") : "");
-            postVars.append("cavServiceVersion="
-                    + ((cav_version != null) ? cav_version : 0) + "&");
-            postVars.append("vbvEnabled="
-                    + ((vbv_enabled != null && vbv_enabled.equals("true")) ? 1
-                            : 0) + "&");
-            postVars.append("scEnabled="
-                    + ((sc_enabled != null && sc_enabled.equals("true")) ? 1
-                            : 0));
+            postVars.append("cavServiceVersion=").append((cav_version != null) ? cav_version : 0).append("&");
+            postVars.append("vbvEnabled=").append((vbv_enabled != null && vbv_enabled.equals("true")) ? 1
+                    : 0).append("&");
+            postVars.append("scEnabled=").append((sc_enabled != null && sc_enabled.equals("true")) ? 1
+                    : 0);
 
             //TODO: check this log also check values of postVars
             String maskedCCNumber = postVars.toString().replaceAll("trnCardNumber=[^&]*", "trnCardNumber=*****");
             LOG.debug("HTTP POST vars going to beanstream:  " + maskedCCNumber);
 
-            postVars.append("&").append("password=" + password);
+            postVars.append("&").append("password=").append(password);
 
             return postVars.toString();
         } catch (Exception e) {

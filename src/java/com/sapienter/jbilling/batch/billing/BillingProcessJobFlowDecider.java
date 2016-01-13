@@ -8,7 +8,7 @@ import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.item.ExecutionContext;
 
-;
+
 
 public class BillingProcessJobFlowDecider implements JobExecutionDecider {
 

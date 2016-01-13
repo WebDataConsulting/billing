@@ -1,12 +1,5 @@
 package com.sapienter.jbilling.server.process.task;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-;
-import org.codehaus.jackson.map.ObjectMapper;
 import com.sapienter.jbilling.client.suretax.SuretaxClient;
 import com.sapienter.jbilling.client.suretax.request.LineItem;
 import com.sapienter.jbilling.client.suretax.request.SuretaxRequest;
@@ -16,9 +9,7 @@ import com.sapienter.jbilling.client.suretax.response.SuretaxResponse;
 import com.sapienter.jbilling.client.suretax.response.TaxItem;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.invoice.NewInvoiceContext;
-import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
 import com.sapienter.jbilling.server.invoice.db.InvoiceLineTypeDTO;
 import com.sapienter.jbilling.server.invoice.db.SuretaxTransactionLogDAS;
@@ -34,10 +25,18 @@ import com.sapienter.jbilling.server.pluggableTask.TaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription.Type;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
-import com.sapienter.jbilling.server.process.PeriodOfTime;
 import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+;
 
 /**
  * This plug-in gets the tax lines from Suretax Tax engine for invoice lines in
@@ -319,7 +318,7 @@ public class SureTaxCompositionTask extends PluggableTask implements
 		MetaFieldValue<String> p2PPlus4 = invoiceToUser.getCustomer()
 				.getMetaField(secondaryZipCodeExtensionFieldname);
 		if (p2PPlus4 != null) {
-			lineItem.setP2PPlus4(p2PPlus4.getValue().toString());
+			lineItem.setP2PPlus4(p2PPlus4.getValue());
 		} else {
 			lineItem.setP2PPlus4("");
 		}
@@ -327,7 +326,7 @@ public class SureTaxCompositionTask extends PluggableTask implements
 		MetaFieldValue<String> p2PZipcode = invoiceToUser.getCustomer()
 				.getMetaField(secondaryZipCodeFieldname);
 		if (p2PZipcode != null) {
-			lineItem.setP2PZipcode(p2PZipcode.getValue().toString());
+			lineItem.setP2PZipcode(p2PZipcode.getValue());
 		} else {
 			lineItem.setP2PZipcode("");
 		}
@@ -335,7 +334,7 @@ public class SureTaxCompositionTask extends PluggableTask implements
 		MetaFieldValue<String> plus4 = invoiceToUser.getCustomer()
 				.getMetaField(billingZipCodeFieldname);
 		if (plus4 != null) {
-			lineItem.setPlus4(plus4.getValue().toString());
+			lineItem.setPlus4(plus4.getValue());
 		} else {
 			lineItem.setPlus4("");
 		}

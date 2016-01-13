@@ -4,8 +4,6 @@
 package com.sapienter.jbilling.server.user.tasks;
 
 
-import java.math.BigDecimal;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.db.MetaField;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldDAS;
@@ -19,14 +17,13 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.system.event.Event;
 import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.contact.db.ContactDAS;
-import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.user.event.DynamicBalanceChangeEvent;
 import com.sapienter.jbilling.server.util.Context;
-
 import org.apache.commons.lang.StringUtils;
-;
+
+import java.math.BigDecimal;
+
 
 /**
  * @author Vikas Bodani

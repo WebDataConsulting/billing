@@ -27,10 +27,17 @@ package com.sapienter.jbilling.server.util.csv;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
+import com.sapienter.jbilling.server.item.db.ItemDTO;
+import com.sapienter.jbilling.server.metafields.EntityType;
+import com.sapienter.jbilling.server.metafields.MetaFieldBL;
+import com.sapienter.jbilling.server.order.db.OrderDTO;
+import com.sapienter.jbilling.server.payment.db.PaymentDTO;
+import com.sapienter.jbilling.server.user.db.UserDTO;
+import com.sapienter.jbilling.server.user.partner.db.PartnerDTO;
 import com.sapienter.jbilling.server.util.converter.BigDecimalConverter;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
-;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -77,7 +84,28 @@ public class CsvExporter<T extends Exportable> implements Exporter<T> {
 
     public String export(List<? extends Exportable> list) {
         String[] header;
-
+        
+        T instance = null;
+		try {
+			instance = type.newInstance();
+		} catch (InstantiationException | IllegalAccessException e1) {
+			e1.printStackTrace();
+		}
+        if(instance.getClass() == UserDTO.class) {
+        	instance.metaFieldsNames.addAll(MetaFieldBL.getMetaFieldsByType(1,EntityType.ACCOUNT_TYPE));
+        	instance.customerMetaFieldsNames.addAll(MetaFieldBL.getMetaFieldsByCustomerType(1,EntityType.CUSTOMER));
+        }
+        else if(instance.getClass() == ItemDTO.class)      	ItemDTO.metaFieldsNames.addAll(MetaFieldBL.getMetaFieldsByType(1,EntityType.PRODUCT));
+        
+        else if(instance.getClass() == OrderDTO.class)    	OrderDTO.metaFieldsNames.addAll(MetaFieldBL.getMetaFieldsByType(1,EntityType.ORDER));
+        
+        else if(instance.getClass() == PartnerDTO.class)  	PartnerDTO.metaFieldsNames.addAll(MetaFieldBL.getMetaFieldsByType(1,EntityType.AGENT));
+        
+        else if(instance.getClass() == InvoiceDTO.class)  	InvoiceDTO.metaFieldsNames.addAll(MetaFieldBL.getMetaFieldsByType(1,EntityType.INVOICE));
+        
+        else if(instance.getClass() == PaymentDTO.class)  	InvoiceDTO.metaFieldsNames.addAll(MetaFieldBL.getMetaFieldsByType(1,EntityType.PAYMENT));
+        
+        
         if(!list.isEmpty()) {
             header = list.get(0).getFieldNames();
         } else {
@@ -98,18 +126,25 @@ public class CsvExporter<T extends Exportable> implements Exporter<T> {
         StringWriter out = new StringWriter();
         CSVWriter writer = new CSVWriter(out);
         writer.writeNext(header);
-
+        
         for (Exportable exportable : list) {
             for (Object[] values : exportable.getFieldValues()) {
                 writer.writeNext(convertToString(values));
             }
         }
-
         try {
+			instance.metaFieldsNames.clear();
+
             writer.close();
             out.close();
         } catch (IOException e) {
+			instance.metaFieldsNames.clear();
+
             LOG.debug("Writer cannot be closed, exported CSV may be missing data.");
+        }
+        finally {
+			instance.metaFieldsNames.clear();
+
         }
 
         return out.toString();
@@ -134,4 +169,21 @@ public class CsvExporter<T extends Exportable> implements Exporter<T> {
 
         return strings;
     }
+   /* 
+    public String resolveEntityType(String className) {
+    	if(className == null) return null;
+    	
+    	className = className.substring(0,className.lastIndexOf("DTO"));
+    	String entityType = String.valueOf(className.charAt(0));
+    	for(int i=1; i< className.length(); i++) {
+    		if(className.charAt(i) >= 'A' && className.charAt(i) <= 'Z') {
+    			entityType += '_'+className.charAt(i);
+    		}
+    		else {
+    			entityType+= className.charAt(i);
+    		}
+    	}
+    	
+    	return entityType;
+    }*/
 }

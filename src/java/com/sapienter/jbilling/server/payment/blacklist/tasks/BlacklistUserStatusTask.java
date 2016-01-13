@@ -24,20 +24,11 @@
 
 package com.sapienter.jbilling.server.payment.blacklist.tasks;
 
-import java.util.Collection;
-import java.util.Date;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
 import com.sapienter.jbilling.server.metafields.db.MetaField;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldDAS;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
-import com.sapienter.jbilling.server.user.ContactBL;
-import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.db.*;
-
-;
-
 import com.sapienter.jbilling.server.payment.PaymentInformationBL;
 import com.sapienter.jbilling.server.payment.blacklist.BlacklistBL;
 import com.sapienter.jbilling.server.payment.blacklist.db.BlacklistDTO;
@@ -46,9 +37,18 @@ import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
 import com.sapienter.jbilling.server.process.event.NewUserStatusEvent;
 import com.sapienter.jbilling.server.system.event.Event;
 import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
+import com.sapienter.jbilling.server.user.ContactBL;
+import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.user.contact.db.ContactDAS;
 import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
+import com.sapienter.jbilling.server.user.db.UserDAS;
+import com.sapienter.jbilling.server.user.db.UserDTO;
+import com.sapienter.jbilling.server.user.db.UserStatusDAS;
+import com.sapienter.jbilling.server.user.db.UserStatusDTO;
+
+import java.util.Collection;
+import java.util.Date;
 
 /**
  * Blacklists users and all their data when their status moves to 

@@ -62,8 +62,8 @@ public class BigDecimalTestCase extends TestCase { // todo: move base test case 
      * @param actual actual BigDecimal value
      */
     public static void assertEquals(String message, BigDecimal expected, BigDecimal actual) {
-        assertEquals(message,
-                     (Object) (expected == null ? null : expected.setScale(COMPARISON_SCALE, COMPARISON_ROUNDING_MODE)),
-                     (Object) (actual == null ? null : actual.setScale(COMPARISON_SCALE, COMPARISON_ROUNDING_MODE)));
+    	TestCase.assertEquals(message,
+                expected == null ? null : expected.setScale(COMPARISON_SCALE, COMPARISON_ROUNDING_MODE),
+                actual == null ? null : actual.setScale(COMPARISON_SCALE, COMPARISON_ROUNDING_MODE));
     }
 }

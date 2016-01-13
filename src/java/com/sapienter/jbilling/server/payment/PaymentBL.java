@@ -24,25 +24,6 @@
 
 package com.sapienter.jbilling.server.payment;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.persistence.EntityNotFoundException;
-import javax.sql.rowset.CachedRowSet;
-
-;
-import org.springframework.dao.EmptyResultDataAccessException;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;
@@ -56,19 +37,7 @@ import com.sapienter.jbilling.server.notification.INotificationSessionBean;
 import com.sapienter.jbilling.server.notification.MessageDTO;
 import com.sapienter.jbilling.server.notification.NotificationBL;
 import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
-import com.sapienter.jbilling.server.payment.db.PaymentAuthorizationDTO;
-import com.sapienter.jbilling.server.payment.db.PaymentDAS;
-import com.sapienter.jbilling.server.payment.db.PaymentDTO;
-import com.sapienter.jbilling.server.payment.db.PaymentInformationDAS;
-import com.sapienter.jbilling.server.payment.db.PaymentInformationDTO;
-import com.sapienter.jbilling.server.payment.db.PaymentInstrumentInfoDTO;
-import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDAS;
-import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDTO;
-import com.sapienter.jbilling.server.payment.db.PaymentMethodDAS;
-import com.sapienter.jbilling.server.payment.db.PaymentMethodDTO;
-import com.sapienter.jbilling.server.payment.db.PaymentMethodTypeDAS;
-import com.sapienter.jbilling.server.payment.db.PaymentResultDAS;
-import com.sapienter.jbilling.server.payment.db.PaymentResultDTO;
+import com.sapienter.jbilling.server.payment.db.*;
 import com.sapienter.jbilling.server.payment.event.AbstractPaymentEvent;
 import com.sapienter.jbilling.server.payment.event.PaymentDeletedEvent;
 import com.sapienter.jbilling.server.payment.event.PaymentUnlinkedFromInvoiceEvent;
@@ -86,6 +55,15 @@ import com.sapienter.jbilling.server.user.partner.db.PartnerPayout;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
+import org.springframework.dao.EmptyResultDataAccessException;
+
+import javax.persistence.EntityNotFoundException;
+import javax.sql.rowset.CachedRowSet;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.*;
+
+;
 
 public class PaymentBL extends ResultList implements PaymentSQL {
 
@@ -941,7 +919,7 @@ public class PaymentBL extends ResultList implements PaymentSQL {
             InvoiceBL invoice = new InvoiceBL(invoiceId);
             UserBL user = new UserBL(invoice.getEntity().getUserId());
             message.addParameter("invoice_number", invoice.getEntity()
-                    .getPublicNumber().toString());
+                    .getPublicNumber());
             message.addParameter("invoice", invoice.getEntity());
             message.addParameter("method", info.getInstrument().getPaymentMethod().getDescription(user.getEntity().getLanguage().getId()));
             notificationSess.notify(info.getUserId(), message);

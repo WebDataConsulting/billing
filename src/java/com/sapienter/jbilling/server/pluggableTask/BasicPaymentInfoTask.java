@@ -29,7 +29,6 @@ import java.util.Date;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 
-;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
@@ -60,7 +59,7 @@ public class BasicPaymentInfoTask
      */
     public PaymentDTOEx getPaymentInfo(Integer userId)
             throws TaskException {
-        PaymentDTOEx retValue = new PaymentDTOEx();;
+        PaymentDTOEx retValue = new PaymentDTOEx();
         PaymentInformationBL paymentInfoBL = new PaymentInformationBL();
         
         try {

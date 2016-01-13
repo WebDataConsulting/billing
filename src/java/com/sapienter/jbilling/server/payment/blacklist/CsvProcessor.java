@@ -24,21 +24,11 @@
 
 package com.sapienter.jbilling.server.payment.blacklist;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
+import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.metafields.db.MetaField;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldDAS;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
-
-;
-
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.payment.PaymentInformationBL;
 import com.sapienter.jbilling.server.payment.blacklist.db.BlacklistDAS;
 import com.sapienter.jbilling.server.payment.blacklist.db.BlacklistDTO;
@@ -51,6 +41,13 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Util;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** 
  * Processes blacklist CSV files.

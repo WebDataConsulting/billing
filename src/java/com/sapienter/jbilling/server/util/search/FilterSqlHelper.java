@@ -2,7 +2,7 @@ package com.sapienter.jbilling.server.util.search;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
-;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;

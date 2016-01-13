@@ -24,18 +24,6 @@
 
 package com.sapienter.jbilling.server.pluggableTask;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Random;
-import java.util.List;
-
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.item.CurrencyBL;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
@@ -48,8 +36,20 @@ import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.user.ContactBL;
 import com.sapienter.jbilling.server.util.Constants;
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+;
 
 public class PaymentAuthorizeNetTask extends PluggableTask
             implements PaymentTask {
@@ -133,8 +133,8 @@ public class PaymentAuthorizeNetTask extends PluggableTask
                 expiry = piBl.get4digitExpiry(paymentInfo.getInstrument());
             }
             
-            String login = (String) parameters.get(PARAMETER_LOGIN.getName());
-            String transaction = (String) parameters.get(PARAMETER_TRANSACTION.getName());
+            String login = parameters.get(PARAMETER_LOGIN.getName());
+            String transaction = parameters.get(PARAMETER_TRANSACTION.getName());
             
             if (login == null || login.length() == 0 || transaction == null ||
                     transaction.length() == 0) {
@@ -192,7 +192,7 @@ public class PaymentAuthorizeNetTask extends PluggableTask
             }
             
             // see if AVS info has to be included
-            String doAvs = (String) parameters.get(PARAMETER_AVS.getName());
+            String doAvs = parameters.get(PARAMETER_AVS.getName());
             if (doAvs != null && doAvs.equals("true")) {
                 data = addAVSFields(paymentInfo.getUserId(), data);
 
@@ -383,9 +383,7 @@ public class PaymentAuthorizeNetTask extends PluggableTask
     private NameValuePair[] addAVSFields(Integer userId, NameValuePair[] fields) {
         try {
             List result = new ArrayList();
-            for (int f = 0; f < fields.length; f++) {
-                result.add(fields[f]);
-            }
+            Collections.addAll(result, fields);
             ContactBL contact = new ContactBL();
             contact.set(userId);
             considerField(result, contact.getEntity().getFirstName(),
@@ -474,8 +472,8 @@ public class PaymentAuthorizeNetTask extends PluggableTask
      */
     public boolean preAuth(PaymentDTOEx payment)
             throws PluggableTaskException {
-        String login = (String) parameters.get(PARAMETER_LOGIN.getName());
-        String transaction = (String) parameters.get(PARAMETER_TRANSACTION.getName());
+        String login = parameters.get(PARAMETER_LOGIN.getName());
+        String transaction = parameters.get(PARAMETER_TRANSACTION.getName());
         boolean isTest = false;
 
         if (login == null || login.length() == 0 || transaction == null ||

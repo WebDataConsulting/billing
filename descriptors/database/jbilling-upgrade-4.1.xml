@@ -1340,6 +1340,12 @@
 
         <modifyDataType tableName="batch_job_execution_params" columnName="date_val" newDataType="datetime"/>
 
+        <addColumn tableName="meta_field_name">
+            <column defaultValueBoolean="false" name="is_unique" type="java.sql.Types.BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
         <update tableName="pluggable_task_type_category">
             <column name="interface_name" value="com.sapienter.jbilling.server.pricing.tasks.IPricing"/>
             <where>interface_name = 'com.sapienter.jbilling.server.item.tasks.IPricing'</where>

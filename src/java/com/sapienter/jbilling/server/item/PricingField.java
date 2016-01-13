@@ -425,7 +425,7 @@ public class PricingField implements Serializable {
                 result.add(new PricingField(fields[i]));
             }
         }
-        return result.toArray(new PricingField[0]); 
+        return result.toArray(new PricingField[result.size()]);
     }
 
     /**
@@ -500,7 +500,7 @@ public class PricingField implements Serializable {
     }
 
 	public static String setPricingFieldsValue(List<PricingField> pricingFields) {
-		PricingField[] fields = pricingFields.toArray(new PricingField[0]);
+		PricingField[] fields = pricingFields.toArray(new PricingField[pricingFields.size()]);
 		return setPricingFieldsValue(fields);
 	}
 

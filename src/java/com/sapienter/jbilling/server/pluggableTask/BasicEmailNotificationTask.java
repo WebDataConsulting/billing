@@ -23,12 +23,19 @@
  */
 package com.sapienter.jbilling.server.pluggableTask;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.common.Util;
+import com.sapienter.jbilling.server.notification.MessageDTO;
+import com.sapienter.jbilling.server.notification.MessageSection;
+import com.sapienter.jbilling.server.notification.NotificationBL;
+import com.sapienter.jbilling.server.notification.NotificationMediumType;
+import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
+import com.sapienter.jbilling.server.user.ContactBL;
+import com.sapienter.jbilling.server.user.ContactDTOEx;
+import com.sapienter.jbilling.server.user.db.UserDTO;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -36,23 +43,10 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.util.*;
 
-import com.sapienter.jbilling.server.customer.CustomerBL;
-import com.sapienter.jbilling.server.notification.NotificationMediumType;
 ;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.common.Util;
-import com.sapienter.jbilling.server.notification.MessageDTO;
-import com.sapienter.jbilling.server.notification.MessageSection;
-import com.sapienter.jbilling.server.notification.NotificationBL;
-import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
-import com.sapienter.jbilling.server.user.ContactBL;
-import com.sapienter.jbilling.server.user.ContactDTOEx;
-import com.sapienter.jbilling.server.user.db.UserDTO;
 
 /* 
  * This will send an email to the main contant of the provided user
@@ -120,7 +114,7 @@ public class BasicEmailNotificationTask extends PluggableTask
 
     private void init() {
                 // set some parameters
-        server = (String) parameters.get(PARAMETER_SMTP_SERVER.getName());
+        server = parameters.get(PARAMETER_SMTP_SERVER.getName());
         if (server == null || server.length() == 0) {
             server = Util.getSysProp("smtp_server");
         }
@@ -134,21 +128,21 @@ public class BasicEmailNotificationTask extends PluggableTask
                 LOG.error("The port is not a number", e);
             }
         }
-        username = (String) parameters.get(PARAMETER_USERNAME.getName());
+        username = parameters.get(PARAMETER_USERNAME.getName());
         if (username == null || username.length() == 0) {
             username = Util.getSysProp("smtp_username");
         }
-        password = (String) parameters.get(PARAMETER_PASSWORD.getName());
+        password = parameters.get(PARAMETER_PASSWORD.getName());
         if (password == null || password.length() == 0) {
             password = Util.getSysProp("smtp_password");
         }
-        replyTo = (String) parameters.get(PARAMETER_REPLYTO.getName());
+        replyTo = parameters.get(PARAMETER_REPLYTO.getName());
 
-        doHTML = Boolean.parseBoolean((String) parameters.get(PARAMETER_HTML.getName()));
+        doHTML = Boolean.parseBoolean(parameters.get(PARAMETER_HTML.getName()));
 
-        tls = Boolean.parseBoolean((String) parameters.get(PARAMETER_TLS.getName()));
+        tls = Boolean.parseBoolean(parameters.get(PARAMETER_TLS.getName()));
 
-        sslAuth = Boolean.parseBoolean((String) parameters.get(PARAMETER_SSL_AUTH.getName()));
+        sslAuth = Boolean.parseBoolean(parameters.get(PARAMETER_SSL_AUTH.getName()));
     }
 
     public boolean deliver(UserDTO user, MessageDTO message)
@@ -242,12 +236,12 @@ public class BasicEmailNotificationTask extends PluggableTask
         }
 
         // the from address
-        String from = (String) parameters.get(PARAMETER_FROM.getName());
+        String from = parameters.get(PARAMETER_FROM.getName());
         if (from == null || from.length() == 0) {
             from = Util.getSysProp("email_from");
         }
 
-        String fromName = (String) parameters.get(PARAMETER_FROM_NAME.getName());
+        String fromName = parameters.get(PARAMETER_FROM_NAME.getName());
         try {
             if (fromName == null || fromName.length() == 0) {
                 msg.setFrom(new InternetAddress(from));
@@ -268,7 +262,7 @@ public class BasicEmailNotificationTask extends PluggableTask
             }
         }
         // the bcc if specified
-        String bcc = (String) parameters.get(PARAMETER_BCCTO.getName());
+        String bcc = parameters.get(PARAMETER_BCCTO.getName());
         if (bcc != null && bcc.length() > 0) {
             try {
                 msg.setBcc(new InternetAddress(bcc, false));
@@ -292,7 +286,7 @@ public class BasicEmailNotificationTask extends PluggableTask
                 msg.setText(sections[1].getContent());
             }
             if (message.getAttachmentFile() != null) {
-                File file = (File) new File(message.getAttachmentFile());
+                File file = new File(message.getAttachmentFile());
 
                 msg.addAttachment(file.getName(), new FileSystemResource(file));
                 LOG.debug("added attachment " + file.getName());

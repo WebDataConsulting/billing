@@ -28,7 +28,7 @@ import static org.testng.AssertJUnit.assertEquals;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-
+import com.sapienter.jbilling.server.process.BillingProcessTestCase;
 import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
 import com.sapienter.jbilling.server.order.OrderPeriodWS;
 import com.sapienter.jbilling.server.order.db.OrderPeriodDAS;
@@ -39,7 +39,6 @@ import com.sapienter.jbilling.server.user.MainSubscriptionWS;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.CustomerDAS;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
-import com.sapienter.jbilling.server.util.BillingProcessTestCase;
 import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.common.Util;
@@ -67,7 +66,7 @@ import java.lang.System;
  * @author Sagar Dond On 15 june 2014
  */
 @Test(groups = { "billing-and-discounts", "billing" })
-public class DailyBillingCycleTest extends BillingProcessTestCase {
+public class DailyBillingCycleTest extends BillingProcessTestCase  {
 
     @Test
     public void testDailyBillingCycle () throws Exception {

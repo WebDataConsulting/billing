@@ -27,7 +27,6 @@ import java.util.List;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
-;
 import org.hibernate.Query;
 
 public class PluggableTaskParameterDAS extends AbstractDAS<PluggableTaskParameterDTO> {

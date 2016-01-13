@@ -25,8 +25,6 @@ package com.sapienter.jbilling.server.process.task;
 
 import java.math.BigDecimal;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.pluggableTask.BasicCompositionTask;
 import com.sapienter.jbilling.server.process.PeriodOfTime;

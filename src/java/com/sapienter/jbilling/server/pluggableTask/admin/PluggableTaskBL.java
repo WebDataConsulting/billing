@@ -292,7 +292,7 @@ public class PluggableTaskBL<T> {
             String messages[] = new String[missingParameters.size()];
             int f=0;
             for (ParameterDescription param: missingParameters) {
-                messages[f] = new String("PluggableTaskWS,parameter,plugins.error.required_parameter," + param.getName());
+                messages[f] = "PluggableTaskWS,parameter,plugins.error.required_parameter," + param.getName();
                 f++;
             }
             exception.setErrorMessages(messages);
@@ -347,7 +347,7 @@ public class PluggableTaskBL<T> {
             int f=0;
             for (PluggableTaskParameterDTO param: dateParameters) {
                 // some hard-coding here :(
-                messages[f] = new String("PluggableTaskWS,parameter,plugins.error.date_incorrect_format," + param.getName()+","+ Constants.DATE_TIME_FORMAT);
+                messages[f] = "PluggableTaskWS,parameter,plugins.error.date_incorrect_format," + param.getName() + "," + Constants.DATE_TIME_FORMAT;
                 f++;
             }
             exception.setErrorMessages(messages);

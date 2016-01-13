@@ -23,12 +23,6 @@
  */
 package com.sapienter.jbilling.server.order.task;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.ResourceBundle;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.ItemBL;
@@ -36,11 +30,7 @@ import com.sapienter.jbilling.server.item.ItemDecimalsException;
 import com.sapienter.jbilling.server.item.db.ItemDAS;
 import com.sapienter.jbilling.server.item.db.ItemDTO;
 import com.sapienter.jbilling.server.order.OrderBL;
-import com.sapienter.jbilling.server.order.db.OrderDAS;
-import com.sapienter.jbilling.server.order.db.OrderDTO;
-import com.sapienter.jbilling.server.order.db.OrderLineDTO;
-import com.sapienter.jbilling.server.order.db.OrderLineTypeDAS;
-import com.sapienter.jbilling.server.order.db.OrderPeriodDAS;
+import com.sapienter.jbilling.server.order.db.*;
 import com.sapienter.jbilling.server.order.event.NewActiveUntilEvent;
 import com.sapienter.jbilling.server.order.event.NewQuantityEvent;
 import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
@@ -50,6 +40,10 @@ import com.sapienter.jbilling.server.system.event.Event;
 import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.util.Constants;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * Cancellation fee task

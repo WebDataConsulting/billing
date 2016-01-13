@@ -24,15 +24,6 @@ You may download the latest source from webdataconsulting.github.io.
 
 package com.sapienter.jbilling.server.invoice;
 
-import java.util.Date;
-import java.util.ResourceBundle;
-
-import com.sapienter.jbilling.server.user.db.UserDTO;
-;
-
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;
@@ -45,7 +36,13 @@ import com.sapienter.jbilling.server.pluggableTask.PaperInvoiceNotificationTask;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
 import com.sapienter.jbilling.server.process.BillingProcessBL;
 import com.sapienter.jbilling.server.user.UserBL;
+import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 /**

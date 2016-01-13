@@ -27,7 +27,6 @@ package com.sapienter.jbilling.server.item;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.db.*;
-;
 
 import java.util.*;
 

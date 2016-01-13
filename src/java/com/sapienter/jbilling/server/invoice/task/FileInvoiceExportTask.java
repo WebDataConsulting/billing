@@ -25,20 +25,9 @@
 
 package com.sapienter.jbilling.server.invoice.task;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.sapienter.jbilling.server.invoice.InvoiceLineComparator;
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.Util;
+import com.sapienter.jbilling.server.invoice.InvoiceLineComparator;
 import com.sapienter.jbilling.server.invoice.NewInvoiceEvent;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
@@ -50,6 +39,17 @@ import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.user.ContactBL;
 import com.sapienter.jbilling.server.user.UserBL;
 import org.joda.time.format.DateTimeFormat;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.MathContext;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+;
 
 /**
  *
@@ -110,49 +110,49 @@ public class FileInvoiceExportTask extends PluggableTask implements IInternalEve
         contact.set(userId);
 
         // cono                                                         
-        line.append("\"" + emptyIfNull(contact.getEntity().getPostalCode()) + "\"");
+        line.append("\"").append(emptyIfNull(contact.getEntity().getPostalCode())).append("\"");
         line.append(',');
         // custno
-        line.append("\"" + userId + "\"");
+        line.append("\"").append(userId).append("\"");
         line.append(',');
         // naddrcode
         line.append("\"" + "000" + "\"");
         line.append(',');
         // lookupnm
-        line.append("\"" + emptyIfNull(contact.getEntity().getOrganizationName()) + "\"");
+        line.append("\"").append(emptyIfNull(contact.getEntity().getOrganizationName())).append("\"");
         line.append(',');
         // totallineamt
-        line.append("\"" + invoiceLine.getAmount() + "\"");
+        line.append("\"").append(invoiceLine.getAmount()).append("\"");
         line.append(',');
         // period
-        line.append("\"" + DateTimeFormat.forPattern("yyyyMM").print(invoice.getCreateDatetime().getTime()) + "\"");
+        line.append("\"").append(DateTimeFormat.forPattern("yyyyMM").print(invoice.getCreateDatetime().getTime())).append("\"");
         line.append(',');
         // name
-        line.append("\"" + emptyIfNull(contact.getEntity().getOrganizationName()) + "\"");
+        line.append("\"").append(emptyIfNull(contact.getEntity().getOrganizationName())).append("\"");
         line.append(',');
         // deliveryaddr
-        line.append("\"" + emptyIfNull(contact.getEntity().getAddress1()) + "\"");
+        line.append("\"").append(emptyIfNull(contact.getEntity().getAddress1())).append("\"");
         line.append(',');
         // city
-        line.append("\"" + emptyIfNull(contact.getEntity().getCity()) + "\"");
+        line.append("\"").append(emptyIfNull(contact.getEntity().getCity())).append("\"");
         line.append(',');
         // state
-        line.append("\"" + emptyIfNull(contact.getEntity().getStateProvince()) + "\"");
+        line.append("\"").append(emptyIfNull(contact.getEntity().getStateProvince())).append("\"");
         line.append(',');
         // zip5
-        line.append("\"" + emptyIfNull(contact.getEntity().getPostalCode()) + "\"");
+        line.append("\"").append(emptyIfNull(contact.getEntity().getPostalCode())).append("\"");
         line.append(',');
         // totdue - round to two decimals
-        line.append("\"" + UserBL.getBalance(userId).round(new MathContext(2)) + "\"");
+        line.append("\"").append(UserBL.getBalance(userId).round(new MathContext(2))).append("\"");
         line.append(',');
         // qty
-        line.append("\"" + invoiceLine.getQuantity() + "\"");
+        line.append("\"").append(invoiceLine.getQuantity()).append("\"");
         line.append(',');
         // description
-        line.append("\"" + invoiceLine.getDescription() + "\"");
+        line.append("\"").append(invoiceLine.getDescription()).append("\"");
         line.append(',');
         // invoiceno
-        line.append("\"" + invoice.getNumber() + "\"");
+        line.append("\"").append(invoice.getNumber()).append("\"");
         line.append(',');
         // custstatus
         line.append("\"" + "TRUE" + "\"");

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Date;
 
-;
+
 
 /**
  * @author Khobab

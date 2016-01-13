@@ -24,9 +24,9 @@
 package com.sapienter.jbilling.server.pluggableTask.admin;
 
 public class ParameterDescription {
-	public enum Type { STR, INT, FLOAT, DATE, BOOLEAN };
-	
-	private final String name;
+	public enum Type { STR, INT, FLOAT, DATE, BOOLEAN }
+
+    private final String name;
 	private final boolean required;
 	private final Type type;
 	private boolean isPassword;

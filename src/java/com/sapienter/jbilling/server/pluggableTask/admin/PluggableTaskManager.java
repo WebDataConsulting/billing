@@ -31,8 +31,6 @@ package com.sapienter.jbilling.server.pluggableTask.admin;
 import java.util.Iterator;
 import java.util.List;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
 import com.sapienter.jbilling.server.util.Context;

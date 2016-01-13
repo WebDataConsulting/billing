@@ -1,7 +1,7 @@
 package com.sapienter.jbilling.server.util;
 
 import com.sapienter.jbilling.common.FormatLogger;
-;
+
 import org.hibernate.event.PreUpdateEvent;
 import org.hibernate.event.PreUpdateEventListener;
 

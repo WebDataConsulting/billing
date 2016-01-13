@@ -1,11 +1,5 @@
 package com.sapienter.jbilling.server.user.tasks;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.item.PricingField;
 import com.sapienter.jbilling.server.item.db.ItemDAS;
@@ -19,6 +13,10 @@ import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
 import com.sapienter.jbilling.server.pluggableTask.TaskException;
 import com.sapienter.jbilling.server.user.ValidatePurchaseWS;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Abstract validate purchase task that provides convenience methods and helpers to simplify

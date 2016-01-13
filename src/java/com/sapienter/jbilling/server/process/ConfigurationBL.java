@@ -89,8 +89,8 @@ public class ConfigurationBL {
                         Constants.TABLE_BILLING_PROCESS_CONFIGURATION,
                         configuration.getId(),
                         EventLogger.MODULE_BILLING_PROCESS,
-                        EventLogger.ROW_UPDATED, new Integer(configuration
-                                .getGenerateReport()), null, null);
+                        EventLogger.ROW_UPDATED, configuration
+                                .getGenerateReport(), null, null);
                 configuration.setGenerateReport(dto.getGenerateReport());
                 configuration
                         .setReviewStatus(dto.getGenerateReport() == 1 ? Constants.REVIEW_STATUS_GENERATED
@@ -239,7 +239,7 @@ public class ConfigurationBL {
     				SessionInternalError exception = new SessionInternalError(
     				        "There is already a billing process for the give date." + ws.getNextRunDate());
     	            String messages[] = new String[1];
-    	            messages[0] = new String("BillingProcessConfigurationWS,nextRunDate,billing.configuration.error.unique.nextrundate,");
+    	            messages[0] = "BillingProcessConfigurationWS,nextRunDate,billing.configuration.error.unique.nextrundate,";
     	            exception.setErrorMessages(messages);
     	            throw exception;
     			}
@@ -256,9 +256,9 @@ public class ConfigurationBL {
     		LOG.error("Trying to set this configuration: " + ws + " but the it should be in the future " + run.getBillingProcess());
 			SessionInternalError exception = new SessionInternalError("The new next date needs to be in the future from the last successful run");
 			String messages[] = new String[1];
-			messages[0] = new String("BillingProcessConfigurationWS,nextRunDate,"
-                                     + "billing.configuration.error.past.nextrundate,"
-                                     + run.getBillingProcess().getBillingDate());
+			messages[0] = "BillingProcessConfigurationWS,nextRunDate,"
+                            + "billing.configuration.error.past.nextrundate,"
+                            + run.getBillingProcess().getBillingDate();
 
 			exception.setErrorMessages(messages);
 			throw exception;

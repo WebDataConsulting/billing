@@ -33,12 +33,10 @@ package com.sapienter.jbilling.server.user;
 import com.sapienter.jbilling.server.util.api.validation.EntitySignupValidationGroup;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Iterator;
 
 /** @author Emil */
 public class ContactWS implements Serializable {
@@ -155,8 +153,8 @@ public class ContactWS implements Serializable {
         setFirstName(other.getFirstName());
         setInitial(other.getInitial());
         setTitle(other.getTitle());
-        setPhoneCountryCode(null != other.getPhoneCountryCode() ? other.getPhoneCountryCode().toString() : "");
-        setPhoneAreaCode(null != other.getPhoneAreaCode() ? other.getPhoneAreaCode().toString() : "");
+        setPhoneCountryCode(null != other.getPhoneCountryCode() ? other.getPhoneCountryCode() : "");
+        setPhoneAreaCode(null != other.getPhoneAreaCode() ? other.getPhoneAreaCode() : "");
         setPhoneNumber(other.getPhoneNumber());
         setFaxCountryCode(other.getFaxCountryCode());
         setFaxAreaCode(other.getFaxAreaCode());
@@ -336,7 +334,7 @@ public class ContactWS implements Serializable {
     }
 
     public Boolean getInclude() {
-        return include == null ? new Boolean(false) : include;
+        return include == null ? Boolean.FALSE : include;
     }
 
     public void setInclude(Boolean include) {

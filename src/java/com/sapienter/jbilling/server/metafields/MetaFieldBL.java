@@ -26,6 +26,9 @@ package com.sapienter.jbilling.server.metafields;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.metafields.db.*;
+import com.sapienter.jbilling.server.metafields.db.value.*;
+import com.sapienter.jbilling.server.metafields.validation.ValidationRuleType;
+import com.sapienter.jbilling.server.metafields.validation.ValidationRuleWS;
 import com.sapienter.jbilling.server.payment.db.PaymentMethodTypeDAS;
 import com.sapienter.jbilling.server.pricing.util.AttributeUtils;
 import com.sapienter.jbilling.server.user.db.AccountInformationTypeDAS;
@@ -37,20 +40,6 @@ import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.DescriptionBL;
 import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
 import com.sapienter.jbilling.server.util.db.*;
-import com.sapienter.jbilling.server.metafields.db.MetaField;
-import com.sapienter.jbilling.server.metafields.db.MetaFieldDAS;
-import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.MetaFieldValueDAS;
-import com.sapienter.jbilling.server.metafields.db.ValidationRule;
-import com.sapienter.jbilling.server.metafields.db.value.BooleanMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.value.DateMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.value.DecimalMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.value.IntegerMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.value.JsonMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.value.ListMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.value.StringMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.validation.ValidationRuleType;
-import com.sapienter.jbilling.server.metafields.validation.ValidationRuleWS;
 import org.joda.time.format.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -113,6 +102,14 @@ public class MetaFieldBL {
     public static void validateMetaFields(Integer entityId, EntityType type, MetaFieldValueWS[] metaFields) {
         MetaFieldBL.validateMetaFields(entityId, new EntityType[]{type}, metaFields);
     }
+    
+    public static List<String> getMetaFieldsByType(Integer entityId, EntityType type) {
+    		return new MetaFieldDAS().getMetaFieldsByType(entityId, type);
+    }
+    
+    public static List<String> getMetaFieldsByCustomerType(Integer entityId, EntityType type) {
+		return new MetaFieldDAS().getMetaFieldsByCustomerype(entityId, type);
+}
 
     public static void validateMetaFields(Integer entityId, EntityType[] type, MetaFieldValueWS[] metaFields) {
         Collection<MetaField> metaFieldsCollection =  new MetaFieldDAS().getAvailableFields(entityId,type, true);
@@ -175,12 +172,32 @@ public class MetaFieldBL {
             throw new SessionInternalError("Metafield value must be specified",
                     new String[] {"MetaFieldValue,value,metafield.validation.value.unspecified," + field.getName()});
         }
+        
+        if(field.isUnique()  && field.getEntityType() != EntityType.CUSTOMER) {
+            validateUniqueMF(value);
+        }
 
         if (value != null) {
             value.validate(field.getEntity().getLanguageId(), source);
-        }
+        }        
     }
 
+    /**
+     * Validate if the Meta field value is unique for the unique meta field.
+     * @param value
+     */
+    public static void validateUniqueMF(MetaFieldValue value) {
+        if (null == value.getValue() || !value.getField().isUnique()) return;
+        MetaField field= value.getField();
+    	MetaFieldDAS metaFieldDas = new MetaFieldDAS();
+
+        boolean uniqueMetaField = metaFieldDas.getValueByMetaFieldId(field.getId(), field.getDataType(), value);
+        if(!uniqueMetaField) {
+    		throw new SessionInternalError("Metafield value must be unique",
+                    new String[] {"MetaFieldValue,value,metafield.validation.value.unique," + field.getName()});
+    	}
+    }
+    
     /**
      * Convert only the MetaFields which belongs to the entity. Missing or empty MetaFields will not be added.
      *
@@ -294,6 +311,7 @@ public class MetaFieldBL {
             ws.setValidationRule(MetaFieldBL.getValidationRuleWS(dto.getValidationRule()));
         }
         ws.setFilename(dto.getFilename());
+        ws.setUnique(dto.isUnique());
         return ws;
     }
 
@@ -318,6 +336,7 @@ public class MetaFieldBL {
         }
 
         dto.setMandatory(ws.isMandatory());
+        dto.setUnique(ws.isUnique());
         dto.setName(ws.getName());
         dto.setPrimary(ws.isPrimary());
         dto.setValidationRule(ws.getValidationRule() == null ? null : MetaFieldBL.getValidationRuleDTO(ws.getValidationRule()));
@@ -390,7 +409,7 @@ public class MetaFieldBL {
                 case LIST:
                     ListMetaFieldValue listMetaFieldValue = new ListMetaFieldValue(metaField);
                     if (value != null) {
-                        listMetaFieldValue.setValue(Arrays.asList(new String[] {value.toString()}));
+                        listMetaFieldValue.setValue(Arrays.asList(value.toString()));
                     }
                     return listMetaFieldValue;
             }
@@ -533,6 +552,7 @@ public class MetaFieldBL {
         metaField.setPrimary(dto.getPrimary());
         metaField.setFieldUsage(dto.getFieldUsage());
         metaField.setFilename(dto.getFilename());
+        metaField.setUnique(dto.isUnique());
 
         if(dto.getValidationRule()!=null){
             validateAttributes(new ArrayList<ValidationRule>(Arrays.asList(dto.getValidationRule())));
@@ -584,6 +604,7 @@ public class MetaFieldBL {
         metaField.setFieldUsage(dto.getFieldUsage());
         metaField.setFilename(dto.getFilename());
         metaField.setDataType(dto.getDataType());
+        metaField.setUnique(dto.isUnique());
         
         if (metaField.getDefaultValue() != null && dto.getDefaultValue() == null) {
             metaField.getDefaultValue().setValue(null);

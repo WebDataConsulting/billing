@@ -37,14 +37,12 @@ import com.sapienter.jbilling.server.user.MainSubscriptionWS;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.util.db.InternationalDescriptionDAS;
 import com.sapienter.jbilling.server.util.db.InternationalDescriptionDTO;
-
-;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,7 +52,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 
-import org.apache.commons.lang.StringUtils;
+;
 
 /**
  * @author Emil
@@ -451,7 +449,7 @@ public class Util {
         }
         fields.add(field); // after last ','
 
-        return fields.toArray(new String[0]);
+        return fields.toArray(new String[fields.size()]);
     }
 
     /**

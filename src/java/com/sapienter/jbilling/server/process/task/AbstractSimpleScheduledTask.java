@@ -23,24 +23,18 @@
  */
 package com.sapienter.jbilling.server.process.task;
 
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
+import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import org.apache.commons.lang.StringUtils;
-;
 import org.joda.time.DateMidnight;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
-import org.quartz.SimpleTrigger;
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
-import org.quartz.impl.triggers.SimpleTriggerImpl;
-import org.quartz.SimpleTrigger;
+
+import java.util.Date;
 
 /**
  * Abstract task that contains all the plumbing necessary to construct a SimpleTrigger for

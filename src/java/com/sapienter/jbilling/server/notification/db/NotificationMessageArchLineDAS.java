@@ -23,8 +23,6 @@
  */
 package com.sapienter.jbilling.server.notification.db;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 

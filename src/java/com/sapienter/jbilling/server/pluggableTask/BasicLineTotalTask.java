@@ -24,20 +24,18 @@
 
 package com.sapienter.jbilling.server.pluggableTask;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
-
 import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.item.db.ItemTypeDTO;
-;
-
 import com.sapienter.jbilling.server.item.ItemDecimalsException;
 import com.sapienter.jbilling.server.item.db.ItemDAS;
 import com.sapienter.jbilling.server.item.db.ItemDTO;
+import com.sapienter.jbilling.server.item.db.ItemTypeDTO;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
 import com.sapienter.jbilling.server.util.Constants;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Basic tasks that takes the quantity and multiplies it by the price to 

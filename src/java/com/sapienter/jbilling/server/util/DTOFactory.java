@@ -37,11 +37,8 @@ import com.sapienter.jbilling.server.user.partner.PartnerBL;
 import com.sapienter.jbilling.server.user.permisson.db.RoleDTO;
 import com.sapienter.jbilling.server.util.db.LanguageDAS;
 import com.sapienter.jbilling.server.util.db.LanguageDTO;
-;
 
 import javax.naming.NamingException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 /**

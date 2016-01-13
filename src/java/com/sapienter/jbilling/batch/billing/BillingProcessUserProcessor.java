@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-;
+
 
 /**
  * @author Khobab
@@ -115,6 +115,6 @@ public class BillingProcessUserProcessor extends JobContextHandler implements In
     }
 
     public void setReview(String review) {
-        this.review = Integer.parseInt(review) == 1 ? true : false;
+        this.review = Integer.parseInt(review) == 1;
     }
 }

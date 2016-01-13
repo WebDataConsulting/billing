@@ -24,27 +24,6 @@
 
 package com.sapienter.jbilling.server.payment;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.*;
-
-import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;
-import com.sapienter.jbilling.server.payment.db.*;
-
-import com.sapienter.jbilling.server.payment.event.PaymentLinkedToInvoiceEvent;
-import com.sapienter.jbilling.server.payment.event.ProcessPaymentEvent;
-import com.sapienter.jbilling.server.process.db.AgeingEntityStepDTO;
-import com.sapienter.jbilling.server.user.db.UserStatusDTO;
-import com.sapienter.jbilling.server.user.partner.db.PartnerDTO;
-;
-
-import org.hibernate.StaleObjectStateException;
-import org.springframework.dao.DeadlockLoserDataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;
@@ -54,16 +33,22 @@ import com.sapienter.jbilling.server.notification.INotificationSessionBean;
 import com.sapienter.jbilling.server.notification.MessageDTO;
 import com.sapienter.jbilling.server.notification.NotificationBL;
 import com.sapienter.jbilling.server.payment.blacklist.CsvProcessor;
+import com.sapienter.jbilling.server.payment.db.PaymentDTO;
+import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDTO;
+import com.sapienter.jbilling.server.payment.db.PaymentMethodDAS;
+import com.sapienter.jbilling.server.payment.db.PaymentResultDAS;
 import com.sapienter.jbilling.server.payment.event.PaymentFailedEvent;
+import com.sapienter.jbilling.server.payment.event.PaymentLinkedToInvoiceEvent;
 import com.sapienter.jbilling.server.payment.event.PaymentSuccessfulEvent;
+import com.sapienter.jbilling.server.payment.event.ProcessPaymentEvent;
 import com.sapienter.jbilling.server.process.AgeingBL;
 import com.sapienter.jbilling.server.process.ConfigurationBL;
+import com.sapienter.jbilling.server.process.db.AgeingEntityStepDTO;
 import com.sapienter.jbilling.server.system.event.EventManager;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.db.CustomerDTO;
 import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.user.partner.PartnerBL;
+import com.sapienter.jbilling.server.user.db.UserStatusDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.PreferenceBL;
@@ -71,12 +56,25 @@ import com.sapienter.jbilling.server.util.TransactionInfoUtil;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
 import org.hibernate.SessionFactory;
+import org.hibernate.StaleObjectStateException;
+import org.springframework.dao.DeadlockLoserDataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+;
 
 /**
  *
@@ -641,7 +639,7 @@ public class PaymentSessionBean implements IPaymentSessionBean {
                 }
 
                 // if the user is in the ageing process, she should be out
-                if (new Integer(invoice.getToProcess()).equals(new Integer(0))) {
+                if (invoice.getToProcess().equals(new Integer(0))) {
                     AgeingBL ageing = new AgeingBL();
                     ageing.out(invoice.getBaseUser(), invoice.getId());
                 }
@@ -873,7 +871,7 @@ public class PaymentSessionBean implements IPaymentSessionBean {
                 LOG.debug("wrong entity paypal account %s %s", paypalAccount, entityEmail);
             }
             
-            return new Boolean(ret);
+            return Boolean.valueOf(ret);
         } catch (Exception e) {
             throw new SessionInternalError(e);
         }

@@ -31,7 +31,7 @@ import com.sapienter.jbilling.server.user.ContactDTOEx;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-;
+
 
 @Transactional(propagation = Propagation.REQUIRED)
 public class CustomerSessionBean implements ICustomerSessionBean {

@@ -47,7 +47,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
-;
+
 
 /**
  * Automatic payment task designed to "top up" a customers pre-paid balance with a user

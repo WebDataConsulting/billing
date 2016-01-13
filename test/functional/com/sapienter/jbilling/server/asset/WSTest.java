@@ -16,7 +16,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import java.math.BigDecimal;
 import java.util.*;
-
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
+import org.joda.time.DateMidnight;
 /**
  * Created by vojislav on 10/31/14.
  */
@@ -867,7 +868,8 @@ public class WSTest {
 		item.setEntities(Arrays.asList(PRANCING_PONY_COMPANY_ID));
 		item.setDescription(description);
 		item.setPriceModelCompanyId(PRICING_MODEL_CATEGORY_ID);
-		item.setPrice(price);
+		item.setPriceManual(0);
+		item.setPrices(CreateObjectUtil.setItemPrice(price, new DateMidnight(1970, 1, 1).toDate(), PRANCING_PONY_COMPANY_ID, CURRENCY_US));
 		item.setNumber(code);
 		item.setAssetManagementEnabled(ASSET_MANAGEMENT_ENABLED);
 		item.setTypes(new Integer[]{categoryId});

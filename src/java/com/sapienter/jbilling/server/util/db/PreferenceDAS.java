@@ -26,7 +26,6 @@ package com.sapienter.jbilling.server.util.db;
 import java.util.List;
 
 import com.sapienter.jbilling.common.FormatLogger;
-;
 import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projections;

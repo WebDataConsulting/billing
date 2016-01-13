@@ -32,8 +32,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-;
-
 @Entity
 @TableGenerator(
         name = "pluggable_task_parameter_GEN",

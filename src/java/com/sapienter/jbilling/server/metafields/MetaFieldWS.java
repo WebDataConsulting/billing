@@ -43,6 +43,8 @@ public class MetaFieldWS implements Serializable {
     @Size(min = 0, max = 100, message = "validation.error.size,0,100")
     private String filename;
     
+    private boolean unique = false;
+    
 	public MetaFieldWS() {
 	}
 
@@ -168,6 +170,15 @@ public class MetaFieldWS implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+    
+    public boolean isUnique() {
+        return unique;
+    }
+
+
+    public void setUnique(boolean unique) {
+        this.unique = unique;
     }
 
 }

@@ -32,8 +32,6 @@ import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.db.InternationalDescriptionDAS;
 import com.sapienter.jbilling.server.util.db.InternationalDescriptionDTO;
 
-;
-
 import java.util.Collection;
 import java.util.Set;
 

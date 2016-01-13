@@ -37,7 +37,7 @@ import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
-;
+
 
 import java.math.BigDecimal;
 import java.util.Date;

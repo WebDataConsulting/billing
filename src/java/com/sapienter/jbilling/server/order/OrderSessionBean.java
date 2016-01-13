@@ -32,7 +32,6 @@ import com.sapienter.jbilling.server.item.PricingField;
 import com.sapienter.jbilling.server.item.db.AssetDTO;
 import com.sapienter.jbilling.server.order.db.*;
 import com.sapienter.jbilling.server.order.validator.OrderHierarchyValidator;
-;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -164,7 +163,7 @@ public class OrderSessionBean implements IOrderSessionBean {
         try {
             // now get the order
             OrderBL bl = new OrderBL();
-            return new Boolean(bl.deletePeriod(periodId));
+            return Boolean.valueOf(bl.deletePeriod(periodId));
         } catch (Exception e) {
             throw new SessionInternalError(e);
         }

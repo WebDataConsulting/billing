@@ -27,8 +27,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 
-;
-
 import com.paypal.sdk.exceptions.PayPalException;
 import com.sapienter.jbilling.common.CommonConstants;
 import com.sapienter.jbilling.common.FormatLogger;

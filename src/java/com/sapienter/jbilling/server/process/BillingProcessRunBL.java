@@ -24,31 +24,21 @@
 
 package com.sapienter.jbilling.server.process;
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.sql.SQLException;
-import java.io.IOException;
-
-;
-
-
+import com.sapienter.jbilling.common.Constants;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.common.Constants;
 import com.sapienter.jbilling.server.item.CurrencyBL;
+import com.sapienter.jbilling.server.list.ResultList;
+import com.sapienter.jbilling.server.notification.NotificationBL;
 import com.sapienter.jbilling.server.payment.db.PaymentMethodDAS;
 import com.sapienter.jbilling.server.process.db.*;
-import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.list.ResultList;
-import com.sapienter.jbilling.server.order.OrderSQL;
-import com.sapienter.jbilling.server.notification.NotificationBL;
-import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
-import com.sapienter.jbilling.server.notification.MessageDTO;
-import com.sapienter.jbilling.server.notification.INotificationSessionBean;
-import com.sapienter.jbilling.server.util.Context;
-import javax.sql.rowset.CachedRowSet;
 
 import javax.mail.MessagingException;
+import javax.sql.rowset.CachedRowSet;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.*;
 
 public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
     private ProcessRunDAS processRunDas = null;

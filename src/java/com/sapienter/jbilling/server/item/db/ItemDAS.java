@@ -25,17 +25,12 @@ package com.sapienter.jbilling.server.item.db;
 
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.criterion.*;
 
 import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.Query;
 
 public class ItemDAS extends AbstractDAS<ItemDTO> {
 
@@ -188,7 +183,7 @@ public class ItemDAS extends AbstractDAS<ItemDTO> {
             query.setParameter("itemId", itemId);
             query.setParameter("entityId", entityId);
             Number count = (Number) query.uniqueResult();
-            return null != count ? count.longValue() > 0 : false;
+            return null != count && count.longValue() > 0;
         } else {
             //check if the product is visible to either the parent or the child company
             SQLQuery query = getSession().createSQLQuery(PRODUCT_VISIBLE_TO_CHILD_HIERARCHY_SQL);
@@ -196,7 +191,7 @@ public class ItemDAS extends AbstractDAS<ItemDTO> {
             query.setParameter("parentCompanyId", parentId);
             query.setParameter("childCompanyId", entityId);
             Number count = (Number) query.uniqueResult();
-            return null != count ? count.longValue() > 0 : false;
+            return null != count && count.longValue() > 0;
         }
     }
     
@@ -207,7 +202,7 @@ public class ItemDAS extends AbstractDAS<ItemDTO> {
             query.setParameter("itemId", itemId);
             query.setParameter("entityId", entityId);
             Number count = (Number) query.uniqueResult();
-            return null != count ? count.longValue() > 0 : false;
+            return null != count && count.longValue() > 0;
         
     }
     

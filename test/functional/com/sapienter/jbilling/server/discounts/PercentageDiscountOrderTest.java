@@ -207,82 +207,6 @@ public class PercentageDiscountOrderTest extends BaseDiscountApiTest {
 		api.deleteUser(customerId);
 	}
 
-	@Test
-	public void testPercentagePlanItemLevelDiscount() throws Exception {
-		
-		Integer customerId = null;
-		Integer orderId = null;
-		
-		try {
-	        
-	        //create User
-	        UserWS customer= CreateObjectUtil.createCustomer(1, "testPercentagePlanItemLevel.310", 
-	        						"newPa$$word1", 1, 5, false, 1, null, null, 
-	        						CreateObjectUtil.createCustomerContact("test@gmail.com"));
-	        
-	        customerId= api.createUser(customer);
-	        assertNotNull("Customer/User ID should not be null", customerId);
-	        
-	        //create order
-	        OrderWS mainOrder = getUserSubscriptionToPlan(new Date(), BigDecimal.TEN, customerId, 1, 4);
-	        
-			mainOrder.setUserId(customerId);
-	        // set discount lines with percentage discount at plan item level
-	        
-	        // call api to create order
-	        orderId = api.createOrder(mainOrder);
-	        mainOrder = api.getOrder(orderId);
-	        assertNotNull("mainOrder is null.", orderId);
-	        // fetch the discount order from linked orders
-	        List<OrderWS> linkedOrders = api.getLinkedOrders(orderId);
-	        assertNotNull("linkedOrders is null.", linkedOrders);	        
-	        assertTrue("No. of linkedOrders is not equal to 1", linkedOrders.size() == 1);
-	        OrderWS discountOrderWS = null;
-	        for (OrderWS orderWS : linkedOrders) {
-	        	if (orderWS.getId() != orderId) {
-	        		discountOrderWS = orderWS;
-	        		break;
-	        	}
-	        }
-
-	        // various asserts to test discount order and its order line
-	        assertNotNull("Discount Order is null", discountOrderWS);
-	        assertTrue("Discount Order Period is not One Time.", discountOrderWS.getPeriod().intValue() == 1);
-	        assertTrue("No. of lines on Discount Order not equal to One", discountOrderWS.getOrderLines().length == 1);
-	        assertTrue("Discount Order line Type not Discount Line Type.", discountOrderWS.getOrderLines()[0].getTypeId().intValue() == Constants.ORDER_LINE_TYPE_DISCOUNT.intValue());
-	        assertNull("Discount Order line item is not null", discountOrderWS.getOrderLines()[0].getItemId());
-	        
-		} finally {
-			if (orderId !=null) api.deleteOrder(orderId);
-			//if (planId != null) api.deletePlan(planId);
-			if (customerId !=null) api.deleteUser(customerId);
-		}
-
-		// various asserts to test discount order and its order line
-		assertNotNull("Discount Order is null", discountOrderWS);
-		assertTrue("Discount Order Period is not One Time.", discountOrderWS.getPeriod().intValue() == 1);
-		assertTrue("No. of lines on Discount Order not equal to One", discountOrderWS.getOrderLines().length == 1);
-		assertTrue("Discount Order line Type not Discount Line Type.", discountOrderWS.getOrderLines()[0].getTypeId().intValue() == Constants.ORDER_LINE_TYPE_DISCOUNT);
-		assertNull("Discount Order line item is not null", discountOrderWS.getOrderLines()[0].getItemId());
-
-		// GET THE discountable amount as matching order line's amount (match by item id).
-		BigDecimal discountableAmount = planWS.getPlanItems().get(0).getModel().getRateAsDecimal().
-				multiply(planWS.getPlanItems().get(0).getBundle().getQuantityAsDecimal());
-
-		System.out.println("plan item level discount, discountableAmount : " + discountableAmount);
-		BigDecimal expectedDiscountAmount = TEN.negate().divide(new BigDecimal(100)).multiply(discountableAmount);
-		assertEquals("Discount Order line Amount not equal to Discount Amount.", expectedDiscountAmount, discountOrderWS.getOrderLines()[0].getAmountAsDecimal());
-		assertEquals("Discount amount is not equal to Discount Order Total", expectedDiscountAmount, discountOrderWS.getTotalAsDecimal());
-
-		//cleanup
-		api.deleteOrder(discountOrderWS.getId());
-//		api.deleteDiscount(discount.getId());
-		api.deleteItem(subscriptionItemId);
-//		api.deletePlan(planId);
-		for(Integer bItem : bundleItems) api.deleteItem(bItem);
-		api.deleteUser(customerId);
-	}
-	
 	/**
 	 * An Order Active Since in past (1/1/2012), add Percentage Discount (Start Date: 1/1/2011) 
 	 * Order creation should be successful (Order backdating), 
@@ -477,9 +401,9 @@ public class PercentageDiscountOrderTest extends BaseDiscountApiTest {
 		discountLine.setDiscountId(discount.getId());
 		discountLine.setOrderId(order.getId());
 		if ("Item Level".equalsIgnoreCase(discountLevel)) {
-			discountline.setItemId(itemId);
+			discountLine.setItemId(itemId);
 		} 
-		discountline.setDescription(discountWs.getDescription() + " Discount " + discountLevel);
+		discountLine.setDescription(discount.getDescription() + " Discount " + discountLevel);
 		
 		DiscountLineWS discountLines[] = new DiscountLineWS[1];
 		discountLines[0] = discountLine;
@@ -503,25 +427,4 @@ public class PercentageDiscountOrderTest extends BaseDiscountApiTest {
 		return api.getDiscountWS(discountId);
 	}
 
-	
-	private OrderWS getUserSubscriptionToPlan(Date since, BigDecimal cost, Integer userId, Integer billingType, Integer orderPeriodID) {
-
-        OrderWS order = new OrderWS();
-        order.setUserId(userId);
-        order.setBillingTypeId(billingType);
-        order.setPeriod(orderPeriodID);
-        order.setCurrencyId(CURRENCY_USD);
-        order.setActiveSince(since);
-
-        OrderLineWS line = new OrderLineWS();
-        line.setTypeId(Constants.ORDER_LINE_TYPE_ITEM);
-        line.setQuantity(1);
-        line.setDescription("Order line for plan subscription");
-        line.setUseItem(true);
-
-        order.setOrderLines(new OrderLineWS[]{line});
-
-        System.out.println("User subscription...");
-        return order;
-    }
 }

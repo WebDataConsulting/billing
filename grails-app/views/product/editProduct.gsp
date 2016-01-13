@@ -67,70 +67,15 @@
                 }
             });
 
-            loadAvailableDecLang();
-		
+			hidePriceCurrency();
+
             var validator = $('#save-product-form').validate();
             validator.init();
             validator.hideErrors();
             
         });
 
-        function addNewProductDescription(){
-            var languageId = $('#newDescriptionLanguage').val();
-            var previousDescription = $("#descriptions div:hidden .descLanguage[value='"+languageId+"']");
-            if(previousDescription.size()){
-                previousDescription.parents('.row:first').show();
-                previousDescription.parents('.row:first').find(".descDeleted").val(false);
-                previousDescription.parents('.row:first').find(".descContent").val('');
-            }else{
-                var languageDescription = $('#newDescriptionLanguage option:selected').text();
-                var clone = $('#descriptionClone').children().clone();
-                var languagesCount = $('#descriptions').children().size();
-                var newName = 'product.descriptions['+languagesCount+']';
-                clone.find("label").attr('for', newName+'.content');
-                var label = clone.find('label').html();
-                clone.find('label').html(label.replace('{0}', languageDescription));
-                if(languageDescription=="English"){
-                   clone.find('label').append("<span id='mandatory-meta-field'>*</span>");
-                }
 
-                clone.find(".descContent").attr('id',newName+'.content');
-                clone.find(".descContent").attr('name',newName+'.content');
-
-                clone.find(".descLanguage").attr('id',newName+'.languageId');
-                clone.find(".descLanguage").attr('name',newName+'.languageId');
-                clone.find(".descLanguage").val(languageId);
-
-                clone.find(".descDeleted").attr('id',newName+'.deleted');
-                clone.find(".descDeleted").attr('name',newName+'.deleted');
-
-                $('#descriptions').append(clone);
-            }
-            if(languageId==1){
-                    $('#newDescriptionLanguage').closest("div").find("label span").remove();
-              }
-            removeProductSelectedLanguage();
-        }
-
-        function removeProductDescription(elm){
-            var div = $(elm).parents('.row:first');
-            //set 'deleted'=true;
-            div.find('.descDeleted').val(true);
-            div.hide();
-
-            if($("#addDescription").is(':hidden')){
-                $("#addDescription").show();
-            }
-            var langId = div.find(".descLanguage").val();
-            var langValue = getValueForLangId(langId);
-            if(langValue){
-                $("#newDescriptionLanguage").append("<option value='"+langId+"'>"+langValue+"</option>");
-                if(langId==1){
-                  $("#newDescriptionLanguage").closest("div").find('label').append("<span id='mandatory-meta-field'>*</span>");
-               }
-            }
-        }
-	
 		function hideCompanies(){
 			$("#company-select option").removeAttr("selected");
 			if ($("#global-checkbox").is(":checked")) {
@@ -159,44 +104,7 @@
 			$('#save-product-form').submit();
 		}
 			
-        function loadAvailableDecLang(){
-            var languages = $('#availableDescriptionLanguages').val().split(',');
-            if(languages[0]!=''){
-                $.each(languages,function(i,lang){
-                   var lang = lang.split('-');
-                   $("#newDescriptionLanguage").append("<option value='"+lang[0]+"'>"+lang[1]+"</option>");
-                   if(lang[0]==1){
-                     $("#newDescriptionLanguage").closest("div").find('label').append("<span id='mandatory-meta-field'>*</span>");
-                    }
-                });
-            }else{
-                $('#addDescription').hide();
-            }
-        }
 
-        function getValueForLangId(langId){
-            var languages = $('#allDescriptionLanguages').val().split(',')
-            if(languages[0]!=''){
-                var value = false;
-                $.each(languages,function(i,lang){
-                   var lang = lang.split('-');
-                   if(lang[0] == langId){
-                       value = lang[1];
-                   }
-                });
-                return value;
-            }else{
-                return false;
-            }
-            return false;
-        }
-
-        function removeProductSelectedLanguage(){
-            $('#newDescriptionLanguage option:selected').remove();
-            if(!$('#newDescriptionLanguage option').size()){
-                $('#addDescription').hide();
-            }
-        }
         function checkAssetManagement(obj) {
         var assetManagementEnabledDiv = $('#assetManagementEnabledDiv');
         var assetManagementEnabled = $('#assetManagementEnabled');
@@ -315,7 +223,7 @@
                             <g:hiddenField name="product.id" value="${product?.id}"/>
                         </g:applyLayout>
 
-                        <g:render template="/product/descriptions" model="[product: product]"/>
+                        <g:render template="/descriptions/descriptions" model="[multiLingualEntity: product, itemName: 'product']"/>
 
                         <g:applyLayout name="form/checkbox">
                             <content tag="label"><g:message code="product.allow.decimal.quantity"/></content>

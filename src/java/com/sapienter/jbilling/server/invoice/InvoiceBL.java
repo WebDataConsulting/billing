@@ -24,76 +24,47 @@ You may download the latest source from webdataconsulting.github.io.
 
 package com.sapienter.jbilling.server.invoice;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.List;
-import java.util.Set;
-
-import com.sapienter.jbilling.server.metafields.MetaFieldBL;
-import com.sapienter.jbilling.server.process.BillingProcessBL;
-import com.sapienter.jbilling.server.process.BillingProcessWS;
-import com.sapienter.jbilling.server.user.ContactDTOEx;
-import com.sapienter.jbilling.server.user.db.CustomerDTO;
-import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.util.db.PreferenceDAS;
-
-import org.apache.commons.lang.StringUtils;
-;
-
-import javax.sql.rowset.CachedRowSet;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;
-import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
-import com.sapienter.jbilling.server.invoice.db.InvoiceLineDAS;
-import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
-import com.sapienter.jbilling.server.invoice.db.InvoiceStatusDAS;
+import com.sapienter.jbilling.server.invoice.db.*;
 import com.sapienter.jbilling.server.item.CurrencyBL;
-import com.sapienter.jbilling.server.item.ItemBL;
 import com.sapienter.jbilling.server.list.ResultList;
+import com.sapienter.jbilling.server.metafields.MetaFieldBL;
 import com.sapienter.jbilling.server.notification.INotificationSessionBean;
 import com.sapienter.jbilling.server.notification.MessageDTO;
 import com.sapienter.jbilling.server.notification.NotificationBL;
 import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
 import com.sapienter.jbilling.server.order.OrderBL;
-import com.sapienter.jbilling.server.order.db.OrderChangeDTO;
-import com.sapienter.jbilling.server.order.db.OrderDTO;
-import com.sapienter.jbilling.server.order.db.OrderLineDTO;
-import com.sapienter.jbilling.server.order.db.OrderProcessDAS;
-import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
-import com.sapienter.jbilling.server.order.db.OrderStatusDAS;
 import com.sapienter.jbilling.server.order.OrderStatusFlag;
+import com.sapienter.jbilling.server.order.db.*;
 import com.sapienter.jbilling.server.payment.PaymentBL;
 import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDAS;
 import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDTO;
+import com.sapienter.jbilling.server.process.BillingProcessBL;
 import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
 import com.sapienter.jbilling.server.process.event.BeforeInvoiceDeleteEvent;
 import com.sapienter.jbilling.server.process.event.InvoiceDeletedEvent;
 import com.sapienter.jbilling.server.system.event.EventManager;
 import com.sapienter.jbilling.server.user.ContactBL;
+import com.sapienter.jbilling.server.user.ContactDTOEx;
 import com.sapienter.jbilling.server.user.EntityBL;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.db.CompanyDAS;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
-import com.sapienter.jbilling.server.user.db.UserDAS;
+import com.sapienter.jbilling.server.user.db.*;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.PreferenceBL;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
-
+import com.sapienter.jbilling.server.util.db.PreferenceDAS;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import javax.sql.rowset.CachedRowSet;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+
+;
 
 public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
 
@@ -962,15 +933,15 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
                         ContactBL contact = new ContactBL();
                         contact.set(nowProcessing);
                         StringBuffer text = new StringBuffer();
-                        text.append(subaccountNumber + " - ");
+                        text.append(subaccountNumber).append(" - ");
                         text.append(bundle.getString("invoice.line.subAccount.header1"));
-                        text.append(" " + bundle.getString("invoice.line.subAccount.header2") + " " + nowProcessing);
+                        text.append(" ").append(bundle.getString("invoice.line.subAccount.header2")).append(" ").append(nowProcessing);
                         if ( null != contact.getEntity() ) {
     	                    if (contact.getEntity().getFirstName() != null) {
-    	                        text.append(" " + contact.getEntity().getFirstName());
+    	                        text.append(" ").append(contact.getEntity().getFirstName());
     	                    }
     	                    if (contact.getEntity().getLastName() != null) {
-    	                        text.append(" " + contact.getEntity().getLastName());
+    	                        text.append(" ").append(contact.getEntity().getLastName());
     	                    }
                         }
                         headerLine.setDescription(text.toString());
@@ -1127,7 +1098,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
 	                    name.append(contact.getFirstName());
 	                }
 	                if (contact.getLastName() != null) {
-	                    name.append(" " + contact.getLastName());
+	                    name.append(" ").append(contact.getLastName());
 	                }
                 } else if(!StringUtils.isEmpty(contact.getOrganizationName())){
 	                name.append(contact.getOrganizationName());

@@ -24,28 +24,23 @@
 
 package com.sapienter.jbilling.server.invoice.db;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import com.sapienter.jbilling.server.user.partner.db.InvoiceCommissionDTO;
-import org.hibernate.Criteria;
-import org.hibernate.ScrollableResults;
-import org.hibernate.criterion.*;
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.invoice.NewInvoiceContext;
-import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.process.db.BillingProcessDAS;
 import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
 import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.util.db.AbstractDAS;
+import com.sapienter.jbilling.server.user.partner.db.InvoiceCommissionDTO;
 import com.sapienter.jbilling.server.util.Constants;
+import com.sapienter.jbilling.server.util.db.AbstractDAS;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.*;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
     public static final FormatLogger LOG = new FormatLogger(InvoiceDAS.class);

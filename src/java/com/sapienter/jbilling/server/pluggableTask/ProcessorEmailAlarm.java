@@ -29,8 +29,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 
 /**

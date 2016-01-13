@@ -72,8 +72,8 @@ public class PluggableTaskTypeCategoryDTO extends AbstractDescription implements
 
     public String toString() {
         StringBuffer str = new StringBuffer("{");
-        str.append("-" + this.getClass().getName() + "-");
-        str.append("id=" + getId() + " interfaceName=" + getInterfaceName() + " description=" + getDescription());
+        str.append("-").append(this.getClass().getName()).append("-");
+        str.append("id=").append(getId()).append(" interfaceName=").append(getInterfaceName()).append(" description=").append(getDescription());
         str.append('}');
         return (str.toString());
     }

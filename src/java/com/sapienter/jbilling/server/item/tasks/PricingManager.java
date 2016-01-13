@@ -27,7 +27,6 @@ import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.FormatLogger;
 
 import java.math.BigDecimal;
-;
 
 /**
  *

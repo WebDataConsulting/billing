@@ -36,14 +36,13 @@ import com.sapienter.jbilling.server.user.MainSubscriptionWS;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.CustomerDAS;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
-import com.sapienter.jbilling.server.util.BillingProcessTestCase;
+import com.sapienter.jbilling.server.process.BillingProcessTestCase;
 import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
 
 import org.springframework.util.Assert;
 import org.testng.annotations.Test;
 
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.server.entity.InvoiceLineDTO;
 import com.sapienter.jbilling.server.invoice.InvoiceWS;
 import com.sapienter.jbilling.server.order.OrderWS;
 import com.sapienter.jbilling.server.user.UserWS;
@@ -384,11 +383,11 @@ public class SemiMonthlyBillingCycleTest extends BillingProcessTestCase {
             logger.info(S("Total Invoice lines  :{}", invoice.getInvoiceLines().length));
             assertEqualsBilling("Invoice Lines should be 2 ", 2, invoice.getInvoiceLines().length);
             api.getOrderProcessesByInvoice(invoice.getId());
-            for (InvoiceLineDTO line : invoice.getInvoiceLines()) {
+            for (com.sapienter.jbilling.server.entity.InvoiceLineDTO line : invoice.getInvoiceLines()) {
                 logger.info(S("Getting all invoice lines : {}", line));
             }
             //?? [2014-11-21 igor.poteryaev@jbilling.com] how it worked ??  to 01/01/2009
-            InvoiceLineDTO line = invoice.getInvoiceLines()[0];
+            com.sapienter.jbilling.server.entity.InvoiceLineDTO line = invoice.getInvoiceLines()[0];
             assertEqualsBilling("1st description for InvoiceWSE4At6Jan should be: ",
                     S("Order line: {} Period from 12/30/2008 to 12/31/2008", line.getItemId()),
                     line.getDescription());

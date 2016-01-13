@@ -26,7 +26,7 @@ package com.sapienter.jbilling.server.invoice.task;
 import java.util.ArrayList;
 import java.util.List;
 
-;
+
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;

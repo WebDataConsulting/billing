@@ -23,19 +23,12 @@
  */
 package com.sapienter.jbilling.server.system.event;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.Session;
-
-;
-
+import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.server.util.Context;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.util.Context;
+import javax.jms.*;
 
 public abstract class AsynchronousEventProcessor<TType> extends EventProcessor<TType> {
     private static final FormatLogger LOG = new FormatLogger(AsynchronousEventProcessor.class);

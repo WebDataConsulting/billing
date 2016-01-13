@@ -9,7 +9,7 @@ import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.PreferenceBL;
-;
+
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 

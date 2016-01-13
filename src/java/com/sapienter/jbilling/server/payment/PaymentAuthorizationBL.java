@@ -35,8 +35,6 @@ import com.sapienter.jbilling.server.payment.db.PaymentDTO;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-;
-
 public class PaymentAuthorizationBL {
 
     private PaymentAuthorizationDAS paymentAuthorizationDas = null;

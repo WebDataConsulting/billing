@@ -32,7 +32,6 @@ import com.sapienter.jbilling.server.payment.db.PaymentAuthorizationDTO;
 import com.sapienter.jbilling.server.payment.db.PaymentInformationDTO;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.user.ContactBL;
-;
 
 import java.math.BigDecimal;
 

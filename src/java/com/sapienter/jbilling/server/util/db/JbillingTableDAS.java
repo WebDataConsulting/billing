@@ -27,7 +27,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
-;
+
 import org.springmodules.cache.provider.CacheProviderFacade;
 import org.springmodules.cache.CachingModel;
 

@@ -26,7 +26,6 @@ package com.sapienter.jbilling.server.item.tasks;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.rule.Result;
-;
 
 import java.math.BigDecimal;
 

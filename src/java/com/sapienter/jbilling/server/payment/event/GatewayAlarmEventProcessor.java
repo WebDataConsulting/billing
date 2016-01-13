@@ -23,7 +23,7 @@
  */
 package com.sapienter.jbilling.server.payment.event;
 
-;
+
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.pluggableTask.ProcessorAlarm;

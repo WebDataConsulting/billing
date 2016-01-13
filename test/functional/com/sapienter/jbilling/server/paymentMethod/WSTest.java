@@ -104,9 +104,9 @@ public class WSTest extends ApiTestCase {
 		existing.setAllAccountType(true);
 		api.updatePaymentMethodType(existing);
 		Assert.assertEquals("Payment method type should be global", existing.isAllAccountType(), true);
-		PaymentMethodTypeWS existing1 = api.getPaymentMethodType(paymentMethodTypeId);
+		existing = api.getPaymentMethodType(paymentMethodTypeId);
 		Assert.assertEquals("All account type should be associated with payment method type",
-				existing1.getAccountTypes().size(), api.getAllAccountTypes().length);
+				existing.getAccountTypes().size(), api.getAllAccountTypes().length);
 
 		//cleanup
 		boolean deleteAccountType1 = api.deleteAccountType(newAccountTypeId1);

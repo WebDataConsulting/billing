@@ -212,12 +212,6 @@ public class PaymentTermPenaltyTaskTest extends ApiTestCase {
 	private Integer createPenaltyItem(Integer categoryId) {
 		ItemDTOEx item = new ItemDTOEx();
 		item.setCurrencyId(CURRENCY_USD);
-
-		PriceModelWS linePercentagePrice = new PriceModelWS();
-        linePercentagePrice.setType(PriceModelStrategy.LINE_PERCENTAGE.name());
-        linePercentagePrice.setRate(BigDecimal.ONE);
-        linePercentagePrice.setCurrencyId(CURRENCY_USD);
-        item.addDefaultPrice(CommonConstants.EPOCH_DATE, linePercentagePrice);
 		
 		item.setDescription("1 % Penalty Item");
 		item.setEntityId(TEST_ENTITY_ID);

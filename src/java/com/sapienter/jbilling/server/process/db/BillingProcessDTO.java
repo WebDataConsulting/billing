@@ -23,39 +23,25 @@
  */
 package com.sapienter.jbilling.server.process.db;
 
+import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
+import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
+import com.sapienter.jbilling.server.process.BillingProcessBL;
+import com.sapienter.jbilling.server.process.BillingProcessWS;
+import com.sapienter.jbilling.server.user.db.CompanyDTO;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.OrderBy;
+
+import javax.persistence.CascadeType;
+import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.process.BillingProcessWS;
-;
-
-import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
-import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
-import com.sapienter.jbilling.server.process.BillingProcessBL;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
-
-import javax.persistence.OneToOne;
-
-import org.hibernate.annotations.*;
 
 @Entity
 @TableGenerator(name = "billing_process_GEN", 
@@ -260,8 +246,8 @@ public class BillingProcessDTO implements Serializable {
         StringBuffer ret = new StringBuffer("BillingProcessDTO: id: " + id + " periodUint " + periodUnitDTO + " paperInvoiceBatch "
                 + paperInvoiceBatch  + " entity " + entity + " billingDate " + billingDate
                 + " periodValue " + periodValue + " isReview " + isReview + " retriesToDo " + retriesToDo);
-        ret.append(" orderProcesses (count) " + orderProcesses.size());
-        ret.append(" invoices (count) " + invoices.size());//note, cached association
+        ret.append(" orderProcesses (count) ").append(orderProcesses.size());
+        ret.append(" invoices (count) ").append(invoices.size());//note, cached association
         ret.append(" processRuns ");
         for (ProcessRunDTO run: processRuns) {
             ret.append(run.toString());

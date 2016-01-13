@@ -11,7 +11,6 @@ import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
 import com.sapienter.jbilling.server.user.event.NewContactEvent;
-;
 
 /**
  * Simple plugin that invokes a remote web-service when a customer's contact information is changed.

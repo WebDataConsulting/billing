@@ -26,6 +26,7 @@ package com.sapienter.jbilling.server.payment.db;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,11 +52,6 @@ import javax.persistence.Version;
 import javax.persistence.OrderBy;
 
 import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
 
 import com.sapienter.jbilling.server.metafields.EntityType;
 import com.sapienter.jbilling.server.metafields.MetaFieldHelper;
@@ -503,7 +499,7 @@ public class PaymentDTO extends CustomizedEntity implements Serializable, Export
     
     @Transient
     public String[] getFieldNames() {
-        return new String[] {
+        String header[] =  new String[] {
                 "id",
                 "userId",
                 "userName",
@@ -546,6 +542,13 @@ public class PaymentDTO extends CustomizedEntity implements Serializable, Export
                 "chequeNumber",
                 "chequeDate",
         };
+        
+        List<String> list = new ArrayList<>(Arrays.asList(header));
+        for(String name : metaFieldsNames) {
+        	list.add(name);
+        }
+        
+        return list.toArray(new String[list.size()]);
     }
 
     @Transient
@@ -560,7 +563,7 @@ public class PaymentDTO extends CustomizedEntity implements Serializable, Export
                 ? paymentAuthorizations.iterator().next()
                 : null);
 
-        return new Object[][] {
+        Object values[][] =  new Object[][] {
             {
                 id,
                 (baseUser != null ? baseUser.getId() : null),
@@ -588,6 +591,19 @@ public class PaymentDTO extends CustomizedEntity implements Serializable, Export
                 (latestAuthorization != null ? latestAuthorization.getResponseMessage() : null),
             }
         };
+        
+        List<Object> paymentList = new ArrayList<>(Arrays.asList(values[0]));
+        for(String name : metaFieldsNames) {
+        	MetaFieldValue value = getMetaField(name);
+        	if(value != null) 
+        		paymentList.add(value.getValue());
+        	else
+        		paymentList.add(null);
+        }
+        
+        Object obj[][] = new Object[][] {paymentList.toArray()};  
+        return obj;
+        
     }
 
 }

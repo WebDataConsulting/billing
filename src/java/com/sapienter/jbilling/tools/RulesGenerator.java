@@ -25,7 +25,6 @@ package com.sapienter.jbilling.tools;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.util.Util;
-;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 

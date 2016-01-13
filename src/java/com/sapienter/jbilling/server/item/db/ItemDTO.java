@@ -86,6 +86,7 @@ public class ItemDTO extends AbstractDescription implements MetaContent, Exporta
     private boolean standardAvailability = true;
     private boolean global = false;
     private List<AccountTypeDTO> accountTypeAvailability = new ArrayList<AccountTypeDTO>();
+	
 
     /** If the item will do asset management. Only possible if one linked ItemTypeDTO allows asset management */
     private Integer assetManagementEnabled;
@@ -777,7 +778,7 @@ public class ItemDTO extends AbstractDescription implements MetaContent, Exporta
     }*/
     @Transient
     public String[] getFieldNames() {
-        return new String[] {
+        String headers[] = new String[] {
                 "id",
                 "productCode",
                 "itemTypes",
@@ -786,6 +787,13 @@ public class ItemDTO extends AbstractDescription implements MetaContent, Exporta
                 "percentage",
                 "prices",
         };
+        
+        List<String> list = new ArrayList<String>(Arrays.asList(headers));
+        for(String field : metaFieldsNames) {
+        	list.add(field);
+        }
+       
+        return list.toArray(new String[list.size()]);
     }
 
     @Transient
@@ -800,8 +808,8 @@ public class ItemDTO extends AbstractDescription implements MetaContent, Exporta
     	    prices.append(price.getPrice()).append(" ").append(price.getCurrency().getCode());
     	    if (it.hasNext()) prices.append(",");
     	}
-
-        return new Object[][] {
+        
+        Object values[][] = new Object[][] {
             {
                 id,
                 internalNumber,
@@ -812,6 +820,19 @@ public class ItemDTO extends AbstractDescription implements MetaContent, Exporta
                 prices.toString(),
             }
         };
+        
+        List<Object> aitList = new ArrayList<>(Arrays.asList(values[0]));
+        for(String name : metaFieldsNames) {
+        	MetaFieldValue value =  getMetaField(name);
+        	if(value != null)
+        		aitList.add(value.getValue());
+        	else {
+        		aitList.add(null);
+        	}
+        }
+        
+        Object obj[][] = new Object[][] {aitList.toArray()};  
+        return obj;
     }
 
 }

@@ -43,8 +43,6 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.user.event.NewContactEvent;
 import com.sapienter.jbilling.server.user.event.NewCreditCardEvent;
 
-;
-
 import java.util.Date;
 import java.util.List;
 
@@ -231,7 +229,7 @@ public class SaveCreditCardExternallyTask extends PluggableTask implements IInte
             // delete the credit card on failure so that it cannot be used for future payments. useful when
             // paired with PARAM_OBSCURE_ON_FAIL as it prevents accidental payments with invalid cards.
             if (getParameter(PARAM_REMOVE_ON_FAIL.getName(), DEFAULT_REMOVE_ON_FAIL)) {
-                piBl.delete(creditCard.getId());;
+                piBl.delete(creditCard.getId());
                 LOG.warn("gateway key returned from external store is null, deleting card and removing from user map");
             }
         }

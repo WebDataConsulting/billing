@@ -4,7 +4,7 @@ import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
 import com.sapienter.jbilling.server.process.task.AbstractCronTask;
-;
+
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 

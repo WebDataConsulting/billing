@@ -39,7 +39,7 @@ import java.util.Map;
 
 import javax.sql.rowset.CachedRowSet;
 
-;
+
 import org.hibernate.ScrollableResults;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;

@@ -34,8 +34,6 @@ import com.sapienter.jbilling.server.metafields.MetaFieldType;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
 import com.sapienter.jbilling.server.user.db.CustomerDAS;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.invoice.NewInvoiceContext;
 import com.sapienter.jbilling.server.pluggableTask.TaskException;

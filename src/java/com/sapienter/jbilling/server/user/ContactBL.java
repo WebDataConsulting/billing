@@ -36,7 +36,7 @@ import com.sapienter.jbilling.server.util.audit.EventLogger;
 import org.apache.commons.lang.StringUtils;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
 import com.sapienter.jbilling.server.user.db.CustomerDAS;
-;
+
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;

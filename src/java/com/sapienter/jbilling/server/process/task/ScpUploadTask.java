@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.rev6.scf.ScpException;

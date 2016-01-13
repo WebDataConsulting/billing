@@ -40,7 +40,7 @@ import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.MapPeriodToCalendar;
 import com.sapienter.jbilling.server.util.PreferenceBL;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
-;
+
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;

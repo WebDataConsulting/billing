@@ -23,7 +23,6 @@ Clone the repository from `git@github.com:WebDataConsulting/billing.git`
 <pre><code>git clone git@github.com:WebDataConsulting/billing.git jB-CE-4.1.1</code></pre>
 
 
-
 Configuring PostgreSQL
 ----------------------
 
@@ -37,11 +36,20 @@ local   all         all                               trust
 host    all         all         127.0.0.1/32          trust
 </code></pre>
 
+Explanation: Set up PostgreSQL to allow all local connections to the database without using a password
+
+
+Restart the PostgreSQL server
+
+<pre><code>sudo -u postgres psql
+</code></pre>
+
+
 Connect to PostgreSQL and create the test user and database.
 
 <pre><code>CREATE ROLE jbilling WITH LOGIN SUPERUSER CREATEDB CREATEROLE PASSWORD 'jbilling';
 CREATE DATABASE jbilling_test WITH OWNER jbilling;
-</pre></code>
+</code></pre>
 
 
 
@@ -64,8 +72,6 @@ grails prepare-test
 
 *The grails compile target may halt with a compiler error on some environments, running compile a second time usually resolves the issue.*
 
-
-
 Running from Source
 -------------------
 
@@ -74,7 +80,40 @@ Running from Source
 **Linux/Mac**: ``./run-app.sh``
 
 
+Logging in
+----------
+
+Browse to
 
 
+<pre><code>
+http://localhost:8080
+</pre></code>
+
+
+Select "Prancing Pony" from "Child company" 
+Credentials:
+
+user: admin
+password: 123qwe
+
+
+
+
+
+
+Setup with an empty database
+----------------------------
+
+<pre><code>
+grails compile
+grails prepare-test --init
+</pre></code>
+
+
+
+<pre><code>
+grails prepare-test -init -user=<username> -db=<database_name> -pass=<password-for-dbuser> -url=<dburl> -driver=<driver-full-class-name>
+</code></pre>
 
 

@@ -1,9 +1,5 @@
 package com.sapienter.jbilling.server.order.task;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.ItemDecimalsException;
@@ -22,6 +18,8 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
+
+import java.util.List;
 
 /**
  * 
@@ -47,7 +45,7 @@ public class CreateOrderForResellerTask extends PluggableTask implements IIntern
 		CompanyDAS companyDAS = new CompanyDAS();
 		CompanyDTO company = companyDAS.find(invoiceEvent.getEntityId());
 
-		if(!(company.getParent() != null)) {
+		if(company.getParent() == null) {
 			return;
 		}
 		LOG.debug("Order belongs to child entity");

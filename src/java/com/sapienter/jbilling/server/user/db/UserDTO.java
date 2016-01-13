@@ -24,33 +24,8 @@
 package com.sapienter.jbilling.server.user.db;
 
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.persistence.OrderBy;
-
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
+import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
 import com.sapienter.jbilling.server.notification.db.NotificationMessageArchDTO;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.payment.db.PaymentDTO;
@@ -64,6 +39,10 @@ import com.sapienter.jbilling.server.util.audit.db.EventLogDTO;
 import com.sapienter.jbilling.server.util.csv.Exportable;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 import com.sapienter.jbilling.server.util.db.LanguageDTO;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
 @TableGenerator(
@@ -117,6 +96,7 @@ public class UserDTO implements Serializable, Exportable {
     
     // payment instruments
  	private List<PaymentInformationDTO> paymentInstruments = new ArrayList<PaymentInformationDTO>(0);
+ 	
 
     private Date accountLockedTime;
 
@@ -613,7 +593,7 @@ public class UserDTO implements Serializable, Exportable {
 
     @Transient
     public String[] getFieldNames() {
-        return new String[] {
+        String[] fields= new String[] {
                 "id",
                 "userName",
                 "password",
@@ -658,6 +638,22 @@ public class UserDTO implements Serializable, Exportable {
                 "faxNumber",
                 "email"
         };
+
+        List<String> list = new ArrayList<>(Arrays.asList(fields));
+        
+        // Account information type metafields name
+        for(String metaField : metaFieldsNames) {
+        	list.add(metaField);
+        	
+        }
+
+        // Customer metafields name
+        for(String metaField : customerMetaFieldsNames) {
+        	list.add(metaField);
+        }
+        
+        return list.toArray(new String[list.size()]);
+
     }
 
     @Transient
@@ -667,58 +663,93 @@ public class UserDTO implements Serializable, Exportable {
 
         ContactDTO contact = contactBL.getEntity();
 
-        return new Object[][] {
-            {
-                id,
-                userName,
-                password,
-                (userStatus != null ? userStatus.getDescription() : null),
-                (subscriberStatus != null ? subscriberStatus.getDescription() : null),
-                deleted,
-                accountExpired,
-                accountLocked,
-                passwordExpired,
-                    lastLoginDate,
-                lastStatusChange,
-                createDatetime,
-                (language != null ? language.getDescription() : null),
-                (currencyDTO != null ? currencyDTO.getDescription() : null),
+        Object[][]values= new Object[][]{
+                {
+                        id,
+                        userName,
+                        password,
+                        (userStatus != null ? userStatus.getDescription() : null),
+                        (subscriberStatus != null ? subscriberStatus.getDescription() : null),
+                        deleted,
+                        accountExpired,
+                        accountLocked,
+                        passwordExpired,
+                        lastLoginDate,
+                        lastStatusChange,
+                        createDatetime,
+                        (language != null ? language.getDescription() : null),
+                        (currencyDTO != null ? currencyDTO.getDescription() : null),
 
-                // customer
-                (customer != null && customer.getInvoiceDeliveryMethod() != null
-                 ? customer.getInvoiceDeliveryMethod().getId()
-                 : null),
+                        // customer
+                        (customer != null && customer.getInvoiceDeliveryMethod() != null
+                                ? customer.getInvoiceDeliveryMethod().getId()
+                                : null),
 
-                (customer != null ? customer.getAutoPaymentType() : null),
+                        (customer != null ? customer.getAutoPaymentType() : null),
 
-                (customer != null && customer.getParent() != null
-                 ? customer.getParent().getBaseUser().getId()
-                 : null),
+                        (customer != null && customer.getParent() != null
+                                ? customer.getParent().getBaseUser().getId()
+                                : null),
 
-                (customer != null ? customer.getIsParent() : null),
-                (customer != null ? customer.getInvoiceChild() : null),
-                (customer != null ? customer.getExcludeAging() : null),
-                (customer != null ? customer.getDynamicBalance() : null),
-                (customer != null ? customer.getCreditLimit() : null),
-                (customer != null ? customer.getAutoRecharge() : null),
+                        (customer != null ? customer.getIsParent() : null),
+                        (customer != null ? customer.getInvoiceChild() : null),
+                        (customer != null ? customer.getExcludeAging() : null),
+                        (customer != null ? customer.getDynamicBalance() : null),
+                        (customer != null ? customer.getCreditLimit() : null),
+                        (customer != null ? customer.getAutoRecharge() : null),
 
-                // contact
-                (contact != null ? contact.getOrganizationName() : null),
-                (contact != null ? contact.getTitle() : null),
-                (contact != null ? contact.getFirstName() : null),
-                (contact != null ? contact.getLastName() : null),
-                (contact != null ? contact.getInitial() : null),
-                (contact != null ? contact.getAddress1(): null),
-                (contact != null ? contact.getAddress2(): null),
-                (contact != null ? contact.getCity() : null),
-                (contact != null ? contact.getStateProvince() : null),
-                (contact != null ? contact.getPostalCode() : null),
-                (contact != null ? contact.getCountryCode() : null),
-                (contact != null ? contact.getCompletePhoneNumber() : null),
-                (contact != null ? contact.getCompleteFaxNumber() : null),
-                (contact != null ? contact.getEmail() : null),
-            }
+                        // contact
+                        (contact != null ? contact.getOrganizationName() : null),
+                        (contact != null ? contact.getTitle() : null),
+                        (contact != null ? contact.getFirstName() : null),
+                        (contact != null ? contact.getLastName() : null),
+                        (contact != null ? contact.getInitial() : null),
+                        (contact != null ? contact.getAddress1() : null),
+                        (contact != null ? contact.getAddress2() : null),
+                        (contact != null ? contact.getCity() : null),
+                        (contact != null ? contact.getStateProvince() : null),
+                        (contact != null ? contact.getPostalCode() : null),
+                        (contact != null ? contact.getCountryCode() : null),
+                        (contact != null ? contact.getCompletePhoneNumber() : null),
+                        (contact != null ? contact.getCompleteFaxNumber() : null),
+                        (contact != null ? contact.getEmail() : null),
+                }
         };
+
+        // Account Information type MetaFields
+        List<Object> aitList = new ArrayList<>(Arrays.asList(values[0]));
+        List<String> duplicate = new ArrayList<>();
+        duplicate.addAll( metaFieldsNames);
+        for(String metaField : duplicate) {
+        	boolean find = false;
+        	for(CustomerAccountInfoTypeMetaField field :  customer.getCustomerAccountInfoTypeMetaFields()) {
+        		if(field.getMetaFieldValue().getField().getName().equals(metaField) && aitList.indexOf(field.getMetaFieldValue().getValue()) == -1) {
+        			aitList.add(field.getMetaFieldValue().getValue());
+        			find =true;
+        			break;
+        		}
+        		
+        	}
+        	if(!find)   aitList.add(null);
+        }
+
+        duplicate.clear();
+        duplicate.addAll(customerMetaFieldsNames);
+        // Customer MetaFields
+        for (String metaField : duplicate) {
+            boolean find = false;
+            for (MetaFieldValue metaFieldValue : customer.getMetaFields()) {
+                if (metaFieldValue.getField().getName().equals(metaField) && aitList.indexOf(metaFieldValue.getValue()) == -1) {
+                    aitList.add(metaFieldValue.getValue());
+                    find = true;
+                    break;
+                }
+            }
+            if (!find)  aitList.add(null);
+        }
+
+        Object obj[][] = new Object[][]{aitList.toArray()};
+        return obj;
     }
 
 }

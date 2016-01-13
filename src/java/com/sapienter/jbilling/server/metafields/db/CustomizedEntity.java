@@ -25,6 +25,7 @@
 package com.sapienter.jbilling.server.metafields.db;
 
 import com.sapienter.jbilling.server.metafields.MetaContent;
+import com.sapienter.jbilling.server.metafields.MetaFieldBL;
 import com.sapienter.jbilling.server.metafields.MetaFieldHelper;
 import javax.persistence.Transient;
 
@@ -134,6 +135,11 @@ public abstract class CustomizedEntity implements MetaContent, java.io.Serializa
             metaFieldValue = metaField.createValue();
         }
         metaFieldValue.setValue(value);
+        
+        if(null != metaFieldValue.getField() && metaFieldValue.getField().isUnique()) {
+            MetaFieldBL.validateUniqueMF(metaFieldValue);
+        }
+
         setMetaField(metaFieldValue, null);
     }
 

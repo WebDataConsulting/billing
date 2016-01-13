@@ -11,11 +11,10 @@ import com.sapienter.jbilling.server.user.db.ResetPasswordCodeDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.PreferenceBL;
 import org.apache.commons.lang.RandomStringUtils;
-;
+import org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.Hours;
-import org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

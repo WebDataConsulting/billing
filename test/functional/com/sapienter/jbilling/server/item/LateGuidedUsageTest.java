@@ -54,102 +54,9 @@ public class LateGuidedUsageTest {
         newItem1= api.getItem(PRICING_ITEM_ID, null, null);
         assertEquals("Item price is 10.00", new BigDecimal("10.0000000000"), newItem1.getPriceAsDecimal());
 
-        //2. Create a plan "PRICING_PLAN" and add the above item as bundled item,
-
-        ItemDTOEx pItem= getItem("Pricing Plan", "PRICING_PLAN");
-        pItem.setPrice(new BigDecimal("1.00"));
-        Integer pIID= api.createItem(pItem);
-        pItem.setId(pIID);
-        PlanWS plan = getPlan("Pricing Plan", pIID);
-
-        PlanItemWS planItem = new PlanItemWS();
-        planItem.setItemId(newItem1.getId());
-
-        //3. Set price for the item on the plan to 5.00
-        planItem.getModels().put(CommonConstants.EPOCH_DATE,
-                new PriceModelWS(PriceModelStrategy.FLAT.name(), new BigDecimal("5.00"), 1));
-
-        PlanItemBundleWS bundle = new PlanItemBundleWS();
-        bundle.setPeriodId(Constants.ORDER_PERIOD_ONCE);
-        bundle.setTargetCustomer(PlanItemBundleWS.TARGET_SELF);
-        bundle.setQuantity(new BigDecimal("0.00"));
-
-        planItem.setBundle(bundle);
-        plan.addPlanItem(planItem);
-
-        PRICING_PLAN_ID= api.createPlan(plan);
-        assertNotNull("Plan with not null id should get created", PRICING_PLAN_ID);
-
-        plan= api.getPlanWS(PRICING_PLAN_ID);
-        assertNotNull("Plan with not null itemId should get created", plan.getItemId());
-
     }
 
-    @Test
-    public void checkSubscriptionForFutureOrder() {
-
-        System.out.println("TEST OUT: LateGuidedUsageTest.checkSubscriptionForFutureOrder");
-
-        final Integer LEMONADE = 2602;
-
-        try {
-
-            api = JbillingAPIFactory.getAPI();
-
-            ItemDTOEx newItem1 = getItem("TEST PLAN", "TP-01");
-            newItem1.setId(api.createItem(newItem1));
-            PlanWS plan = getPlan("TEST PLAN", newItem1.getId());
-            PlanItemWS planItem = new PlanItemWS();
-            planItem.setItemId(LEMONADE);
-            planItem.getModels().put(CommonConstants.EPOCH_DATE,
-                    new PriceModelWS(PriceModelStrategy.FLAT.name(), new BigDecimal("0.10"), 1));
-
-            PlanItemBundleWS bundle = new PlanItemBundleWS();
-            bundle.setPeriodId(Constants.ORDER_PERIOD_ONCE);
-            bundle.setTargetCustomer(PlanItemBundleWS.TARGET_SELF);
-            bundle.setQuantity(new BigDecimal("10"));
-
-            planItem.setBundle(bundle);
-            plan.addPlanItem(planItem);
-
-            plan.setId(api.createPlan(plan));
-
-            UserWS customer = CreateObjectUtil.createCustomer(1, "CustomerPriceTest001 " + System.currentTimeMillis(),
-                    "AAaa$$11", 1, 5, false, 1, null,
-                    CreateObjectUtil.createCustomerContact("test@gmail.com"));
-            Integer userId = api.createUser(customer);
-            OrderWS order = new OrderWS();
-            order.setUserId(userId);
-            order.setBillingTypeId(Constants.ORDER_BILLING_POST_PAID);
-            order.setPeriod(2);
-            order.setCurrencyId(1);
-            Calendar cal = Calendar.getInstance();
-            cal.set(2017, Calendar.AUGUST, 26); //Year, month and day of month
-            Date date = cal.getTime();
-            order.setActiveSince(date);
-
-            // subscribe to plan item
-            OrderLineWS line = new OrderLineWS();
-            line.setTypeId(Constants.ORDER_LINE_TYPE_ITEM);
-            line.setItemId(newItem1.getId());
-            line.setUseItem(true);
-            line.setQuantity(1);
-            order.setOrderLines(new OrderLineWS[]{line});
-
-            api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
-            Integer[] orderIds = api.getLastOrders(userId, 2);
-            OrderWS bundledOrder = api.getOrder(orderIds[1]);
-            OrderWS parentOrder = api.getOrder(orderIds[0]);
-            System.out.println("TEST OUT: parent order is " + parentOrder.getId());
-            System.out.println("TEST OUT: child order is " + bundledOrder.getId());
-            Boolean val = api.isCustomerSubscribedForDate(plan.getId(), userId, new Date());
-            assertFalse(val);
-            // Deleting a user would also delete its orders
-            api.deleteUser(userId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+   
 
 /*    @Test
     public void checkLateUsageforMediation() throws Exception {
@@ -262,135 +169,9 @@ public class LateGuidedUsageTest {
 
     }*/
 
-    @Test
-    public void checkSubscriptionForExpiredOrder() {
+   
 
-        System.out.println("TEST OUT: LateGuidedUsageTest.checkSubscriptionForExpiredOrder");
-
-        final Integer LEMONADE = 2602;
-
-        try {
-            api = JbillingAPIFactory.getAPI();
-
-            ItemDTOEx newItem1 = getItem("TEST PLAN4", "TP-04");
-            newItem1.setId(api.createItem(newItem1));
-            PlanWS plan = getPlan("TEST PLAN4", newItem1.getId());
-            PlanItemWS planItem = new PlanItemWS();
-            planItem.setItemId(LEMONADE);
-            planItem.getModels().put(CommonConstants.EPOCH_DATE,
-                    new PriceModelWS(PriceModelStrategy.FLAT.name(), new BigDecimal("0.10"), 1));
-
-            PlanItemBundleWS bundle = new PlanItemBundleWS();
-            bundle.setPeriodId(Constants.ORDER_PERIOD_ONCE);
-            bundle.setTargetCustomer(PlanItemBundleWS.TARGET_SELF);
-            bundle.setQuantity(new BigDecimal("10"));
-
-            planItem.setBundle(bundle);
-            plan.addPlanItem(planItem);
-
-            plan.setId(api.createPlan(plan));
-
-            UserWS customer = CreateObjectUtil.createCustomer(1, "CustomerPriceTest3 " + System.currentTimeMillis(),
-                    "AAaa$$11", 1, 5, false, 1, null,
-                    CreateObjectUtil.createCustomerContact("test@gmail.com"));
-            Integer userId = api.createUser(customer);
-            OrderWS order = new OrderWS();
-            order.setUserId(userId);
-            order.setBillingTypeId(Constants.ORDER_BILLING_POST_PAID);
-            order.setPeriod(2);
-            order.setCurrencyId(1);
-            Calendar cal = Calendar.getInstance();
-            cal.set(2014, Calendar.FEBRUARY, 26); //Year, month and day of month
-            Date activeSince = cal.getTime();
-            order.setActiveSince(activeSince);
-            cal.set(2014, Calendar.JULY, 26);
-            Date activeUntil = cal.getTime();
-            order.setActiveUntil(activeUntil);
-            // subscribe to plan item
-            OrderLineWS line = new OrderLineWS();
-            line.setTypeId(Constants.ORDER_LINE_TYPE_ITEM);
-            line.setItemId(newItem1.getId());
-            line.setUseItem(true);
-            line.setQuantity(1);
-            order.setOrderLines(new OrderLineWS[]{line});
-            api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
-            Boolean val = api.isCustomerSubscribedForDate(plan.getId(), userId, new Date());
-            assertFalse(val);
-            // Deleting a user would also delete its orders
-            api.deleteUser(userId);
-            api.deletePlan(plan.getId());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void checkSubscriptionForDeletedCustomer() {
-        System.out.println("TEST OUT: LateGuidedUsageTest.checkSubscriptionForDeletedCustomer");
-        final Integer LEMONADE = 2602;
-
-        try {
-            api = JbillingAPIFactory.getAPI();
-
-            ItemDTOEx newItem1 = getItem("TEST PLAN5", "TP-05");
-            newItem1.setId(api.createItem(newItem1));
-            PlanWS plan = getPlan("TEST PLAN5", newItem1.getId());
-            PlanItemWS planItem = new PlanItemWS();
-            planItem.setItemId(LEMONADE);
-            planItem.getModels().put(CommonConstants.EPOCH_DATE,
-                    new PriceModelWS(PriceModelStrategy.FLAT.name(), new BigDecimal("0.10"), 1));
-
-            PlanItemBundleWS bundle = new PlanItemBundleWS();
-            bundle.setPeriodId(Constants.ORDER_PERIOD_ONCE);
-            bundle.setTargetCustomer(PlanItemBundleWS.TARGET_SELF);
-            bundle.setQuantity(new BigDecimal("10"));
-
-            planItem.setBundle(bundle);
-            plan.addPlanItem(planItem);
-
-            plan.setId(api.createPlan(plan));
-
-            UserWS customer = CreateObjectUtil.createCustomer(1, "CustomerPriceTest4 " + System.currentTimeMillis(),
-                    "AAaa$$11", 1, 5, false, 1, null,
-                    CreateObjectUtil.createCustomerContact("test@gmail.com"));
-            Integer userId = api.createUser(customer);
-            OrderWS order = new OrderWS();
-            order.setUserId(userId);
-            order.setBillingTypeId(Constants.ORDER_BILLING_POST_PAID);
-            order.setPeriod(2);
-            order.setCurrencyId(1);
-            Calendar cal = Calendar.getInstance();
-            cal.set(2014, Calendar.FEBRUARY, 25); //Year, month and day of month
-            Date activeSince = cal.getTime();
-            order.setActiveSince(activeSince);
-            cal.set(2014, Calendar.NOVEMBER, 10);
-            Date activeUntil = cal.getTime();
-            order.setActiveUntil(activeUntil);
-            // subscribe to plan item
-            OrderLineWS line = new OrderLineWS();
-            line.setTypeId(Constants.ORDER_LINE_TYPE_ITEM);
-            line.setItemId(newItem1.getId());
-            line.setUseItem(true);
-            line.setQuantity(1);
-            order.setOrderLines(new OrderLineWS[]{line});
-
-            api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
-
-            Calendar cal2 = Calendar.getInstance();
-            cal2.set(2014, Calendar.APRIL, 26); //Year, month and day of month
-            Date testForDate = cal2.getTime();
-            Boolean val = api.isCustomerSubscribedForDate(plan.getId(), userId, testForDate);
-            assertTrue(val);
-
-            val = api.isCustomerSubscribedForDate(plan.getId(), userId, new Date());
-            assertFalse(val);
-
-            api.deletePlan(plan.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+   
 
     @Test
     public void checkLateUsage() {
@@ -435,221 +216,10 @@ public class LateGuidedUsageTest {
         }
     }
 
-    @Test
-    public void testFutureSubscriptionNoCustomerPrice() throws Exception {
-
-        System.out.println("TEST OUT: LateGuidedUsageTest.testFutureSubscriptionNoCustomerPrice");
-
-        //   Create a new customer
-        UserWS customer = CreateObjectUtil.createCustomer(1, "LateGuidedUsage 01 " + System.currentTimeMillis(),
-                        "AAaa$$11", 1, 5, false, 1, null,
-                        CreateObjectUtil.createCustomerContact("test@gmail.com"));
-        Integer userId = api.createUser(customer);
-        assertNotNull("Customer should get created", userId);
-
-        //    subscribe a customer to PRICING_PLAN
-        PlanWS plan= api.getPlanWS(PRICING_PLAN_ID);
-        OrderWS order= subscribeUserToPricingPlan(userId, plan.getItemId());
-
-        //    order.activeSince in future,
-        order.setActiveSince (DateUtils.addDays(new Date(), 10));
-        System.out.println("TEST OUT: Order set for active since " + order.getActiveSince());
-        order.setId(api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID))); // create order
-        order = api.getOrder(order.getId());
-        assertNotNull("order created", order.getId());
-        System.out.println("TEST OUT: order active since = " + order.getActiveSince());
-        //fetch customer price for today for an item on plan,
-        assertNull("expected - no prices should return: ", api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, new Date(), null));
-
-        //Rate Order for today for an item on the plan, should get product's default price of 10
-        OrderWS testOrder= subscribeUserToPricingPlan(userId, PRICING_ITEM_ID);//default active since today from helper method
-        testOrder.setPeriod(ONE_TIME_PERIOD);
-
-        testOrder = api.rateOrder(testOrder, OrderChangeBL.buildFromOrder(testOrder, ORDER_CHANGE_STATUS_APPLY_ID));
-        assertEquals("Order line should be priced at $10.00.", new BigDecimal("10.00"), testOrder.getOrderLines()[0].getPriceAsDecimal());
-
-        //Rate Order for active since same as the plan active since, for an item on the plan, should get plan's price of 5.00 instead of products price of 10
-        testOrder.setActiveSince(order.getActiveSince());
-        testOrder = api.rateOrder(testOrder, OrderChangeBL.buildFromOrder(testOrder, ORDER_CHANGE_STATUS_APPLY_ID));
-        assertEquals("Order line should be priced at $5.00.", new BigDecimal("5.00"), testOrder.getOrderLines()[0].getPriceAsDecimal());
-
-    }
-
-    @Test
-    public void testUpdatedSubscriptionInFutureNoPrice() throws Exception {
-
-        System.out.println("TEST OUT: LateGuidedUsageTest.testUpdatedSubscriptionInFutureNoPrice");
-
-        //    Create a new customer
-        UserWS customer = CreateObjectUtil.createCustomer(1, "LateGuidedUsage 02 " + System.currentTimeMillis(),
-                "AAaa$$11", 1, 5, false, 1, null,
-                CreateObjectUtil.createCustomerContact("test@gmail.com"));
-        Integer userId = api.createUser(customer);
-        assertNotNull("Customer should get created", userId);
-
-        //    subscribe a customer to PRICING_PLAN
-        PlanWS plan = api.getPlanWS(PRICING_PLAN_ID);
-        OrderWS order = subscribeUserToPricingPlan(userId, plan.getItemId());
-
-        // order.activeSince in past,
-        order.setActiveSince (DateUtils.addDays(new Date(), -31));
-
-        order.setId(api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID))); // create order
-        order = api.getOrder(order.getId());
-        assertNotNull("order created", order.getId());
-
-        //Rate Order tests
-
-        OrderWS testOrder= subscribeUserToPricingPlan(userId, PRICING_ITEM_ID);//default active since today from helper method
-        testOrder.setPeriod(ONE_TIME_PERIOD);
-
-        //Rate Order for today, for an item on the plan, should get plan's price of 5.00
-        testOrder = api.rateOrder(testOrder, OrderChangeBL.buildFromOrder(testOrder, ORDER_CHANGE_STATUS_APPLY_ID));
-        assertEquals("Order line should be priced at $5.00.", new BigDecimal("5.00"), testOrder.getOrderLines()[0].getPriceAsDecimal());
-
-        //update the order, set activeSince in future
-        order.setActiveSince (DateUtils.addDays(new Date(), 32));
-        api.updateOrder(order, null);
-        //fetch customer price for today for an item on plan,
-        //expected - no prices should return (negative test)
-        assertNull("No prices should return, Plan order Active Since in future: ", api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, new Date(), Boolean.TRUE));
-
-        //Rate Order for today for an item on the plan, should get product's default price of 10
-        testOrder = api.rateOrder(testOrder, OrderChangeBL.buildFromOrder(testOrder, ORDER_CHANGE_STATUS_APPLY_ID));
-        assertEquals("Order line should be priced at $10.00.", new BigDecimal("10.00"), testOrder.getOrderLines()[0].getPriceAsDecimal());
-
-    }
-
-    @Test
-    public void testCustomerPricingTestBasedOnSubscriptionDates() throws Exception {
-        System.out.println("TEST OUT: LateGuidedUsageTest.testCustomerPricingTestBasedOnSubscriptionDates");
-
-        //    Create a new customer
-        UserWS customer = CreateObjectUtil.createCustomer(1, "LateGuidedUsage 03 " + System.currentTimeMillis(),
-                "AAaa$$11", 1, 5, false, 1, null,
-                CreateObjectUtil.createCustomerContact("test@gmail.com"));
-        Integer userId = api.createUser(customer);
-        assertNotNull("Customer should get created", userId);
-
-        //subscribe a customer to PRICING_PLAN,
-        PlanWS plan = api.getPlanWS(PRICING_PLAN_ID);
-        OrderWS order = subscribeUserToPricingPlan(userId, plan.getItemId());
-
-        //order.activeSince in past, 2 months back
-        order.setActiveSince (DateUtils.addDays(new Date(), -61));
-
-        //update the order, set activeUntil to yesterday
-        order.setActiveUntil(DateUtils.addDays(new Date(), -1));
-
-        System.out.println("order.getActiveUntil() = " + order.getActiveUntil());
-
-        order.setId(api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID))); // create order
-        order = api.getOrder(order.getId());
-        assertNotNull("order created", order.getId());
-
-        //fetch customer price for today for an item PRICING_ITEM,
-        //        expected - no prices should return (negative test)
-        assertNull("No prices should return, Plan expired yesterday: ",
-                api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, new Date(), Boolean.TRUE));
-
-        //fetch customer price for yesterday i.e. activeUntil,for item PRICING_ITEM
-        //expected - price returned not null
-        assertNull("No prices should return, Plan Active until yesterday: ",
-                api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, order.getActiveUntil(), Boolean.TRUE));
-
-        //fetch customer price for activeSince date as pricingDate, for item PRICING_ITEM
-        //expected - price returned not null
-        assertNotNull("No prices should return, Plan Active Since date: ",
-                api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, order.getActiveSince(), Boolean.TRUE));
-
-        System.out.println("TEST OUT: Price returned for activeSince is " + api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, order.getActiveSince(), null).getModels());
-
-        //fetch customer price for one day prior to activeSince date as pricingDate, for item PRICING_ITEM
-        //expected - no price should return
-        assertNull("No prices should return, one day prior to Plan Active Since: ",
-                api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, DateUtils.addDays(order.getActiveSince(), -1), Boolean.TRUE));
-    }
-
-    @Test
-    public void testCustomerPricePlanNonPlanPricing() throws Exception {
-        System.out.println("TEST OUT: LateGuidedUsageTest.testCustomerPricePlanNonPlanPricing");
-
-        //    Create a new customer
-        UserWS customer = CreateObjectUtil.createCustomer(1, "LateGuidedUsage 04 " + System.currentTimeMillis(),
-                "AAaa$$11", 1, 5, false, 1, null,
-                CreateObjectUtil.createCustomerContact("test@gmail.com"));
-        Integer userId = api.createUser(customer);
-        assertNotNull("Customer should get created", userId);
-
-        //set customer specific(non - plan) price for item PRICING_ITEM to 9.00
-
-        //subscribe the customer to the PRICING_PLAN plan from today
-        PlanWS plan = api.getPlanWS(PRICING_PLAN_ID);
-        OrderWS order = subscribeUserToPricingPlan(userId, plan.getItemId());
-
-        order.setId(api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID))); // create order
-        order = api.getOrder(order.getId());
-        assertNotNull("order created", order.getId());
-
-        //fetch customer price for the item PRICING_ITEM
-        //expected - 10.00
-        PlanItemWS itemPrice= api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, new Date(), Boolean.FALSE);
-        assertNull("prices should return, fetching non plan prices only, so no customer prices set: ", itemPrice);
-
-        itemPrice= api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, new Date(), Boolean.TRUE);
-        System.out.println("TEST OUT: itemPrice = " + itemPrice);
-        assertEquals("Expect price to be the vanilla product price", new BigDecimal("5.00"),
-                PriceModelBL.getWsPriceForDate(itemPrice.getModels(), new Date()).getRateAsDecimal());
-
-        //fetch customer price for the item PRICING_ITEM for planPricing = true
-        //expected - 5.00
-        itemPrice= api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, new Date(), Boolean.TRUE);
-        assertNotNull("prices should return, Plan Active Since in future: ", itemPrice);
-        System.out.println("TEST OUT: itemPrice = " + itemPrice);
-
-        assertEquals("Expect price to be the plan price", new BigDecimal("5.00"), PriceModelBL.getWsPriceForDate(itemPrice.getModels(), new Date()).getRateAsDecimal());
-
-    }
-
-    @Test
-    public void testCustomerPriceBasedOnSubscriptionAndDate() throws Exception {
-
-        System.out.println("TEST OUT: LateGuidedUsageTest.testCustomerPriceBasedOnSubscriptionAndDate");
-
-        //    Create a new customer
-        UserWS customer = CreateObjectUtil.createCustomer(1, "LateGuidedUsage 05 " + System.currentTimeMillis(),
-                "AAaa$$11", 1, 5, false, 1, null,
-                CreateObjectUtil.createCustomerContact("test@gmail.com"));
-        Integer userId = api.createUser(customer);
-        assertNotNull("Customer should get created", userId);
-
-        //subscribe a customer to PRICING_PLAN
-        PlanWS plan = api.getPlanWS(PRICING_PLAN_ID);
-        OrderWS order = subscribeUserToPricingPlan(userId, plan.getItemId());
-
-        //order.activeSince in past, activeUntil = null or in future
-        order.setActiveSince (DateUtils.addDays(new Date(), -61));
-        order.setActiveUntil ( null );
-
-        order.setId(api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID))); // create order
-        order = api.getOrder(order.getId());
-        assertNotNull("order created", order.getId());
-
-        //fetch customer price for today for item PRICING_ITEM
-        //expected - price for today should be 5.00
-        PlanItemWS itemPrice= api.getCustomerPriceForDate(userId, PRICING_ITEM_ID, new Date(), Boolean.TRUE);
-        assertNotNull("prices should return, Plan Active Since in future: ", itemPrice);
-        System.out.println("TEST OUT: itemPrice = " + itemPrice);
-
-        assertEquals("Expect price to be the vanilla product price", new BigDecimal("5.00"), PriceModelBL.getWsPriceForDate(itemPrice.getModels(), new Date()).getRateAsDecimal());
-
-
-    }
-
 	/**
 	 *The following test was create to cover the the issue in #12609
 	 */
-	@Test
+	/*@Test
 	public void checkCustomerPriceInMediation12609() throws Exception {
 
 		api = JbillingAPIFactory.getAPI();
@@ -699,21 +269,7 @@ public class LateGuidedUsageTest {
 		//quantity 100 x 1$ = 100$
 		assertEquals("The order total is not correct", new BigDecimal("100.00"), firstCdrOrder.getTotalAsDecimal());
 
-		//now set customer price for the product different from the company price
-		//create a price model for the customer price
-		PriceModelWS priceModel = new PriceModelWS();
-		priceModel.setCurrencyId(Constants.PRIMARY_CURRENCY_ID);
-		priceModel.setRate(new BigDecimal("2.00"));
-		priceModel.setType("FLAT");
-
-		//make the customer price to effective from 01-FEB-2014
-		PlanItemWS customerPrice = new PlanItemWS();
-		customerPrice.setItemId(item.getId());
-		customerPrice.setPrecedence(1);
-		Date customerPriceFrom = new DateTime(2014, 2, 1, 0, 0).toDate();
-		customerPrice.getModels().put(customerPriceFrom, priceModel);
-		customerPrice = api.createCustomerPrice(user.getId(), customerPrice, null);
-
+		
 		//change the cdr to be fall into a date range where the customer has specific price
 		List<PricingField> fieldsAsList = Arrays.asList(fields);
 		PricingField.find(fieldsAsList, "accountcode").setStrValue("LGUWS-" + random + "_2");
@@ -758,7 +314,7 @@ public class LateGuidedUsageTest {
 		api.deleteCustomerPrice(user.getId(), customerPrice.getId());
 		api.deleteItem(item.getId());
 		api.deleteUser(user.getId());
-	}
+	}*/
 
     private OrderWS subscribeUserToPricingPlan(Integer userId, Integer pricingPlanItemID) {
 
@@ -789,15 +345,6 @@ public class LateGuidedUsageTest {
         types[0] = new Integer(1);
         newItem.setTypes(types);
         return newItem;
-    }
-
-
-    private PlanWS getPlan(String description, Integer itemId) {
-        PlanWS plan = new PlanWS();
-        plan.setItemId(itemId);
-        plan.setDescription(description);
-        plan.setPeriodId(2);
-        return plan;
     }
 
 }

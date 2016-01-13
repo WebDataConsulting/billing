@@ -24,13 +24,13 @@
 
 package com.sapienter.jbilling.server.payment;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.sapienter.jbilling.common.Constants;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.MetaFieldBL;
 
-;
 import org.jfree.util.Log;
 
 import com.sapienter.jbilling.server.payment.db.PaymentAuthorizationDAS;
@@ -140,9 +140,7 @@ public class PaymentDTOEx extends PaymentDTO {
         paymentMaps = new ArrayList();
 
         if (dto.getInvoiceIds() != null) {
-            for (int f = 0; f < dto.getInvoiceIds().length; f++) {
-                invoiceIds.add(dto.getInvoiceIds()[f]);
-            }
+            Collections.addAll(invoiceIds, dto.getInvoiceIds());
         }
 
         if (dto.getPaymentId() != null) {

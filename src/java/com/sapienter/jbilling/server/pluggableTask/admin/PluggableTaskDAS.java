@@ -29,7 +29,6 @@ import org.hibernate.Query;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
-;
 import org.springmodules.cache.provider.CacheProviderFacade;
 import org.springmodules.cache.CachingModel;
 import org.springmodules.cache.FlushingModel;

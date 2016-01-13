@@ -24,25 +24,19 @@ You may download the latest source from webdataconsulting.github.io.
 
 package com.sapienter.jbilling.test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
+import java.util.*;
 
 public class TestUtils {
 
     public static <T> List<T> arrayToList (final T[] array) {
         final List<T> newList = new ArrayList<T>(array.length);
 
-        for (final T element : array) {
-            newList.add(element);
-        }
+        Collections.addAll(newList, array);
         return newList;
     }
 

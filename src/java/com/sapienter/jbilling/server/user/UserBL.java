@@ -2741,18 +2741,11 @@ public class UserBL extends ResultList implements UserSQL {
         // Account Expiry feature disabled
         if (daysToDeActivateAccount.equals(new Integer(0))) {
             // check previous state in-case of user update and account in-active feature is not enabled
-            if(null != user && null != user.getAccountDisabledDate())
-                return true;
-            else
-                return false;
+            return null != user && null != user.getAccountDisabledDate();
         }
 
         // Account is currently in-active
-        if (null != accountDisableDate) {
-            return true;
-        } else {
-            return false;
-        }
+        return null != accountDisableDate;
     }
     
     /**

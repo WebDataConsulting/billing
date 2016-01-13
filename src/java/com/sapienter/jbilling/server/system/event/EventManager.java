@@ -23,22 +23,14 @@ You may download the latest source from webdataconsulting.github.io.
  */
 package com.sapienter.jbilling.server.system.event;
 
-import java.util.Hashtable;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.order.event.NewActiveUntilEvent;
-import com.sapienter.jbilling.server.payment.event.EndProcessPaymentEvent;
-import com.sapienter.jbilling.server.payment.event.GatewayAlarmEventProcessor;
-import com.sapienter.jbilling.server.payment.event.PaymentFailedEvent;
-import com.sapienter.jbilling.server.payment.event.PaymentProcessorUnavailableEvent;
-import com.sapienter.jbilling.server.payment.event.PaymentSuccessfulEvent;
-import com.sapienter.jbilling.server.payment.event.ProcessPaymentEvent;
-import com.sapienter.jbilling.server.payment.event.ProcessPaymentProcessor;
+import com.sapienter.jbilling.server.payment.event.*;
 import com.sapienter.jbilling.server.process.event.NoNewInvoiceEvent;
 import com.sapienter.jbilling.server.user.event.SubscriptionStatusEventProcessor;
+
+import java.util.Hashtable;
 
 
 /**

@@ -30,8 +30,6 @@ import java.time.temporal.TemporalAdjusters;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.db.PersistentEnum;
 
-;
-
 /**
  * Utility class for working with period units. Can be persisted by Hibernate.
  *

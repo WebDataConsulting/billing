@@ -213,7 +213,7 @@ public class JBCrypto {
 		}
 
 		if (strict && (salt != null)) {
-			if ((salt.toString().lastIndexOf("{") != -1) || (salt.toString().lastIndexOf("}") != -1)) {
+			if ((salt.lastIndexOf("{") != -1) || (salt.lastIndexOf("}") != -1)) {
 				throw new IllegalArgumentException("Cannot use { or } in salt.toString()");
 			}
 		}
@@ -221,7 +221,7 @@ public class JBCrypto {
 		if ((salt == null) || "".equals(salt)) {
 			return password;
 		} else {
-			return password + "{" + salt.toString() + "}";
+			return password + "{" + salt + "}";
 		}
 	}
 

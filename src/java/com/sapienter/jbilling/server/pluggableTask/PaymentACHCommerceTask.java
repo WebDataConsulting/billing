@@ -30,7 +30,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
-;
 
 import com.sapienter.jbilling.common.Constants;
 import com.sapienter.jbilling.common.FormatLogger;

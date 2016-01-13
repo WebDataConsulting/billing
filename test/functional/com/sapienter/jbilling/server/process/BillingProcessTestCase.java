@@ -349,6 +349,14 @@ public abstract class BillingProcessTestCase extends ApiTestCase {
             int orderId = api.createUpdateOrder(order, orderChanges);
             return api.getOrder(orderId);
         }
+        
+        private Date AsDate (String dateStr) {
+            return BillingProcessTestCase.AsDate(dateStr);
+        }
+        
+        private Date AsDate (int year, int month, int day) {
+            return BillingProcessTestCase.AsDate(year, month, day);
+        }
     }
 
     public class TestOrderChangeBuilder {
@@ -445,6 +453,14 @@ public abstract class BillingProcessTestCase extends ApiTestCase {
             logger.debug(S("* *001: {}", change));
             logger.debug(S("***001: {}", orderLine));
             return change;
+        }
+        
+        private Date AsDate (String dateStr) {
+            return BillingProcessTestCase.AsDate(dateStr);
+        }
+        
+        private Date AsDate (int year, int month, int day) {
+            return BillingProcessTestCase.AsDate(year, month, day);
         }
     }
 
@@ -654,6 +670,14 @@ public abstract class BillingProcessTestCase extends ApiTestCase {
             logger.info(S("Running Billing Process for {}", forDate));
             api.triggerBilling(forDate);
         }
+        
+        private Date AsDate (String dateStr) {
+            return BillingProcessTestCase.AsDate(dateStr);
+        }
+        
+        private Date AsDate (int year, int month, int day) {
+            return BillingProcessTestCase.AsDate(year, month, day);
+        }
     }
 
     protected void triggerBilling (Date runDate) {
@@ -685,23 +709,6 @@ public abstract class BillingProcessTestCase extends ApiTestCase {
             return new ScenarioVerifier(order);
         }
     }
-
-    protected void assertNextBillableDay (OrderWS order, Date expected) {
-        logger.info(S("Processed order next billable day: {}", order.getNextBillableDay()));
-        if (expected == null) {
-            assertNull(S("Order[{}] next billable date should be null", order.getId()), order.getNextBillableDay());
-        } else {
-            assertEquals(S("Order[{}] next billable date should be {}", order.getId(), expected), expected,
-                    order.getNextBillableDay());
-        }
-    }
-
-    protected void assertNextInvoiceDate (UserWS user, Date expected) {
-        logger.info(S("User[{}] next invoice date: {}", user.getId(), user.getNextInvoiceDate()));
-        assertEquals(S("User[{}] next billable date should be {}", user.getId(), expected), expected,
-                user.getNextInvoiceDate());
-    }
-
     public class ScenarioVerifier {
 
         protected OrderWS order;
@@ -775,7 +782,14 @@ public abstract class BillingProcessTestCase extends ApiTestCase {
                 verifyInvoiceLines();
             }
         }
-
+        private Date AsDate (String dateStr) {
+            return BillingProcessTestCase.AsDate(dateStr);
+        }
+        
+        private Date AsDate (int year, int month, int day) {
+            return BillingProcessTestCase.AsDate(year, month, day);
+        }
+        
         protected void verifyInvoiceLines () {
             logger.info(S("Generated Invoices count: {}", order.getGeneratedInvoices().length));
             Integer[] invoiceIds = api.getLastInvoices(order.getUserId(), 1);
@@ -833,4 +847,23 @@ public abstract class BillingProcessTestCase extends ApiTestCase {
             }
         }
     }
+
+    protected void assertNextBillableDay (OrderWS order, Date expected) {
+        logger.info(S("Processed order next billable day: {}", order.getNextBillableDay()));
+        if (expected == null) {
+            assertNull(S("Order[{}] next billable date should be null", order.getId()), order.getNextBillableDay());
+        } else {
+            assertEquals(S("Order[{}] next billable date should be {}", order.getId(), expected), expected,
+                    order.getNextBillableDay());
+        }
+    }
+
+    protected void assertNextInvoiceDate (UserWS user, Date expected) {
+        logger.info(S("User[{}] next invoice date: {}", user.getId(), user.getNextInvoiceDate()));
+        assertEquals(S("User[{}] next billable date should be {}", user.getId(), expected), expected,
+                user.getNextInvoiceDate());
+    }
+
+    
 }
+

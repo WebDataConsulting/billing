@@ -28,10 +28,9 @@ import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.process.BusinessDays;
-import com.sapienter.jbilling.server.process.db.AgeingEntityStepDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
-;
 import org.joda.time.format.DateTimeFormat;
+
 import java.io.File;
 import java.util.Date;
 

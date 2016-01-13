@@ -36,111 +36,106 @@ You may download the latest source from webdataconsulting.github.io.
 --%>
 
 <script type="text/javascript">
-    function addNewProductDescription(){
+    
+    function addNewDescription() {
         var languageId = $('#newDescriptionLanguage').val();
-        var previousDescription = $("#descriptions div:hidden .descLanguage[value='"+languageId+"']");
-        if(previousDescription.size()){
+        var previousDescription = $("#descriptions div:hidden .descLanguage[value='" + languageId + "']");
+        if (previousDescription.size()) {
             previousDescription.parents('.row:first').show();
             previousDescription.parents('.row:first').find(".descDeleted").val(false);
             previousDescription.parents('.row:first').find(".descContent").val('');
-        }else{
+        } else {
             var languageDescription = $('#newDescriptionLanguage option:selected').text();
             var clone = $('#descriptionClone').children().clone();
             var languagesCount = $('#descriptions').children().size();
-            var newName = '${itemName}.descriptions['+languagesCount+']';
-            clone.find("label").attr('for', newName+'.content');
+            var newName = '${itemName}.descriptions[' + languagesCount + ']';
+            clone.find("label").attr('for', newName + '.content');
             var label = clone.find('label').html();
             clone.find('label').html(label.replace('{0}', languageDescription));
-            if(languageDescription=="English"){
+            if (languageDescription == "English") {
                 clone.find('label').append("<span id='mandatory-meta-field'>*</span>");
             }
 
-            clone.find(".descContent").attr('id',newName+'.content');
-            clone.find(".descContent").attr('name',newName+'.content');
+            clone.find(".descContent").attr('id', newName + '.content');
+            clone.find(".descContent").attr('name', newName + '.content');
 
-            clone.find(".descLanguage").attr('id',newName+'.languageId');
-            clone.find(".descLanguage").attr('name',newName+'.languageId');
+            clone.find(".descLanguage").attr('id', newName + '.languageId');
+            clone.find(".descLanguage").attr('name', newName + '.languageId');
             clone.find(".descLanguage").val(languageId);
 
-            clone.find(".descDeleted").attr('id',newName+'.deleted');
-            clone.find(".descDeleted").attr('name',newName+'.deleted');
+            clone.find(".descDeleted").attr('id', newName + '.deleted');
+            clone.find(".descDeleted").attr('name', newName + '.deleted');
 
             $('#descriptions').append(clone);
         }
-        if(languageId==1){
+        if (languageId == 1) {
             $('#newDescriptionLanguage').closest("div").find("label span").remove();
         }
-        removeProductSelectedLanguage();
-        updateItemWithDescriptions();
+        removeSelectedLanguage();
     }
 
-    function removeProductDescription(elm){
+    function removeDescription(elm) {
         var div = $(elm).parents('.row:first');
         //set 'deleted'=true;
         div.find('.descDeleted').val(true);
         div.hide();
 
-        if($("#addDescription").is(':hidden')){
+        if ($("#addDescription").is(':hidden')) {
             $("#addDescription").show();
         }
         var langId = div.find(".descLanguage").val();
         var langValue = getValueForLangId(langId);
-        if(langValue){
-            $("#newDescriptionLanguage").append("<option value='"+langId+"'>"+langValue+"</option>");
-            if(langId==1){
+        if (langValue) {
+            $("#newDescriptionLanguage").append("<option value='" + langId + "'>" + langValue + "</option>");
+            if (langId == 1) {
                 $("#newDescriptionLanguage").closest("div").find('label').append(
                         "<span id='mandatory-meta-field'>*</span>");
             }
         }
-        updateItemWithDescriptions();
     }
 
-    function loadAvailableDecLang(){
+    function loadAvailableDecLang() {
         var languages = $('#availableDescriptionLanguages').val().split(',');
-        if(languages[0]!=''){
-            $.each(languages,function(i,lang){
-                var lang = lang.split('-');
+        if (languages[0] != '') {
+            $.each(languages, function (i, lang) {
+            	var lang = lang.split('-');
                 $("#newDescriptionLanguage").append("<option value='"+lang[0]+"'>"+lang[1]+"</option>");
-                if(lang[0]==1){
-                    $("#newDescriptionLanguage").closest("div").find('label').append("<span id='mandatory-meta-field'>*</span>");
-                }
             });
-        }else{
+        } else {
             $('#addDescription').hide();
         }
     }
 
-    function getValueForLangId(langId){
+    function getValueForLangId(langId) {
         var languages = $('#allDescriptionLanguages').val().split(',')
-        if(languages[0]!=''){
+        if (languages[0] != '') {
             var value = false;
-            $.each(languages,function(i,lang){
+            $.each(languages, function (i, lang) {
                 var lang = lang.split('-');
-                if(lang[0] == langId){
+                if (lang[0] == langId) {
                     value = lang[1];
                 }
             });
             return value;
-        }else{
+        } else {
             return false;
         }
         return false;
     }
 
-    function removeProductSelectedLanguage(){
+    function removeSelectedLanguage() {
         $('#newDescriptionLanguage option:selected').remove();
-        if(!$('#newDescriptionLanguage option').size()){
+        if (!$('#newDescriptionLanguage option').size()) {
             $('#addDescription').hide();
         }
     }
-
 
     function getSelectValues(select) {
         var result = [];
         var options = select && select.options;
         var opt;
 
-        for (var i=0, iLen=options.length; i!=iLen; i++) {
+        for (var i = 0, iLen = options.length; i != iLen; i++) {
             opt = options[i];
 
             if (opt.selected) {
@@ -151,66 +146,82 @@ You may download the latest source from webdataconsulting.github.io.
         return result;
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadAvailableDecLang();
     })
 
-    function updateItemWithDescriptions() {
-        $('#${form_to_submit_on_update}').submit();
-    }
-
 </script>
-<div class="row" id='addDescription'>
-    <div class="add-desc">
-        <label><g:message code='product.detail.description.add.title'/></label>
-        <select name="newDescriptionLanguage" id="newDescriptionLanguage"></select>
-        <a onclick="addNewProductDescription()">
-            <img src="${resource(dir:'images', file:'add.png')}" alt="remove"/>
-        </a>
-    </div>
-</div>
+
 
 <div id="descriptionClone" style="display: none">
     <g:applyLayout name="form/description">
-        <content tag="label"><g:message code="product.detail.description.label"/></content>
+        <content tag="label"><g:message code="${itemName}.detail.description.label"/></content>
         <content tag="label.for">desCloneContent</content>
 
-        <input type="text" id="desCloneContent" class="descContent field" size="26" value="" name="desCloneContent" onchange="updateItemWithDescriptions()">
+        <input type="text" id="desCloneContent" class="descContent field" size="26" value="" name="desCloneContent">
         <input type="hidden" id="desCloneLangId" class="descLanguage" value="" name="desCloneLangId">
         <input type="hidden" id="desCloneDeleted" class="descDeleted" value="" name="desCloneDeleted">
-        <a onclick="removeProductDescription(this)">
+        <a onclick="removeDescription(this)">
             <img src="${resource(dir:'images', file:'cross.png')}" alt="remove"/>
         </a>
     </g:applyLayout>
 </div>
-<g:set var="availableDescriptionLanguages" value="${LanguageDTO.list().collect {it.id+'-'+it.description}}"></g:set>
+
+<g:set var="availableDescriptionLanguages" value="${LanguageDTO.list().collect { it.id + '-' + it.description }}"></g:set>
 
 <div id="descriptions">
-    <g:each in="${product?.descriptions}" var="description" status="index">
-        <g:if test="${description?.languageId}">
-            <g:applyLayout name="form/description">
-                <g:set var="currentLang" value="${LanguageDTO.get(product?.descriptions[index]?.languageId)}"></g:set>
-                <g:set var="availableDescriptionLanguages" value="${availableDescriptionLanguages - (currentLang?.id+'-'+currentLang?.description)}"></g:set>
-                <content tag="label"><g:message code="product.detail.description.label" args="${[currentLang?.description]}"/>
-                    <g:if test="${description?.languageId==1}">
-                        <span id="mandatory-meta-field">*</span>
-                    </g:if>
-                </content>
-
-                <content tag="label.for">product?.descriptions[${index}]?.content</content>
-
-                <g:textField name="${itemName}.descriptions[${index}].content" class="descContent field" value="${product?.descriptions[index]?.content}" onchange="updateItemWithDescriptions()"/>
-                <g:hiddenField name="${itemName}.descriptions[${index}].languageId" class="descLanguage" value="${currentLang?.id}"/>
-                <g:hiddenField name="${itemName}.descriptions[${index}].deleted" value="" class="descDeleted"/>
-                <a onclick="removeProductDescription(this)">
-                    <img src="${resource(dir:'images', file:'cross.png')}" alt="remove"/>
-                </a>
-            </g:applyLayout>
+		<g:if test="${multiLingualEntity?.descriptions}">
+        <g:each in="${multiLingualEntity?.descriptions}" var="description" status="index">
+            <g:if test="${description?.languageId}">
+                <g:applyLayout name="form/description">
+                    <g:set var="currentLang" value="${LanguageDTO.get(multiLingualEntity?.descriptions[index]?.languageId)}"></g:set>
+                    <g:set var="availableDescriptionLanguages" value="${availableDescriptionLanguages - (currentLang?.id+'-'+currentLang?.description)}"></g:set>
+                    <content tag="label"><g:message code="${itemName}.detail.description.label" args="${[currentLang?.description]}"/>
+                        <g:if test="${description?.languageId==1}">
+                            <span id="mandatory-meta-field">*</span>
+                        </g:if>
+                    </content>
+    
+                    <content tag="label.for">${itemName}.descriptions[${index}].content</content>
+    
+                    <g:textField name="${itemName}.descriptions[${index}].content" class="descContent field" value="${multiLingualEntity?.descriptions[index]?.content}"/>
+                    <g:hiddenField name="${itemName}.descriptions[${index}].languageId" class="descLanguage" value="${currentLang?.id}"/>
+                    <g:hiddenField name="${itemName}.descriptions[${index}].deleted" value="" class="descDeleted"/>
+                    <a onclick="removeDescription(this)">
+                        <img src="${resource(dir:'images', file:'cross.png')}" alt="remove"/>
+                    </a>
+                </g:applyLayout>
+            </g:if>
+        </g:each>
         </g:if>
-    </g:each>
+        <g:else>
+        <g:applyLayout name="form/description">
+            <g:set var="currentLang" value="${LanguageDTO.get(session['language_id'] as Integer)}"></g:set>
+            <g:set var="availableDescriptionLanguages" value="${availableDescriptionLanguages - (currentLang?.id + '-' + currentLang?.description)}"></g:set>
+            <content tag="label">
+                <g:message code="${itemName}.detail.description.label" args="${[currentLang?.description]}"/>
+            </content>
+            <content tag="label.for">${itemName}.descriptions[0].content</content>
+            <g:textField name="${itemName}.descriptions[0].content" class="descContent field" value=""/>
+            <g:hiddenField name="${itemName}.descriptions[0].languageId" class="descLanguage" value="${currentLang?.id}"/>
+            <g:hiddenField name="${itemName}.descriptions[0].deleted" value="" class="descDeleted"/>
+            <a onclick="removeDescription(this)">
+                <img src="${resource(dir:'images', file:'cross.png')}" alt="remove"/>
+            </a>
+        </g:applyLayout>
+    </g:else>
 </div>
 
-<g:set var="allDescriptionLanguages" value="${LanguageDTO.list().collect {it.id+'-'+it.description}}"></g:set>
+<div class="row" id='addDescription'>
+    <div class="add-desc">
+        <label><g:message code="${itemName}.detail.description.add.title"/></label>
+        <select name="newDescriptionLanguage" id="newDescriptionLanguage"></select>
+        <a onclick="addNewDescription()">
+            <img src="${resource(dir:'images', file:'add.png')}" alt="remove"/>
+        </a>
+    </div>
+</div>
+<g:set var="allDescriptionLanguages" value="${LanguageDTO.list().collect { it.id + '-' + it.description }}"></g:set>
 <g:hiddenField name="allDescriptionLanguages" value="${allDescriptionLanguages?.join(',')}"/>
 <g:hiddenField name="availableDescriptionLanguages" value="${availableDescriptionLanguages?.join(',')}"/>
 

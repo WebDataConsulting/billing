@@ -26,7 +26,6 @@ package com.sapienter.jbilling.server.pluggableTask.admin;
 
 import java.util.List;
 
-;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;

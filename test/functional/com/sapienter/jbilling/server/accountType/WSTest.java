@@ -526,6 +526,8 @@ public class WSTest extends ApiTestCase {
 			}
 
 			assertTrue("Matching metafield not found: " + mf.getName(), foundMatch);
+			if(foundMatch)
+				break;		
 		}
 	}
 

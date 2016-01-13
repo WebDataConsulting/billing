@@ -26,7 +26,6 @@ package com.sapienter.jbilling.server.process;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import org.apache.commons.lang.StringUtils;
-;
 import org.joda.time.DateMidnight;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

@@ -26,12 +26,10 @@ package com.sapienter.jbilling.server.invoice;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
-import java.util.Comparator;
-
-;
-
 import com.sapienter.jbilling.server.item.ItemBL;
 import com.sapienter.jbilling.server.util.Constants;
+
+import java.util.Comparator;
 
 /**
  * @author Emil

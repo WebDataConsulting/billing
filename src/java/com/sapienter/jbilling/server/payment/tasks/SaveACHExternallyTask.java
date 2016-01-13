@@ -39,8 +39,6 @@ import com.sapienter.jbilling.server.system.event.task.IInternalEventsTask;
 import com.sapienter.jbilling.server.user.event.AchDeleteEvent;
 import com.sapienter.jbilling.server.user.event.AchUpdateEvent;
 
-;
-
 import static com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription.Type.*;
 
 /**

@@ -24,6 +24,7 @@
 package com.sapienter.jbilling.server.invoice.db;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
 import com.sapienter.jbilling.server.util.csv.Exportable;
 
 import org.apache.commons.lang.StringUtils;
-;
+
 import org.hibernate.annotations.*;
 
 import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
@@ -578,7 +579,7 @@ public class InvoiceDTO extends CustomizedEntity implements Serializable, Export
 
     @Transient
     public String[] getFieldNames() {
-        return new String[] {
+        String headers[] = new String[] {
                 "id",
                 "publicNumber",
                 "userId",
@@ -604,6 +605,13 @@ public class InvoiceDTO extends CustomizedEntity implements Serializable, Export
                 "lineAmount",
                 "lineDescription"
         };
+        
+        List<String> list = new ArrayList<>(Arrays.asList(headers));
+        for(String name : metaFieldsNames) {
+        	list.add(name);
+        }
+        
+        return list.toArray(new String[list.size()]);
     }
 
     @Transient
@@ -679,6 +687,19 @@ public class InvoiceDTO extends CustomizedEntity implements Serializable, Export
             }
         }
 
+        Object obj[] = new Object[metaFieldsNames.size()];
+        int index = 0;
+        for(String name : metaFieldsNames) {
+        	MetaFieldValue value = getMetaField(name);
+        	if(value != null) {
+        		obj[index++] = value.getValue();
+        	}
+        	else {
+        		obj[index++] = null;
+        	}
+        }
+        
+        values.add(obj);
         return values.toArray(new Object[values.size()][]);
     }
 }

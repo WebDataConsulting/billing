@@ -19,11 +19,14 @@ import com.sapienter.jbilling.server.util.api.JbillingAPIFactory;
 import static org.testng.AssertJUnit.*;
 
 import com.sapienter.jbilling.test.ApiTestCase;
+
+import org.joda.time.DateMidnight;
 import org.testng.annotations.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
 
 @Test(groups = { "web-services", "meta-fields" }, sequential = true)
 public class WSTest extends ApiTestCase {
@@ -34,7 +37,7 @@ public class WSTest extends ApiTestCase {
     @BeforeClass
     public void setup(){
         if (testItemTypeId == null){
-            testItemTypeId = createCategory(api,true,null);
+            testItemTypeId = createCategory(api,true,null, "testCategory-0002");
         }
     }
 
@@ -824,7 +827,7 @@ public class WSTest extends ApiTestCase {
             assertNotNull("Metafield has not been created", metaFieldWSChild);
 
             System.out.println("Creating global Category ...");
-            ItemTypeWS itemTypeGlobal = createCategory(true, 1);
+            ItemTypeWS itemTypeGlobal = createCategory("test-001",true, 1);
 
             MetaFieldValueWS mfGlobalValue = getMetaFieldValue("Test root value", metaFieldWSRoot.getDataType(), metaFieldWSRoot.getName());
 
@@ -892,7 +895,7 @@ public class WSTest extends ApiTestCase {
             assertNotNull("Metafield has not been created", metaFieldWSChild);
 
             System.out.println("Creating global Category ...");
-            ItemTypeWS itemTypeNonGlobal = createCategory(false, 1);
+            ItemTypeWS itemTypeNonGlobal = createCategory("testCategory-0003", false, 1);
             itemTypeNonGlobal.getEntities().add(1);
             itemTypeNonGlobal.getEntities().add(3);
 
@@ -1080,7 +1083,8 @@ public class WSTest extends ApiTestCase {
 	private ItemDTOEx createProduct() {
 		ItemDTOEx item = new ItemDTOEx();
 		item.setCurrencyId(SYSTEM_CURRENCY_ID);
-		item.setPrice("10");
+		item.setPriceManual(0);
+		item.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("10.00"), new DateMidnight(1970, 1, 1).toDate(), Integer.valueOf(1), SYSTEM_CURRENCY_ID));
 		item.setDescription("Test Item for meta field validation3");
 		item.setEntityId(1);
 		item.setNumber("Number" + System.currentTimeMillis());
@@ -1111,8 +1115,8 @@ public class WSTest extends ApiTestCase {
         return createCategory("", global, null);
     }
 
-    private Integer createCategory(JbillingAPI api, Boolean global, Integer entityId) {
-        ItemTypeWS itemTypeWS =  createCategory("Test Category",global, entityId);
+    private Integer createCategory(JbillingAPI api, Boolean global, Integer entityId, String description) {
+        ItemTypeWS itemTypeWS =  createCategory(description,global, entityId);
         return api.createItemCategory(itemTypeWS);
     }
 

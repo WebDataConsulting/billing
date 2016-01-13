@@ -24,15 +24,16 @@ along with jbilling.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.sapienter.jbilling.server.process;
 
-import java.util.*;
-;
-
-
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.process.db.*;
+import com.sapienter.jbilling.server.list.ResultList;
+import com.sapienter.jbilling.server.process.db.BatchProcessInfoDAS;
+import com.sapienter.jbilling.server.process.db.BatchProcessInfoDTO;
+import com.sapienter.jbilling.server.process.db.BillingProcessFailedUserDAS;
+import com.sapienter.jbilling.server.process.db.BillingProcessFailedUserDTO;
 import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.list.ResultList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BillingProcessFailedUserBL  extends ResultList {
 	private BillingProcessFailedUserDAS bpFailedUsersDas = null;

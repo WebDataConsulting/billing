@@ -25,6 +25,7 @@ package com.sapienter.jbilling.server.user.partner.db;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -327,7 +328,7 @@ public class PartnerDTO extends CustomizedEntity implements java.io.Serializable
     @Transient
     @Override
     public String[] getFieldNames() {
-        return new String[] {
+        String names[] = new String[] {
                 "id",
                 "userName",
                 "firstName",
@@ -337,7 +338,15 @@ public class PartnerDTO extends CustomizedEntity implements java.io.Serializable
                 "totalPayouts",
                 "type",
                 "parentUserName",
-        };    }
+        };    
+        List<String> list = new ArrayList<>(Arrays.asList(names));
+        
+        for(String name : metaFieldsNames) {
+        	list.add(name);
+        }
+        
+        return list.toArray(new String[list.size()]);
+   }
 
     @Transient
     @Override

@@ -21,7 +21,6 @@ import com.sapienter.jbilling.server.util.db.AbstractDAS;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Date;
@@ -90,14 +89,7 @@ public class OrderChangeDAS extends AbstractDAS<OrderChangeDTO> {
                 .add(Restrictions.eq("o.id", statusId));
         List<OrderChangeDTO> orderChangeDTOs;
         orderChangeDTOs = criteria.list();
-        if(!(orderChangeDTOs.isEmpty()))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return !(orderChangeDTOs.isEmpty());
 
     }
 }

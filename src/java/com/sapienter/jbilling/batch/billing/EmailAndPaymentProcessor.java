@@ -85,6 +85,6 @@ public class EmailAndPaymentProcessor extends JobContextHandler implements Initi
     }
 
     public void setReview(String review) {
-        this.review = Integer.parseInt(review) == 1 ? true : false;
+        this.review = Integer.parseInt(review) == 1;
     }
 }

@@ -100,12 +100,6 @@ public class CountryTaxCompositionTaskTest extends ApiTestCase {
         // add a new tax item & enable the tax plug-in
 	    ItemDTOEx taxItem = new ItemDTOEx();
 	    taxItem.setCurrencyId(CURRENCY_USD);
-	    
-	    PriceModelWS linePercentagePrice = new PriceModelWS();
-        linePercentagePrice.setType(PriceModelStrategy.LINE_PERCENTAGE.name());
-        linePercentagePrice.setRate(BigDecimal.TEN); // tax rate is %10
-        linePercentagePrice.setCurrencyId(CURRENCY_USD);
-        taxItem.addDefaultPrice(CommonConstants.EPOCH_DATE, linePercentagePrice);
 
 	    taxItem.setDescription("AU Tax");
 	    taxItem.setEntityId(TEST_ENTITY_ID);
@@ -384,12 +378,6 @@ public class CountryTaxCompositionTaskTest extends ApiTestCase {
         ItemDTOEx taxItem = new ItemDTOEx();
         taxItem.setCurrencyId(CURRENCY_USD);
 
-        PriceModelWS linePercentagePrice = new PriceModelWS();
-        linePercentagePrice.setType(PriceModelStrategy.LINE_PERCENTAGE.name());
-        linePercentagePrice.setRate(BigDecimal.TEN); // tax is %10
-        linePercentagePrice.setCurrencyId(CURRENCY_USD);
-        taxItem.addDefaultPrice(CommonConstants.EPOCH_DATE, linePercentagePrice);
-        
         taxItem.setDescription("AU Tax");
         taxItem.setEntityId(TEST_ENTITY_ID);
         taxItem.setNumber("TAX-AU");

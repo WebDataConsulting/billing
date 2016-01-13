@@ -24,7 +24,7 @@
 
 package com.sapienter.jbilling.server.order.validator;
 
-;
+
 import com.sapienter.jbilling.common.FormatLogger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -54,8 +54,7 @@ public class DateBetweenValidator implements ConstraintValidator<DateBetween, Da
 
     public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
         try {
-            if(date==null||date.toString()=="")
-            {
+            if (date == null || "".equals(date.toString()) ) {
                 return true;
             }
             DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yyyy");

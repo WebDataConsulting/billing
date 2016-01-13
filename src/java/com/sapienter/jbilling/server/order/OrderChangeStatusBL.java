@@ -24,7 +24,6 @@ import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.system.event.EventManager;
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.util.Constants;
-;
 
 import java.util.HashSet;
 import java.util.List;

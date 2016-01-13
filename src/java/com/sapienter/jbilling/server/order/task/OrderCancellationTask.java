@@ -29,8 +29,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.ItemDecimalsException;

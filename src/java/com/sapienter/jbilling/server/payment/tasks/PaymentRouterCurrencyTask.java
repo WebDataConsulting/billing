@@ -27,8 +27,6 @@ package com.sapienter.jbilling.server.payment.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.payment.PaymentDTOEx;

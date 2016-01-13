@@ -24,18 +24,13 @@
 
 package com.sapienter.jbilling.server.pluggableTask;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.invoice.NewInvoiceContext;
-import com.sapienter.jbilling.server.process.PeriodOfTime;
 import com.sapienter.jbilling.server.util.CalendarUtils;
 import com.sapienter.jbilling.server.util.MapPeriodToCalendar;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * This simple task gets the days to add to the invoice date from the billing process configuration. It doesn't get into

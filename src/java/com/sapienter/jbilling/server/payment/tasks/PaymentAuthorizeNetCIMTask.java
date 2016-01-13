@@ -39,7 +39,6 @@ import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
 import com.sapienter.jbilling.server.util.Util;
 
-;
 import org.joda.time.format.DateTimeFormat;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

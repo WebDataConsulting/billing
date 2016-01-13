@@ -28,36 +28,13 @@
  */
 package com.sapienter.jbilling.server.user;
 
-import static com.sapienter.jbilling.test.Asserts.assertEquals;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertNotNull;
-import static org.testng.AssertJUnit.assertTrue;
-import static org.testng.AssertJUnit.fail;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.sapienter.jbilling.server.order.OrderChangeBL;
-import com.sapienter.jbilling.server.user.UserWS;
-import com.sapienter.jbilling.server.util.IWebServicesSessionBean;
-import org.joda.time.DateMidnight;
-import org.joda.time.format.DateTimeFormat;
-import org.testng.annotations.Test;
-
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.invoice.InvoiceWS;
 import com.sapienter.jbilling.server.item.PricingField;
 import com.sapienter.jbilling.server.metafields.DataType;
 import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
+import com.sapienter.jbilling.server.order.OrderChangeBL;
 import com.sapienter.jbilling.server.order.OrderChangeWS;
 import com.sapienter.jbilling.server.order.OrderLineWS;
 import com.sapienter.jbilling.server.order.OrderWS;
@@ -65,13 +42,18 @@ import com.sapienter.jbilling.server.payment.PaymentInformationWS;
 import com.sapienter.jbilling.server.payment.PaymentWS;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.PreferenceWS;
-import com.sapienter.jbilling.server.util.RemoteContext;
 import com.sapienter.jbilling.server.util.api.JbillingAPI;
 import com.sapienter.jbilling.server.util.api.JbillingAPIException;
 import com.sapienter.jbilling.server.util.api.JbillingAPIFactory;
 import com.sapienter.jbilling.test.Asserts;
+import org.joda.time.DateMidnight;
+import org.joda.time.format.DateTimeFormat;
+import org.testng.annotations.Test;
 
-import static com.sapienter.jbilling.test.Asserts.*;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+
 import static org.testng.AssertJUnit.*;
 
 
@@ -329,8 +311,7 @@ public class WSTest {
             retUser.setUserId(0);
             retUser.setPassword("P@ssword1");
             CreateResponseWS mcRet = api.create(retUser, newOrder,
-                    OrderChangeBL.buildFromOrder(newOrder,
-                            ORDER_CHANGE_STATUS_APPLY_ID));
+                    OrderChangeBL.buildFromOrder(newOrder, ORDER_CHANGE_STATUS_APPLY_ID));
 
             System.out.println("Validating new invoice");
             // validate that the results are reasonable
@@ -345,9 +326,9 @@ public class WSTest {
             // get the invoice
             InvoiceWS retInvoice = api.getInvoiceWS(mcRet.getInvoiceId());
             assertNotNull("New invoice not present", retInvoice);
-            assertEquals("Balance of invoice should be zero, is paid",
+            com.sapienter.jbilling.test.Asserts.assertEquals("Balance of invoice should be zero, is paid",
                     new BigDecimal("0.00"), retInvoice.getBalanceAsDecimal());
-            assertEquals("Total of invoice should be total of order",
+            com.sapienter.jbilling.test.Asserts.assertEquals("Total of invoice should be total of order",
                     new BigDecimal("20.00"), retInvoice.getTotalAsDecimal());
             assertEquals("New invoice paid", retInvoice.getToProcess(),
                     new Integer(0));
@@ -378,7 +359,7 @@ public class WSTest {
                             retUser.getPaymentInstruments().iterator().next()
                                     .getMetaFields(), CC_MF_NUMBER)
                             .getStringValue());
-            assertEquals("credit limit updated", new BigDecimal("112233.00"),
+            com.sapienter.jbilling.test.Asserts.assertEquals("credit limit updated", new BigDecimal("112233.00"),
                     retUser.getCreditLimitAsDecimal());
 
             // credit card is no longer implemented
@@ -997,13 +978,13 @@ public class WSTest {
 	       assertNotNull("invoices cant be null", invoices);
 	       assertEquals("there should be one invoice", 1, invoices.length);
 	       InvoiceWS invoice = api.getInvoiceWS(invoices[0]);
-	       assertEquals("invoice should be 80$", new BigDecimal("80.00"), invoice.getTotalAsDecimal());
+           com.sapienter.jbilling.test.Asserts.assertEquals("invoice should be 80$", new BigDecimal("80.00"), invoice.getTotalAsDecimal());
 	       // child1
 	       invoices = api.createInvoice(child1Id, false);
 	       assertNotNull("invoices cant be null", invoices);
 	       assertEquals("there should be one invoice", 1, invoices.length);
 	       invoice = api.getInvoiceWS(invoices[0]);
-	       assertEquals("invoice should be 40$", new BigDecimal("40.00"), invoice.getTotalAsDecimal());
+           com.sapienter.jbilling.test.Asserts.assertEquals("invoice should be 40$", new BigDecimal("40.00"), invoice.getTotalAsDecimal());
 	       // child2
 	       invoices = api.createInvoice(child2Id, false);
 	       // CXF returns null for empty arrays
@@ -1020,7 +1001,7 @@ public class WSTest {
 	       assertNotNull("invoices cant be null", invoices);
 	       assertEquals("there should be one invoice", 1, invoices.length);
 	       invoice = api.getInvoiceWS(invoices[0]);
-	       assertEquals("invoice should be 20$", new BigDecimal("20.00"), invoice.getTotalAsDecimal());
+           com.sapienter.jbilling.test.Asserts.assertEquals("invoice should be 20$", new BigDecimal("20.00"), invoice.getTotalAsDecimal());
 	       // child5
 	       invoices = api.createInvoice(child5Id, false);
 	       if (invoices != null) {
@@ -1037,7 +1018,7 @@ public class WSTest {
 	       assertNotNull("invoices cant be null", invoices);
 	       assertEquals("there should be one invoice", 1, invoices.length);
 	       invoice = api.getInvoiceWS(invoices[0]);
-	       assertEquals("invoice should be 20$", new BigDecimal("20.00"), invoice.getTotalAsDecimal());
+           com.sapienter.jbilling.test.Asserts.assertEquals("invoice should be 20$", new BigDecimal("20.00"), invoice.getTotalAsDecimal());
 
 
 	   } catch (Exception e) {
@@ -1185,21 +1166,21 @@ public class WSTest {
 			// get the current balance, it should be null or 0
 			System.out.println("Checking initial balance type and dynamic balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 0 balance", BigDecimal.ZERO,
-					myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 0 balance", BigDecimal.ZERO,
+                    myUser.getDynamicBalanceAsDecimal());
 
 			// validate. room = 0, price = 7
 			System.out.println("Validate with fields...");
 			PricingField pf[] = { new PricingField("src", "604"),
 					new PricingField("dst", "512") };
-			ValidatePurchaseWS result = api.validatePurchase(myId, 2800, pf);
+			ValidatePurchaseWS result = api.validatePurchase(myId, 2800, PricingField.setPricingFieldsValue(pf));
 			assertEquals("validate purchase success 1", Boolean.valueOf(true),
 					result.getSuccess());
 			assertEquals("validate purchase authorized 1",
 					Boolean.valueOf(false), result.getAuthorized());
 
-			assertEquals("validate purchase quantity 1", BigDecimal.ZERO, result.getQuantityAsDecimal());
-			assertEquals("user should have 0 balance", BigDecimal.ZERO, myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity 1", BigDecimal.ZERO, result.getQuantityAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 0 balance", BigDecimal.ZERO, myUser.getDynamicBalanceAsDecimal());
 
 			// add a payment
 			PaymentWS payment = new PaymentWS();
@@ -1218,7 +1199,7 @@ public class WSTest {
 			// check new balance is 20
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 20 balance", new BigDecimal("20"), myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 20 balance", new BigDecimal("20"), myUser.getDynamicBalanceAsDecimal());
 
 			// now create a one time order, the balance should decrease
 			OrderWS order = getOrder();
@@ -1227,7 +1208,7 @@ public class WSTest {
 			Integer orderId = api.createOrder(order, OrderChangeBL.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 0 balance", BigDecimal.ZERO, myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 0 balance", BigDecimal.ZERO, myUser.getDynamicBalanceAsDecimal());
 
 			// for the following, use line 2 with item id 2. item id 1 has
 			// cancellation fees rules that affect the balance.
@@ -1245,7 +1226,7 @@ public class WSTest {
 			BigDecimal delta = new BigDecimal("6.00").multiply(line.getPriceAsDecimal());
 			api.updateOrder(order, new OrderChangeWS[] { orderChange });
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have new balance", delta.negate(), myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have new balance", delta.negate(), myUser.getDynamicBalanceAsDecimal());
 
 			// decrease the quantity of the one-time order
 			System.out.println("remove quantity to one time order");
@@ -1257,7 +1238,7 @@ public class WSTest {
 			line.setAmount(line.getQuantityAsDecimal().multiply(order.getOrderLines()[1].getPriceAsDecimal()));
 			api.updateOrder(order, new OrderChangeWS[] { orderChange });
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have new balance", BigDecimal.ZERO, myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have new balance", BigDecimal.ZERO, myUser.getDynamicBalanceAsDecimal());
 
 			// delete one line from the one time order
 			System.out.println("remove one line from one time order");
@@ -1276,14 +1257,14 @@ public class WSTest {
 			api.updateOrder(order, orderChanges.toArray(new OrderChangeWS[orderChanges.size()]));
 
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have new balance", new BigDecimal("10"), myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have new balance", new BigDecimal("10"), myUser.getDynamicBalanceAsDecimal());
 
 			// delete the order, the balance has to go back to 20
 			System.out.println("deleting one time order");
 			api.deleteOrder(orderId);
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 20 balance", new BigDecimal("20"), myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 20 balance", new BigDecimal("20"), myUser.getDynamicBalanceAsDecimal());
 
 			// now create a recurring order with invoice, the balance should
 			// decrease
@@ -1307,9 +1288,9 @@ public class WSTest {
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
 
-			assertEquals("user should have 10.32 balance (15 out of 31 days)",
-					new BigDecimal("10.32"),
-					myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 10.32 balance (15 out of 31 days)",
+                    new BigDecimal("10.32"),
+                    myUser.getDynamicBalanceAsDecimal());
 
 			System.out.println("Removing");
 			api.deleteUser(myId);
@@ -1337,8 +1318,8 @@ public class WSTest {
 			System.out
 					.println("Checking initial balance type and dynamic balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 0 balance", BigDecimal.ZERO,
-					myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 0 balance", BigDecimal.ZERO,
+                    myUser.getDynamicBalanceAsDecimal());
 
 			// now create a one time order, the balance should increase
 			OrderWS order = getOrder();
@@ -1348,16 +1329,16 @@ public class WSTest {
 					.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 20 balance", new BigDecimal("-20.0"),
-					myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 20 balance", new BigDecimal("-20.0"),
+                    myUser.getDynamicBalanceAsDecimal());
 
 			// delete the order, the balance has to go back to 0
 			System.out.println("deleting one time order");
 			api.deleteOrder(orderId);
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 0 balance", BigDecimal.ZERO,
-					myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 0 balance", BigDecimal.ZERO,
+                    myUser.getDynamicBalanceAsDecimal());
 
 			// now create a recurring order with invoice, the balance should
 			// increase
@@ -1369,8 +1350,8 @@ public class WSTest {
 					.buildFromOrder(order, ORDER_CHANGE_STATUS_APPLY_ID));
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 20 balance", new BigDecimal("-20.0"),
-					myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 20 balance", new BigDecimal("-20.0"),
+                    myUser.getDynamicBalanceAsDecimal());
 
 			// add a payment. I'd like to call payInvoice but it's not finding
 			// the CC
@@ -1390,8 +1371,8 @@ public class WSTest {
 			// check new balance is 20
 			System.out.println("Validating new balance");
 			myUser = api.getUserWS(myId);
-			assertEquals("user should have 0 balance", BigDecimal.ZERO,
-					myUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have 0 balance", BigDecimal.ZERO,
+                    myUser.getDynamicBalanceAsDecimal());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Exception caught:" + e);
@@ -1441,18 +1422,18 @@ public class WSTest {
 					result.getSuccess());
 			assertEquals("validate purchase authorized 1",
 					Boolean.valueOf(false), result.getAuthorized());
-			assertEquals("validate purchase quantity 1",
-					new BigDecimal("0.00"), result.getQuantityAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity 1",
+                    new BigDecimal("0.00"), result.getQuantityAsDecimal());
 
 			// exception should be thrown
 			PricingField pf[] = { new PricingField("fail", "fail") };
-			result = api.validatePurchase(userId, LEMONADE_ITEM_ID, pf);
+			result = api.validatePurchase(userId, LEMONADE_ITEM_ID, PricingField.setPricingFieldsValue(pf));
 			assertEquals("validate purchase success 2", Boolean.valueOf(false),
 					result.getSuccess());
 			assertEquals("validate purchase authorized 2",
 					Boolean.valueOf(false), result.getAuthorized());
-			assertEquals("validate purchase quantity 2", BigDecimal.ZERO,
-					result.getQuantityAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity 2", BigDecimal.ZERO,
+                    result.getQuantityAsDecimal());
 			assertEquals("validate purchase message 2",
 					"Error: Thrown exception for testing",
 					result.getMessage()[0]);
@@ -1463,8 +1444,8 @@ public class WSTest {
 					result.getSuccess());
 			assertEquals("validate purchase authorized 3",
 					Boolean.valueOf(true), result.getAuthorized());
-			assertEquals("validate purchase quantity 3",
-					new BigDecimal("20.0"), result.getQuantityAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity 3",
+                    new BigDecimal("20.0"), result.getQuantityAsDecimal());
 
             //TODO: createItem
             // add 10 coffees to current order
@@ -1485,8 +1466,8 @@ public class WSTest {
 					result.getSuccess());
 			assertEquals("validate purchase authorized 3",
 					Boolean.valueOf(true), result.getAuthorized());
-			assertEquals("validate purchase quantity 3",
-					new BigDecimal("10.0"), result.getQuantityAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity 3",
+                    new BigDecimal("10.0"), result.getQuantityAsDecimal());
 
 			// add another 10 coffees to current order
 			currentOrderAfter = api.updateCurrentOrder(userId,
@@ -1500,8 +1481,8 @@ public class WSTest {
 					result.getSuccess());
 			assertEquals("validate purchase authorized 4",
 					Boolean.valueOf(false), result.getAuthorized());
-			assertEquals("validate purchase quantity 4", BigDecimal.ZERO,
-					result.getQuantityAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity 4", BigDecimal.ZERO,
+                    result.getQuantityAsDecimal());
 			assertEquals("validate purchase message 4",
 					"No more than 20 coffees are allowed.",
 					result.getMessage()[0]);
@@ -1567,7 +1548,7 @@ public class WSTest {
             // validate the balance of the parent
             System.out.println("Validating new balance");
             UserWS parentUser = api.getUserWS(parentId);
-            assertEquals("user should have -20 balance", new BigDecimal("20.0").negate(), parentUser.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("user should have -20 balance", new BigDecimal("20.0").negate(), parentUser.getDynamicBalanceAsDecimal());
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception caught:" + e);
@@ -1600,9 +1581,14 @@ public class WSTest {
 					result.getSuccess());
 			assertEquals("validate purchase authorized 1",
 					Boolean.valueOf(true), result.getAuthorized());
-			assertEquals("validate purchase quantity 1",
-					new BigDecimal("28.57"), result.getQuantityAsDecimal());
-
+			/*
+			 * credit limit = 1000 ; customer dynamic balance = 0; total of items price = 20+15+6.5 = 41.50
+			 * so resultant quantity = (1000+0)/41.50= 24.096385542
+			 * 
+			 */
+            com.sapienter.jbilling.test.Asserts.assertEquals("validate purchase quantity 1",
+                    new BigDecimal("24.10"), result.getQuantityAsDecimal());
+            
 			System.out.println("Removing");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1654,7 +1640,7 @@ public class WSTest {
             OrderLineWS line = order.getOrderLines()[0];
             assertEquals("New order contains penalty item", PENALTY_ITEM_ID,
                     line.getItemId());
-            assertEquals(
+            com.sapienter.jbilling.test.Asserts.assertEquals(
                     "Order penalty value is the item price (not a percentage)",
                     new BigDecimal("10.00"), line.getAmountAsDecimal());
 
@@ -1683,8 +1669,8 @@ public class WSTest {
 		api.updateUser(user);
 		user = api.getUserWS(user.getUserId());
 
-		assertEquals("Automatic recharge value updated",
-				new BigDecimal("25.00"), user.getAutoRechargeAsDecimal());
+        com.sapienter.jbilling.test.Asserts.assertEquals("Automatic recharge value updated",
+                new BigDecimal("25.00"), user.getAutoRechargeAsDecimal());
 
 		// create an order for $10,
 		OrderWS order = new OrderWS();
@@ -1720,8 +1706,8 @@ public class WSTest {
 		// user's balance should be 0 - 10 + 25 = 15 (initial balance, minus
 		// order, plus auto-recharge).
 		UserWS updated = api.getUserWS(user.getUserId());
-		assertEquals("balance updated with auto-recharge payment",
-				new BigDecimal("15.00"), updated.getDynamicBalanceAsDecimal());
+        com.sapienter.jbilling.test.Asserts.assertEquals("balance updated with auto-recharge payment",
+                new BigDecimal("15.00"), updated.getDynamicBalanceAsDecimal());
 
 		// cleanup
 		api.deleteOrder(orderId);
@@ -1760,8 +1746,8 @@ public class WSTest {
 
 			// check dynamic balance increased (credit limit type)
 			user = api.getUserWS(userId);
-			assertEquals("dynamic balance", new BigDecimal("-150.0"),
-					user.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("dynamic balance", new BigDecimal("-150.0"),
+                    user.getDynamicBalanceAsDecimal());
 
 			// add another 10 coffees to current order
 			currentOrderAfter = api.updateCurrentOrder(userId,
@@ -1770,8 +1756,8 @@ public class WSTest {
 
 			// check dynamic balance increased (credit limit type)
 			user = api.getUserWS(userId);
-			assertEquals("dynamic balance", new BigDecimal("-300.0"),
-					user.getDynamicBalanceAsDecimal());
+            com.sapienter.jbilling.test.Asserts.assertEquals("dynamic balance", new BigDecimal("-300.0"),
+                    user.getDynamicBalanceAsDecimal());
 
 			// update current order using pricing fields
 			PricingField duration = new PricingField("duration", 5); // 5 min
@@ -1779,13 +1765,13 @@ public class WSTest {
 					"ANSWERED");
 			PricingField dst = new PricingField("dst", "12345678");
 			currentOrderAfter = api.updateCurrentOrder(userId, null,
-					new PricingField[] { duration, disposition, dst },
+					PricingField.setPricingFieldsValue(new PricingField[] { duration, disposition, dst }),
 					new Date(), "Event from WS");
 
 			// check dynamic balance increased (credit limit type)
 			// 300 + (5 minutes * 5.0 price)
 			user = api.getUserWS(userId);
-			assertEquals("dynamic balance", new BigDecimal("-325.0"),
+            com.sapienter.jbilling.test.Asserts.assertEquals("dynamic balance", new BigDecimal("-325.0"),
 					user.getDynamicBalanceAsDecimal());
 
 			// clean up

@@ -24,10 +24,6 @@
 
 package com.sapienter.jbilling.server.payment.tasks;
 
-import java.util.Map;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.payment.PaymentDTOEx;
@@ -36,6 +32,8 @@ import com.sapienter.jbilling.server.pluggableTask.PaymentTask;
 import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
+
+import java.util.Map;
 
 /**
  * Abstract class for payment routers. Payment routers must implement

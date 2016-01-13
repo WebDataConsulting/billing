@@ -33,10 +33,9 @@ import com.sapienter.jbilling.server.item.ItemDTOEx;
 import com.sapienter.jbilling.server.item.ItemTypeWS;
 import com.sapienter.jbilling.server.order.*;
 import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
-
 import com.sapienter.jbilling.server.process.AgeingWS;
 import com.sapienter.jbilling.server.util.InternationalDescriptionWS;
-
+import com.sapienter.jbilling.server.util.RemoteContext;
 import com.sapienter.jbilling.server.invoice.InvoiceWS;
 import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.user.UserWS;
@@ -56,6 +55,7 @@ import static com.sapienter.jbilling.test.Asserts.*;
 import static org.testng.AssertJUnit.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
 
 /**
  * @author Emil
@@ -84,7 +84,7 @@ public class WSTest {
 	@BeforeClass
 	protected void setUp() throws Exception {
 		api = JbillingAPIFactory.getAPI();
-		mordorApi = JbillingAPIFactory.getAPI("apiClientMordor");
+		mordorApi = JbillingAPIFactory.getAPI(RemoteContext.Name.API_CLIENT_MORDOR.name());
 		CURRENCY_USD = Constants.PRIMARY_CURRENCY_ID;
 		CURRENCY_AUD = Integer.valueOf(11);
 		LANGUAGE_ID = Constants.LANGUAGE_ENGLISH_ID;
@@ -1037,7 +1037,7 @@ public class WSTest {
 		String name = String.valueOf(millis) + new Random().nextInt(10000);
 		item.setDescription("Payment, Product:" + name);
 		item.setPriceModelCompanyId(priceModelCompanyId);
-		item.setPrice(new BigDecimal("10"));
+		item.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal(10.00), new DateMidnight(1970, 1, 1).toDate(), priceModelCompanyId, Integer.valueOf(1)));
 		item.setNumber("PYM-PROD-" + name);
 		item.setAssetManagementEnabled(0);
 		Integer typeIds[] = new Integer[]{itemTypeId};

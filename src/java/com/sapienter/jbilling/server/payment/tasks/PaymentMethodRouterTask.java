@@ -27,8 +27,6 @@ package com.sapienter.jbilling.server.payment.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.payment.PaymentDTOEx;
 import com.sapienter.jbilling.server.payment.PaymentInformationBL;

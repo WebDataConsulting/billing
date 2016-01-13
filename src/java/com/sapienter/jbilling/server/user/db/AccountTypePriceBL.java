@@ -2,10 +2,6 @@ package com.sapienter.jbilling.server.user.db;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
-;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Business logic for account type pricing.

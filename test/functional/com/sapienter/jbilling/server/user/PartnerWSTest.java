@@ -158,7 +158,7 @@ public class PartnerWSTest {
     @Test
     public void testGetPartner() throws Exception {
         JbillingAPI prancingPonyEntity = JbillingAPIFactory.getAPI();
-        JbillingAPI mordorEntity= JbillingAPIFactory.getAPI(RemoteContext.Name.API_CLIENT_MORDOR.getName());
+        JbillingAPI mordorEntity= JbillingAPIFactory.getAPI(RemoteContext.Name.API_CLIENT_MORDOR.name());
 
         // partner that does not exist throws exception
         try {

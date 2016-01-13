@@ -28,7 +28,6 @@ import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.db.MetaField;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
 import org.apache.commons.lang.StringUtils;
-;
 import org.codehaus.groovy.grails.web.json.JSONObject;
 import org.codehaus.groovy.grails.web.json.parser.JSONParser;
 import org.codehaus.groovy.grails.web.json.parser.ParseException;

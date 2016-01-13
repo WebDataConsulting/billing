@@ -1,19 +1,18 @@
 package com.sapienter.jbilling.server.migrations;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.sapienter.jbilling.server.metafields.validation.ScriptValidationRuleModel;
 import liquibase.database.Database;
 import liquibase.exception.CustomChangeException;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.InsertStatement;
 import liquibase.statement.core.RawSqlStatement;
 
-import com.sapienter.jbilling.server.metafields.validation.ScriptValidationRuleModel;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Vladimir Carevski
@@ -158,7 +157,7 @@ public class MigrateCustomerAccounts extends AbstractCustomSqlChange {
         count.setInt(1, companyId);
         count.setInt(2, cTypeId);
         ResultSet result = count.executeQuery();
-        return result.next() ? 0 != result.getInt(1) : false;
+        return result.next() && 0 != result.getInt(1);
     }
 
     private List<SqlStatement> generateAccountTypeStatements(

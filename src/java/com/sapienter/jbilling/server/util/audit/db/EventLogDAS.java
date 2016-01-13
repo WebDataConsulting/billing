@@ -23,17 +23,15 @@ You may download the latest source from webdataconsulting.github.io.
  */
 package com.sapienter.jbilling.server.util.audit.db;
 
-import java.util.List;
-
-;
+import com.sapienter.jbilling.common.FormatLogger;
+import com.sapienter.jbilling.server.util.audit.EventLogger;
+import com.sapienter.jbilling.server.util.db.AbstractDAS;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.util.audit.EventLogger;
-import com.sapienter.jbilling.server.util.db.AbstractDAS;
+import java.util.List;
 
 public class EventLogDAS extends AbstractDAS<EventLogDTO> {
     

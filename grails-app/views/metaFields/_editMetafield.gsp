@@ -107,6 +107,12 @@ You may download the latest source from webdataconsulting.github.io.
             </g:applyLayout>
         </div>
 
+		<g:applyLayout name="form/checkbox">
+            <content tag="label"><g:message code="metaField.label.unique"/></content>
+            <content tag="label.for">uniqueCheck</content>
+            <g:checkBox class="cb checkbox" id="uniqueCheck" name="metaField${metaFieldIdx}.unique" checked="${metaField?.unique}"/>
+        </g:applyLayout>
+        
         <g:applyLayout name="form/checkbox">
             <content tag="label"><g:message code="metaField.label.mandatory"/></content>
             <content tag="label.for">mandatoryCheck</content>

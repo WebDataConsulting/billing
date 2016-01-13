@@ -29,7 +29,7 @@ import com.sapienter.jbilling.server.process.task.AbstractCronTask;
 import com.sapienter.jbilling.server.user.IUserSessionBean;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
-;
+
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 

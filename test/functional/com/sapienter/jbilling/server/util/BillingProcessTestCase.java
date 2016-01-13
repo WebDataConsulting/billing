@@ -6,7 +6,6 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.sapienter.jbilling.server.entity.CreditCardDTO;
 import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
 import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
 import com.sapienter.jbilling.server.order.OrderPeriodWS;
@@ -127,7 +126,6 @@ public abstract class BillingProcessTestCase {
         newUser.setParentId(null); // this parent exists
         newUser.setStatusId(UserDTOEx.STATUS_ACTIVE);
         newUser.setCurrencyId(null);
-        newUser.setBalanceType(Constants.BALANCE_NO_DYNAMIC);
         newUser.setInvoiceChild(new Boolean(false));
         newUser.setMainSubscription(newMainSubscription);
         newUser.setNextInvoiceDate(nextInvoiceDate);
@@ -148,18 +146,6 @@ public abstract class BillingProcessTestCase {
         contact.setFirstName("J");
         contact.setLastName("Biller");
         newUser.setContact(contact);
-
-        // add a credit card
-        CreditCardDTO cc = new CreditCardDTO();
-        cc.setName("Frodo Baggins");
-        cc.setNumber(true ? "4111111111111152" : "4111111111111111");
-
-        // valid credit card must have a future expiry date to be valid for payment processing
-        Calendar expiry = Calendar.getInstance();
-        expiry.set(Calendar.YEAR, expiry.get(Calendar.YEAR) + 1);
-        cc.setExpiry(expiry.getTime());
-
-        newUser.setCreditCard(cc);
 
         System.out.println("Creating user ...");
         newUser.setUserId(api.createUser(newUser));

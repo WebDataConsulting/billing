@@ -15,22 +15,19 @@
  */
 package com.sapienter.jbilling.server.item;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import com.sapienter.jbilling.common.Util;
-;
-import org.joda.time.DateTime;
-
 import com.sapienter.jbilling.common.CommonConstants;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
+import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.item.db.AssetDAS;
 import com.sapienter.jbilling.server.item.db.AssetDTO;
 import com.sapienter.jbilling.server.item.db.AssetReservationDAS;
 import com.sapienter.jbilling.server.item.db.AssetReservationDTO;
 import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
+import org.joda.time.DateTime;
+
+import java.util.Date;
 
 /**
  * Created by Fernando G. Morales on 10/24/14.

@@ -10,7 +10,7 @@ import org.springframework.batch.core.explore.JobExplorer;
 
 import java.util.Date;
 
-;
+
 
 /**
  * @author Khobab

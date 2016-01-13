@@ -29,7 +29,6 @@ import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
-;
 import org.hibernate.Query;
 import org.joda.time.DateMidnight;
 

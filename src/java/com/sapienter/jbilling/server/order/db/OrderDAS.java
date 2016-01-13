@@ -391,7 +391,7 @@ public class OrderDAS extends AbstractDAS<OrderDTO> {
                 .setInteger("periodVal", Constants.ORDER_PERIOD_ONCE)
                 .list();
         if (qRes != null && qRes.size() > 0) {
-            result = (Integer[])qRes.toArray(new Integer[0]);
+            result = (Integer[]) qRes.toArray(new Integer[qRes.size()]);
         }
         return result;
     }
@@ -547,10 +547,7 @@ public class OrderDAS extends AbstractDAS<OrderDTO> {
                 .add(Restrictions.eq("o.entity.id", entity));
         List<OrderDTO> orderDTOs;
         orderDTOs = criteria.list();
-        if(!(orderDTOs.isEmpty()))
-            return true;
-        else
-            return false;
+        return !(orderDTOs.isEmpty());
     }
 
     /**

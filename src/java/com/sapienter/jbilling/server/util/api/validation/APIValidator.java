@@ -26,7 +26,7 @@ package com.sapienter.jbilling.server.util.api.validation;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
-;
+
 import org.springframework.aop.MethodBeforeAdvice;
 
 import javax.validation.ConstraintViolation;

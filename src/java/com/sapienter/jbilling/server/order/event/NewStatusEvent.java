@@ -24,8 +24,6 @@ You may download the latest source from webdataconsulting.github.io.
 
 package com.sapienter.jbilling.server.order.event;
 
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.order.OrderBL;
 import com.sapienter.jbilling.server.system.event.Event;

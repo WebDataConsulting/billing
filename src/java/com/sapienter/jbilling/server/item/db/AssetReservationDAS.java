@@ -15,7 +15,7 @@
  */
 package com.sapienter.jbilling.server.item.db;
 
-;
+
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;

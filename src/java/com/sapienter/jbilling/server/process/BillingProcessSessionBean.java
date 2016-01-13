@@ -24,68 +24,41 @@
 
 package com.sapienter.jbilling.server.process;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.sapienter.jbilling.server.payment.IPaymentSessionBean;
-import com.sapienter.jbilling.server.process.event.AgeingProcessCompleteEvent;
-import com.sapienter.jbilling.server.process.event.AgeingProcessStartEvent;
-
-;
-import org.hibernate.ScrollableResults;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.billing.task.BillingProcessTask;
-import com.sapienter.jbilling.server.customer.CustomerBL;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;
-import com.sapienter.jbilling.server.invoice.PaperInvoiceBatchBL;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.notification.INotificationSessionBean;
 import com.sapienter.jbilling.server.notification.MessageDTO;
 import com.sapienter.jbilling.server.notification.NotificationBL;
 import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
-import com.sapienter.jbilling.server.order.TimePeriod;
-import com.sapienter.jbilling.server.payment.event.EndProcessPaymentEvent;
-import com.sapienter.jbilling.server.payment.event.ProcessPaymentEvent;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
 import com.sapienter.jbilling.server.process.db.*;
 import com.sapienter.jbilling.server.process.event.NoNewInvoiceEvent;
-import com.sapienter.jbilling.server.process.task.BasicBillingProcessFilterTask;
-import com.sapienter.jbilling.server.process.task.IBillingProcessFilterTask;
 import com.sapienter.jbilling.server.process.task.IScheduledTask;
 import com.sapienter.jbilling.server.system.event.EventManager;
-import com.sapienter.jbilling.server.user.EntityBL;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.db.CompanyDAS;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
-import com.sapienter.jbilling.server.user.db.CustomerDAS;
-import com.sapienter.jbilling.server.user.db.CustomerDTO;
-import com.sapienter.jbilling.server.user.db.MainSubscriptionDTO;
-import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.util.CalendarUtils;
+import com.sapienter.jbilling.server.user.db.*;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
-import com.sapienter.jbilling.server.util.MapPeriodToCalendar;
-import com.sapienter.jbilling.server.util.PreferenceBL;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
+import org.joda.time.DateTime;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  *
@@ -703,8 +676,7 @@ public class BillingProcessSessionBean implements IBillingProcessSessionBean {
     }
     
     public boolean isAgeingProcessRunning(Integer entityId) {
-        Boolean isRunning = ageingRunning.get(entityId);
-        return isRunning != null && isRunning == true;
+        return ageingRunning.getOrDefault(entityId, Boolean.FALSE);
     }
 
     public ProcessStatusWS getAgeingProcessStatus(Integer entityId) {

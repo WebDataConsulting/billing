@@ -24,18 +24,6 @@
 
 package com.sapienter.jbilling.server.payment.tasks;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.util.Calendar;
-
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
 import com.sapienter.jbilling.server.payment.PaymentAuthorizationBL;
@@ -49,6 +37,17 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.user.ContactBL;
 import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.util.Constants;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.util.Calendar;
+
+;
 
 public class PaymentsGatewayTask extends PaymentTaskWithTimeout implements
         PaymentTask {
@@ -198,7 +197,7 @@ public class PaymentsGatewayTask extends PaymentTaskWithTimeout implements
     private String getChargeData(PaymentDTOEx paymentInfo, int method,
             boolean preAuth) throws PluggableTaskException {
 
-        String payloadData = new String("");
+        String payloadData = "";
         try {
 
             payloadData += "pg_merchant_id="
@@ -327,7 +326,7 @@ public class PaymentsGatewayTask extends PaymentTaskWithTimeout implements
         payloadData += "endofdata\n";
 
         //TODO: check this log and payloadData values
-        String maskedCCNumber = payloadData.toString().replaceAll("ecom_payment_card_number=[^\n]*", "ecom_payment_card_number=******");
+        String maskedCCNumber = payloadData.replaceAll("ecom_payment_card_number=[^\n]*", "ecom_payment_card_number=******");
         log.debug("charge data : " + maskedCCNumber);
         return payloadData;
 
@@ -371,7 +370,7 @@ public class PaymentsGatewayTask extends PaymentTaskWithTimeout implements
     public String getTransType(PaymentDTOEx paymentInfo, int method,
             boolean preAuth) throws PluggableTaskException {
 
-        String transType = new String();
+        String transType = "";
 
         if (paymentInfo.getIsRefund() == 1 || 
                 paymentInfo.getAmount().compareTo(BigDecimal.ZERO) < 0) {

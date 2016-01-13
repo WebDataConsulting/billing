@@ -24,20 +24,10 @@
 
 package com.sapienter.jbilling.server.notification;
 
-;
+
 
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.common.Util;
-import com.sapienter.jbilling.server.invoice.InvoiceBL;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageArchDAS;
-import com.sapienter.jbilling.server.notification.db.NotificationMessageArchDTO;
-import com.sapienter.jbilling.server.payment.PaymentBL;
-import com.sapienter.jbilling.server.pluggableTask.NotificationTask;
-import com.sapienter.jbilling.server.pluggableTask.TaskException;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
-import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.util.Constants;
 
 public interface INotificationSessionBean {
     

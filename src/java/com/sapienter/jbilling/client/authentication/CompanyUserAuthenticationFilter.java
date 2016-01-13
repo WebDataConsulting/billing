@@ -26,7 +26,7 @@ package com.sapienter.jbilling.client.authentication;
 
 import com.sapienter.jbilling.client.authentication.util.SecuritySession;
 import com.sapienter.jbilling.client.authentication.util.UsernameHelper;
-;
+
 import com.sapienter.jbilling.common.FormatLogger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

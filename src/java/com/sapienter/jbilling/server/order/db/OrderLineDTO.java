@@ -38,7 +38,6 @@ import com.sapienter.jbilling.server.metafields.db.CustomizedEntity;
 import com.sapienter.jbilling.server.metafields.EntityType;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
 
-;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;

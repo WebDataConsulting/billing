@@ -2775,7 +2775,7 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
 		try {
 			// now get the order
 			OrderBL bl = new OrderBL();
-			return new Boolean(bl.deletePeriod(periodId));
+			return Boolean.valueOf(bl.deletePeriod(periodId));
 		} catch (Exception e) {
 			throw new SessionInternalError(e);
 		}
@@ -2784,132 +2784,51 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
 	/*
 	 * Account Type
 	 */
-	public boolean updateAccountType(AccountTypeWS accountType)
-			throws SessionInternalError {
-		Integer entityId = getCallerCompanyId();
-		PaymentInformationDAS paymentInformationDAS = new PaymentInformationDAS();
-		AccountTypeWS existing = AccountTypeBL.getWS(
-				new AccountTypeDAS().find(accountType.getId()));
-		Integer[] existingPaymentMethodTypeIds = existing
-				.getPaymentMethodTypeIds();
-		existingPaymentMethodTypeIds = (null == existingPaymentMethodTypeIds) ? new Integer[0]
-				: existingPaymentMethodTypeIds;
-		Integer[] newPaymentMethodTypeIds = accountType
-				.getPaymentMethodTypeIds();
-		newPaymentMethodTypeIds = (null == newPaymentMethodTypeIds) ? new Integer[0]
-				: newPaymentMethodTypeIds;
-		List<Integer> removedPaymentMethodType = (List<Integer>) CollectionUtils
-				.subtract(Arrays.asList(existingPaymentMethodTypeIds),
-						Arrays.asList(newPaymentMethodTypeIds));
-		for (Integer paymentMethodType : removedPaymentMethodType) {
-			long l = paymentInformationDAS
-					.findByAccountTypeAndPaymentMethodType(accountType.getId(),
-							paymentMethodType);
-			if (l > 0) {
-				throw new SessionInternalError(
-						"",
-						new String[] { "AccountTypeWS,paymentMethod,validation.error.payment.inUse" });
-			}
-		}
+	public boolean updateAccountType(AccountTypeWS accountType) throws SessionInternalError {
+        Integer entityId = getCallerCompanyId();
+        AccountTypeBL.validateAccountType(accountType, entityId, false);
 
-		AccountTypeDTO accountTypeDTO = AccountTypeBL.getDTO(accountType,entityId);
-		LOG.debug("Payments: " + accountTypeDTO.getPaymentMethodTypes());
-		new AccountTypeBL().update(accountTypeDTO);
+        PaymentInformationDAS paymentInformationDAS = new PaymentInformationDAS();
+        AccountTypeWS existing = AccountTypeBL.getWS(
+                new AccountTypeDAS().find(accountType.getId()));
+        Integer[] existingPaymentMethodTypeIds = existing
+                .getPaymentMethodTypeIds();
+        existingPaymentMethodTypeIds = (null == existingPaymentMethodTypeIds) ? new Integer[0]
+                : existingPaymentMethodTypeIds;
+        Integer[] newPaymentMethodTypeIds = accountType
+                .getPaymentMethodTypeIds();
+        newPaymentMethodTypeIds = (null == newPaymentMethodTypeIds) ? new Integer[0]
+                : newPaymentMethodTypeIds;
+        List<Integer> removedPaymentMethodType = (List<Integer>) CollectionUtils
+                .subtract(Arrays.asList(existingPaymentMethodTypeIds),
+                        Arrays.asList(newPaymentMethodTypeIds));
+        for (Integer paymentMethodType : removedPaymentMethodType) {
+            long l = paymentInformationDAS
+                    .findByAccountTypeAndPaymentMethodType(accountType.getId(),
+                            paymentMethodType);
+            if (l > 0) {
+                throw new SessionInternalError(
+                        "",
+                        new String[]{"AccountTypeWS,paymentMethod,validation.error.payment.inUse"});
+            }
+        }
 
-		if (accountType.getDescriptions() != null
-				&& accountType.getDescriptions().size() > 0) {
+        AccountTypeDTO accountTypeDTO = AccountTypeBL.getDTO(accountType, entityId);
+        LOG.debug("Payments: " + accountTypeDTO.getPaymentMethodTypes());
+        new AccountTypeBL().update(accountTypeDTO);
 
-			for (InternationalDescriptionWS desc : accountType
-					.getDescriptions()) {
-				// verify if description is non empty and unique
-				if (desc.getContent().trim().isEmpty()) {
-					String[] errmsgs = new String[1];
-					errmsgs[0] = "AccountTypeWS,descriptions,accountTypeWS.error.blank.name";
-					throw new SessionInternalError(
-							"There is an error in  data.", errmsgs);
-				} else if (!new AccountTypeBL().isAccountTypeUnique(entityId,
-						desc.getContent(), false)) {
-					String[] errmsgs = new String[1];
-					errmsgs[0] = "AccountTypeWS,descriptions,accountTypeWS.error.unique.name";
-					throw new SessionInternalError(
-							"There is an error in  data.", errmsgs);
-				}
-				accountTypeDTO.setDescription(desc.getContent(),
-						desc.getLanguageId());
-			}
-			BigDecimal creditLimit = accountType.getCreditLimitAsDecimal();
-			BigDecimal notification1 = accountType
-					.getCreditNotificationLimit1AsDecimal();
-			if (creditLimit != null && notification1 != null
-					&& !(creditLimit.compareTo(notification1) >= 0)) {
-				String[] errmsgs = new String[1];
-				errmsgs[0] = "AccountTypeWS,creditNotificationLimit1,accountTypeWS.error.credit.limit";
-				throw new SessionInternalError("There is an error in  data.",
-						errmsgs);
-			}
-			BigDecimal notification2 = accountType
-					.getCreditNotificationLimit2AsDecimal();
-			if (creditLimit != null && notification2 != null
-					&& !(creditLimit.compareTo(notification2) >= 0)) {
-				String[] errmsgs = new String[1];
-				errmsgs[0] = "AccountTypeWS,creditNotificationLimit2,accountTypeWS.error.credit.limit";
-				throw new SessionInternalError("There is an error in  data.",
-						errmsgs);
-			}
-		}
-		return true;
-	}
+        return true;
+    }
 
-	public Integer createAccountType(AccountTypeWS accountType)
-			throws SessionInternalError {
-		Integer entityId = getCallerCompanyId();
-		AccountTypeDTO accountTypeDTO = AccountTypeBL.getDTO(accountType,entityId);
-		accountTypeDTO = new AccountTypeBL().create(accountTypeDTO);
+	public Integer createAccountType(AccountTypeWS accountType) throws SessionInternalError {
+        Integer entityId = getCallerCompanyId();
+        AccountTypeBL.validateAccountType(accountType, entityId, true);
 
-		if (accountType.getDescriptions() != null
-				&& accountType.getDescriptions().size() > 0) {
+        AccountTypeDTO accountTypeDTO = AccountTypeBL.getDTO(accountType, entityId);
+        accountTypeDTO = new AccountTypeBL().create(accountTypeDTO);
 
-			for (InternationalDescriptionWS desc : accountType
-					.getDescriptions()) {
-				if (desc.getContent().trim().isEmpty()) {
-					String[] errmsgs = new String[1];
-					errmsgs[0] = "AccountTypeWS,descriptions,accountTypeWS.error.blank.name";
-					throw new SessionInternalError(
-							"There is an error in  data.", errmsgs);
-				} else if (!new AccountTypeBL().isAccountTypeUnique(entityId,
-						desc.getContent(), true)) {
-					String[] errmsgs = new String[1];
-					errmsgs[0] = "AccountTypeWS,descriptions,accountTypeWS.error.unique.name";
-					throw new SessionInternalError(
-							"There is an error in  data.", errmsgs);
-
-				}
-				accountTypeDTO.setDescription(desc.getContent(),
-						desc.getLanguageId());
-			}
-			BigDecimal creditLimit = accountType.getCreditLimitAsDecimal();
-			BigDecimal notification1 = accountType
-					.getCreditNotificationLimit1AsDecimal();
-			if (creditLimit != null && notification1 != null
-					&& !(creditLimit.compareTo(notification1) >= 0)) {
-				String[] errmsgs = new String[1];
-				errmsgs[0] = "AccountTypeWS,creditNotificationLimit1,accountTypeWS.error.credit.limit";
-				throw new SessionInternalError("There is an error in  data.",
-						errmsgs);
-			}
-			BigDecimal notification2 = accountType
-					.getCreditNotificationLimit2AsDecimal();
-			if (creditLimit != null && notification2 != null
-					&& !(creditLimit.compareTo(notification2) >= 0)) {
-				String[] errmsgs = new String[1];
-				errmsgs[0] = "AccountTypeWS,creditNotificationLimit2,accountTypeWS.error.credit.limit";
-				throw new SessionInternalError("There is an error in  data.",
-						errmsgs);
-			}
-		}
-
-		return accountTypeDTO.getId();
-	}
+        return accountTypeDTO.getId();
+    }
 
 	public boolean deleteAccountType(Integer accountTypeId)
 			throws SessionInternalError {

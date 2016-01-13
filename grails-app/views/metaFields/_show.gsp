@@ -51,6 +51,12 @@
                   <td><g:message code="metaField.label.disabled"/></td>
                   <td class="value">${selected.disabled}</td>
               </tr>
+              
+              <tr>
+                  <td><g:message code="metaField.label.unique"/></td>
+                  <td class="value">${selected.unique}</td>
+              </tr>
+              
               <tr>
                   <td><g:message code="metaField.label.mandatory"/></td>
                   <td class="value">${selected.mandatory}</td>

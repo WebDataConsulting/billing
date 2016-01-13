@@ -45,7 +45,6 @@ import com.sapienter.jbilling.server.util.Context;
 
 import grails.plugin.springsecurity.SpringSecurityService;
 
-;
 import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.transaction.PlatformTransactionManager;

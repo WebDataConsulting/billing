@@ -24,23 +24,14 @@
 
 package com.sapienter.jbilling.server.item;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.Integer;
-import java.math.BigDecimal;
-import java.util.*;
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.item.ItemDTOEx;
-import com.sapienter.jbilling.server.item.ItemTypeWS;
-import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
-import com.sapienter.jbilling.server.metafields.MetaFieldWS;
 import com.sapienter.jbilling.server.metafields.DataType;
 import com.sapienter.jbilling.server.metafields.EntityType;
+import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
+import com.sapienter.jbilling.server.metafields.MetaFieldWS;
 import com.sapienter.jbilling.server.metafields.validation.ValidationRuleWS;
 import com.sapienter.jbilling.server.order.OrderChangeBL;
-import com.sapienter.jbilling.server.order.OrderChangeWS;
 import com.sapienter.jbilling.server.order.OrderLineWS;
 import com.sapienter.jbilling.server.order.OrderWS;
 import com.sapienter.jbilling.server.user.UserWS;
@@ -52,12 +43,18 @@ import com.sapienter.jbilling.server.util.api.SpringAPI;
 import com.sapienter.jbilling.server.util.search.BasicFilter;
 import com.sapienter.jbilling.server.util.search.Filter;
 import com.sapienter.jbilling.server.util.search.SearchCriteria;
-import com.sapienter.jbilling.server.item.AssetStatusBL;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateMidnight;
 import org.testng.annotations.*;
-import static com.sapienter.jbilling.test.Asserts.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+
 import static org.testng.AssertJUnit.*;
 
 /**
@@ -236,8 +233,8 @@ public class WSTest {
 		newItem = api.getItem(newItem.getId(), null, null);
 		List<InternationalDescriptionWS> descriptions = newItem.getDescriptions();
 		assertNotNull(String.format("Item %d should have descriptions!!!", newItem.getId()), descriptions);
-		assertEquals(String.format("There should be two descriptions for the %d Item!!", newItem.getId()), Integer.valueOf(2), Integer.valueOf(descriptions.size()));
-		InternationalDescriptionWS englishDescription = descriptions.get(0);
+        assertEquals(String.format("There should be two descriptions for the %d Item!!", newItem.getId()), Integer.valueOf(2), Integer.valueOf(descriptions.size()));
+        InternationalDescriptionWS englishDescription = descriptions.get(0);
 		assertNotNull(String.format("Item %d should have english description!!!", newItem.getId()), englishDescription);
 
 		// set english description as deleted
@@ -371,7 +368,7 @@ public class WSTest {
 		System.out.println("Changing properties");
 		item.setDescription("Another description");
 		item.setNumber("NMR-01");
-		item.setPrice(new BigDecimal("1.00"));
+		item.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("1.00"), new DateMidnight(1970, 1, 1).toDate(), PRANCING_PONY, Integer.valueOf(1)));
 
 		// Persist changes
 		System.out.println("Updating item");
@@ -405,8 +402,7 @@ public class WSTest {
 
 		// Create Item with AUD currency
 		ItemDTOEx item = createItem(false, false, TEST_ITEM_TYPE_ID);
-		item.setPrice(new BigDecimal("15.00"));
-		item.addDefaultPrice(new Date(), new PriceModelWS(PriceModelStrategy.FLAT.name(), new BigDecimal("15.00"), AU_DOLLAR));
+		item.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("15.00"), new DateMidnight(1970, 1, 1).toDate(), PRANCING_PONY, AU_DOLLAR));
 
 		// Persist Item
 		Integer itemId = api.createItem(item);
@@ -416,11 +412,12 @@ public class WSTest {
 
 		// price automatically converted to user currency when item is fetched
 		assertEquals("Price in USD", 1, item.getCurrencyId().intValue());
-		assertEquals("Converted price AUD->USD", BigDecimal.TEN, item.getPriceAsDecimal());
-		System.out.println("Item default price: " + item.getDefaultPrice());
+        com.sapienter.jbilling.test.Asserts.assertEquals("Converted price AUD->USD", BigDecimal.TEN, item.getPriceAsDecimal());
+		System.out.println("Item default price: " + item.getPriceAsDecimal());
 		// verify that default item price is in AUD
-		assertEquals("Default price in AUD", 11, item.getDefaultPrice().getCurrencyId().intValue());
-		assertEquals("Default price in AUD", new BigDecimal("15.00"), item.getDefaultPrice().getRateAsDecimal());
+		item = api.getItem(itemId);
+        assertEquals("Default price in AUD", 11, item.getPrices().get(0).getCurrencyId().intValue());
+        com.sapienter.jbilling.test.Asserts.assertEquals("Default price in AUD", new BigDecimal("15.00"), item.getPrices().get(0).getPriceAsDecimal());
 
 		// Clean up
 		api.deleteItem(itemId);
@@ -455,7 +452,7 @@ public class WSTest {
 		types = api.getAllItemCategories();
 		int categoriesCountAfterPersist = types.length;
 
-		assertEquals("The initial number of persisted item types is not increasing!!", Integer.valueOf(initialCategoriesCount + 2), Integer.valueOf(categoriesCountAfterPersist));
+        assertEquals("The initial number of persisted item types is not increasing!!", Integer.valueOf(initialCategoriesCount + 2), Integer.valueOf(categoriesCountAfterPersist));
 
 		// Check if the returned array of item types contains previously persisted item types.
 		int firstItemTypeIndex = -1;
@@ -579,7 +576,7 @@ public class WSTest {
 		System.out.println("Verifying description has changed...");
 		for (int i = 0; i < types.length; ++i) {
 			if (itemCategoryId.equals(types[i].getId())) {
-				assertEquals(description, types[i].getDescription());
+                assertEquals(description, types[i].getDescription());
 
 				System.out.println("Restoring description...");
 				types[i].setDescription(originalDescription);
@@ -660,7 +657,7 @@ public class WSTest {
 		// Get the items for a category
 		ItemDTOEx[] items = api.getItemByCategory(TEST_ITEM_TYPE_ID);
 		assertNotNull("There should be items received!!", items);
-		assertEquals(String.format("Number of items for %d category is not 2!!!", TEST_ITEM_TYPE_ID), 2, items.length);
+        assertEquals(String.format("Number of items for %d category is not 2!!!", TEST_ITEM_TYPE_ID), 2, items.length);
 
 		// Find and Match
 		matchItems(secondItem, items[0]);
@@ -723,7 +720,7 @@ public class WSTest {
 		asset = getAssetWS(TEST_ITEM_ID_WITH_ASSET_MANAGEMENT, STATUS_DEFAULT_ID);
 		MetaFieldValueWS[] assetMetaFieldsValues = asset.getMetaFields();
 		assertNotNull(String.format("There should be meta fields for %s!!!", asset.getIdentifier()), asset.getMetaFields());
-		assertEquals("There should be one meta field value!!", Integer.valueOf(1), Integer.valueOf(assetMetaFieldsValues.length));
+        assertEquals("There should be one meta field value!!", Integer.valueOf(1), Integer.valueOf(assetMetaFieldsValues.length));
 
 		// Set to empty
 		asset.setMetaFields(new MetaFieldValueWS[0]);
@@ -743,8 +740,8 @@ public class WSTest {
 		// Get the persisted Asset
 		AssetWS savedAsset = api.getAsset(assetId);
 		JBillingTestUtils.assertPropertiesEqual(asset, savedAsset, new String[] {"id", "createDatetime", "status", "orderLineId", "metaFields", "provisioningCommands"});
-		assertEquals(1, asset.getMetaFields().length);
-		assertEquals(asset.getMetaFields()[0].getFieldName(), "Regulatory Code");
+        assertEquals(1, asset.getMetaFields().length);
+        assertEquals(asset.getMetaFields()[0].getFieldName(), "Regulatory Code");
 		assertTrue(asset.getMetaFields()[0].getListValueAsList().contains("01"));
 		assertTrue(asset.getMetaFields()[0].getListValueAsList().contains("02"));
 
@@ -976,22 +973,22 @@ public class WSTest {
 	public void test018GetAssetsForCategory() {
 
 		Integer[] ids = api.getAssetsForCategory(TEST_ASSET_ITEM_TYPE_ID);
-		assertEquals("Ids: "+Arrays.asList(ids), 0, ids.length);
+        assertEquals("Ids: "+Arrays.asList(ids), 0, ids.length);
 
 		ids = api.getAssetsForItem(TEST_ITEM_ID_WITH_ASSET_MANAGEMENT);
-		assertEquals("Ids: "+Arrays.asList(ids), 0, ids.length);
+        assertEquals("Ids: "+Arrays.asList(ids), 0, ids.length);
 
 		// Create Asset
 		AssetWS asset = getAssetWS(TEST_ITEM_ID_WITH_ASSET_MANAGEMENT, STATUS_AVAILABLE_ID);
 		Integer assetId = api.createAsset(asset);
 
 		ids = api.getAssetsForCategory(TEST_ASSET_ITEM_TYPE_ID);
-		assertEquals("Ids: "+Arrays.asList(ids), 1, ids.length);
-		assertEquals("Ids: "+Arrays.asList(ids), assetId, ids[0]);
+        assertEquals("Ids: "+Arrays.asList(ids), 1, ids.length);
+        assertEquals("Ids: " +Arrays.asList(ids), assetId, ids[0]);
 
 		ids = api.getAssetsForItem(TEST_ITEM_ID_WITH_ASSET_MANAGEMENT);
-		assertEquals("Ids: "+Arrays.asList(ids), 1, ids.length);
-		assertEquals("Ids: "+Arrays.asList(ids), assetId, ids[0]);
+        assertEquals("Ids: "+Arrays.asList(ids), 1, ids.length);
+        assertEquals("Ids: " +Arrays.asList(ids), assetId, ids[0]);
 
 		// Create second asset for asset product
 		asset = getAssetWS(TEST_ITEM_ID_WITH_ASSET_MANAGEMENT, STATUS_AVAILABLE_ID);
@@ -999,8 +996,8 @@ public class WSTest {
 		Integer secondAssetId = api.createAsset(asset);
 
 		List idList = Arrays.asList(api.getAssetsForCategory(TEST_ASSET_ITEM_TYPE_ID));
-		assertEquals("Ids: "+idList, 2, idList.size());
-		assertTrue("Ids: " + idList, idList.contains(assetId));
+        assertEquals("Ids: " + idList, 2, idList.size());
+        assertTrue("Ids: " + idList, idList.contains(assetId));
 		assertTrue("Ids: "+idList,idList.contains(secondAssetId));
 
 		idList = Arrays.asList(api.getAssetsForItem(TEST_ITEM_ID_WITH_ASSET_MANAGEMENT));
@@ -1595,7 +1592,7 @@ public class WSTest {
 		ItemDTOEx newItem = new ItemDTOEx();
 		newItem.setDescription("A reseller item" + rand);
 		newItem.setPriceModelCompanyId(new Integer(1));
-		newItem.setPrice(new BigDecimal("30"));
+		newItem.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("30.00"), new DateMidnight(1970, 1, 1).toDate(), PRANCING_PONY, Integer.valueOf(1)));
 		newItem.setNumber("RP-1");
 
 		List<Integer> childEntities= new ArrayList<Integer>(1);
@@ -1686,144 +1683,6 @@ public class WSTest {
         api.updateItem(persistedItem);
         api.deleteItem(itemId);
 		api.deleteItem(dependentItemId);
-	}
-
-	@Test
-	public void test025PlanValidityDates() {
-		String count = Short.toString((short)System.currentTimeMillis());
-
-//        I'm creating a (nested) Gold service plan which has the following products:
-//                - SMS Service (bundled quantity=1, period = monthly)
-//                - GPRS Service (bundled quantity=1, period = monthly)
-//                - SMS to NA (bundled quantity=0, period = monthly)
-
-        ItemDTOEx smsServiceItem = new ItemDTOEx();
-        smsServiceItem.setDescription("SMS Service");
-        smsServiceItem.setEntityId(PRANCING_PONY);
-        smsServiceItem.setTypes(new Integer[]{TEST_ITEM_TYPE_ID});
-        smsServiceItem.setPrice("1");
-        smsServiceItem.setNumber("SMS-"+count);
-        smsServiceItem.setActiveSince(Util.getDate(2010, 1, 1));
-        smsServiceItem.setActiveUntil(Util.getDate(2010, 9, 1));
-        Integer smsServiceItemId = api.createItem(smsServiceItem);
-        smsServiceItem.setId(smsServiceItemId);
-
-        ItemDTOEx gprsServiceItem = new ItemDTOEx();
-        gprsServiceItem.setDescription("GPRS Service");
-        gprsServiceItem.setEntityId(PRANCING_PONY);
-        gprsServiceItem.setTypes(new Integer[]{TEST_ITEM_TYPE_ID});
-        gprsServiceItem.setPrice("1");
-        gprsServiceItem.setNumber("GPRS-"+count);
-        Integer gprsServiceItemId = api.createItem(gprsServiceItem);
-        gprsServiceItem.setId(gprsServiceItemId);
-
-        ItemDTOEx goldServiceItem = new ItemDTOEx();
-        goldServiceItem.setDescription("Gold Service Plan");
-        goldServiceItem.setEntityId(PRANCING_PONY);
-        goldServiceItem.setTypes(new Integer[]{TEST_ITEM_TYPE_ID});
-        goldServiceItem.setPrice("1");
-        goldServiceItem.setNumber("GSP-"+count);
-        goldServiceItem.setActiveSince(Util.getDate(2010, 1, 1));
-        goldServiceItem.setActiveUntil(Util.getDate(2010, 10, 1));
-
-        Integer goldServiceItemId = api.createItem(goldServiceItem);
-
-        PriceModelWS priceModel = new PriceModelWS(PriceModelStrategy.FLAT.name(), BigDecimal.ONE, 1);
-        SortedMap<Date, PriceModelWS> models = new TreeMap<Date, PriceModelWS>();
-        models.put(Constants.EPOCH_DATE, priceModel);
-
-        PlanItemBundleWS bundle1 = new PlanItemBundleWS();
-        bundle1.setPeriodId(2);
-        bundle1.setQuantity(BigDecimal.ONE);
-        PlanItemWS pi1 = new PlanItemWS();
-        pi1.setItemId(smsServiceItemId);
-        pi1.setPrecedence(-1);
-        pi1.setModels(models);
-        pi1.setBundle(bundle1);
-
-        PlanItemBundleWS bundle2 = new PlanItemBundleWS();
-        bundle2.setPeriodId(2);
-        bundle2.setQuantity(BigDecimal.ONE);
-        PlanItemWS pi2 = new PlanItemWS();
-        pi2.setItemId(gprsServiceItemId);
-        pi2.setPrecedence(-1);
-        pi2.setModels(models);
-        pi2.setBundle(bundle2);
-
-
-        Integer goldServicePlanId = 0;
-        PlanWS goldServicePlan = new PlanWS();
-        goldServicePlan.setItemId(goldServiceItemId);
-        goldServicePlan.setDescription("Gold Service Plan");
-        goldServicePlan.setPeriodId(2);
-        goldServicePlan.addPlanItem(pi1);
-        goldServicePlan.addPlanItem(pi2);
-
-        //plan valid dates ends after bundled item
-        System.out.println("plan valid dates ends after bundled item");
-        try {
-            api.createPlan(goldServicePlan);
-            fail("Plan has invalid dates");
-        } catch (SessionInternalError e) {
-            JBillingTestUtils.assertContainsError(e, "PlanWS,planItems,validation.error.plan.planItem.expired,SMS-"+count);
-        }
-
-
-        //plan valid dates begin before bundled item
-        System.out.println("plan valid dates begin before bundled item ");
-        goldServiceItem = api.getItem(goldServiceItemId, null, null);
-        goldServiceItem.setActiveUntil(null);
-        goldServiceItem.setActiveSince(Util.getDate(2009, 1, 1));
-        api.updateItem(goldServiceItem);
-
-        try {
-            api.createPlan(goldServicePlan);
-            fail("Plan has invalid dates");
-        } catch (SessionInternalError e) {
-            JBillingTestUtils.assertContainsError(e, "PlanWS,planItems,validation.error.plan.planItem.expired,SMS-"+count);
-        }
-
-        //clear plan item dates
-        goldServiceItem.setActiveUntil(null);
-        goldServiceItem.setActiveSince(null);
-        api.updateItem(goldServiceItem);
-
-        //plan must be created and get start and end date of SMS service item
-        System.out.println("//plan must be created and get start and end date of SMS service item ");
-        goldServiceItem = api.getItem(goldServiceItemId, null, null);
-        goldServiceItem.setActiveUntil(null);
-        api.updateItem(goldServiceItem);
-        goldServicePlanId = api.createPlan(goldServicePlan);
-        goldServicePlan = api.getPlanWS(goldServicePlanId);
-        goldServiceItem = api.getItem(goldServiceItemId, null, null);
-        assertNotNull(goldServiceItem.getActiveUntil());
-        assertNotNull(goldServiceItem.getActiveSince());
-        assertEquals(smsServiceItem.getActiveUntil(), goldServiceItem.getActiveUntil());
-        assertEquals(smsServiceItem.getActiveSince(), goldServiceItem.getActiveSince());
-
-		api.deletePlan(goldServicePlanId);
-
-		//set valid dates exactly at exactly right boundary
-		System.out.println("//set valid dates exactly at exactly right boundary ");
-		goldServiceItem.setActiveSince(Util.getDate(2010, 1, 1));
-		goldServiceItem.setActiveUntil(Util.getDate(2010, 9, 1));
-		api.updateItem(goldServiceItem);
-
-		goldServicePlanId = api.createPlan(goldServicePlan);
-
-
-		smsServiceItem.setActiveSince(Util.getDate(2010, 2, 1));
-		try {
-			api.updateItem(smsServiceItem);
-			fail("Item has invalid dates");
-		} catch (SessionInternalError e) {
-			JBillingTestUtils.assertContainsError(e, "ItemDTOEx,activeSince,validation.error.item.activeSince.plan.inactive,GSP-"+count);
-		}
-
-		api.deletePlan(goldServicePlanId);
-		api.deleteItem(smsServiceItemId);
-		api.deleteItem(goldServiceItemId);
-		api.deleteItem(gprsServiceItemId);
 	}
 
 	@Test
@@ -1988,6 +1847,7 @@ public class WSTest {
 		item.setDescription("TestItem: " + System.currentTimeMillis());
 		item.setNumber("TestWS-" + System.currentTimeMillis());
 		item.setTypes(types);
+		item.setPriceManual(0);
 		if(allowAssetManagement){
 			item.setAssetManagementEnabled(ENABLED);
 		}
@@ -2277,6 +2137,7 @@ public class WSTest {
 	private Integer createItem(Integer categoryID) throws IOException, JbillingAPIException {
 		ItemDTOEx item = new ItemDTOEx();
 		item.setGlobal(true);
+		item.setPriceManual(0);
 		item.setDescription("item-test-for-asset-reservation");
 		item.setNumber("ITFAR-023");
 		item.setReservationDuration(10);

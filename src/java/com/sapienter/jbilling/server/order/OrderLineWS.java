@@ -24,10 +24,6 @@
 
 package com.sapienter.jbilling.server.order;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.*;
-
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.metafields.MetaFieldValueWS;
 import com.sapienter.jbilling.server.util.api.validation.CreateValidationGroup;
@@ -37,6 +33,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author Emil
@@ -192,7 +191,7 @@ public class OrderLineWS implements Serializable {
     }
 
     public Boolean getUseItem() {
-        return useItem == null ? new Boolean(false) : useItem;
+        return useItem == null ? Boolean.FALSE : useItem;
     }
 
     public void setUseItem(Boolean useItem) {

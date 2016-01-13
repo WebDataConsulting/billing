@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-;
 import com.sapienter.jbilling.common.FormatLogger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

@@ -16,31 +16,19 @@
 
 package com.sapienter.jbilling.server.item;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.sapienter.jbilling.server.item.event.AbstractAssetEvent;
-import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.db.AssetDAS;
 import com.sapienter.jbilling.server.item.db.AssetDTO;
 import com.sapienter.jbilling.server.item.db.AssetStatusDTO;
 import com.sapienter.jbilling.server.item.db.ItemTypeDTO;
+import com.sapienter.jbilling.server.item.event.AbstractAssetEvent;
 import com.sapienter.jbilling.server.item.event.AssetCreatedEvent;
 import com.sapienter.jbilling.server.item.event.AssetDeletedEvent;
 import com.sapienter.jbilling.server.item.event.AssetUpdatedEvent;
 import com.sapienter.jbilling.server.metafields.MetaFieldBL;
 import com.sapienter.jbilling.server.metafields.MetaFieldHelper;
+import com.sapienter.jbilling.server.metafields.db.MetaFieldValue;
 import com.sapienter.jbilling.server.order.OrderBL;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
@@ -49,9 +37,13 @@ import com.sapienter.jbilling.server.system.event.EventManager;
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
 import com.sapienter.jbilling.server.util.search.SearchCriteria;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+;
 
 /**
  *
@@ -61,8 +53,8 @@ import com.sapienter.jbilling.server.util.search.SearchCriteria;
 public class AssetBL {
 
     private static final FormatLogger LOG = new FormatLogger(AssetBL.class);
-    AssetDAS das = null;
-    AssetDTO asset = null;
+    private AssetDAS das = null;
+    private AssetDTO asset = null;
     private EventLogger eLogger = null;
 
     public AssetBL(Integer assetId)

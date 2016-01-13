@@ -1522,8 +1522,16 @@ class ProductController {
         def availableFields
 
         try {
-            product = params.id ? webServicesSession.getItem(params.int('id'), session['user_id'], null) : null
-			
+            //product = params.id ? webServicesSession.getItem(params.int('id')) : null
+            ItemDTO itemDto= ItemDTO.get(params.int('id'))
+            if (itemDto) {
+                if (itemDto.entityId == session['company_id'] as Integer || itemDto.entities.contains(session['company_id'] as Integer) ) {
+                    product = params.id ? webServicesSession.getItem(params.int('id'), session['user_id'] as Integer, null) : null
+                } else {
+                    //item does not belong to hierarchy
+                }
+            }
+
             if (product && product.deleted == 1) {
             	productNotFoundErrorRedirect(params.id)
             	return

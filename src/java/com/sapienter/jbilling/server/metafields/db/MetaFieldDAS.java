@@ -25,15 +25,12 @@
 package com.sapienter.jbilling.server.metafields.db;
 
 import com.sapienter.jbilling.common.FormatLogger;
-import com.sapienter.jbilling.server.metafields.MetaFieldType;
-import com.sapienter.jbilling.server.metafields.db.value.IntegerMetaFieldValue;
-import com.sapienter.jbilling.server.metafields.db.value.StringMetaFieldValue;
 import com.sapienter.jbilling.server.metafields.DataType;
 import com.sapienter.jbilling.server.metafields.EntityType;
 import com.sapienter.jbilling.server.metafields.MetaFieldType;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
+import com.sapienter.jbilling.server.metafields.db.value.IntegerMetaFieldValue;
+import com.sapienter.jbilling.server.metafields.db.value.StringMetaFieldValue;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -42,7 +39,6 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-;
 
 import java.util.*;
 
@@ -65,7 +61,7 @@ public class MetaFieldDAS extends AbstractDAS<MetaField> {
                     "  FROM MetaField a " +
                     " WHERE a.dataType = :dataType "+
                     " AND a.name = :name";
-
+    
     @SuppressWarnings("unchecked")
     public List<MetaField> getAvailableFields(Integer entityId, EntityType[] entityType, Boolean primary) {
         DetachedCriteria query = DetachedCriteria.forClass(MetaField.class);
@@ -91,7 +87,28 @@ public class MetaFieldDAS extends AbstractDAS<MetaField> {
     public MetaField getFieldByName(Integer entityId, EntityType[] entityType, String name) {
         return getFieldByName(entityId, entityType, name, null);
     }
+    
+    @SuppressWarnings("unchecked")
+    public boolean getValueByMetaFieldId(Integer metaFieldId, DataType type, MetaFieldValue value) {
+        if (null == type || null == value.getValue() || null == metaFieldId) {
+            throw new IllegalArgumentException("arguments type/value/fields can not be null");
+        }
 
+        StringBuilder queryBuilder = findMetafieldValueIdsByQueryBuilder(type, value);
+        if (null != value.getId()) {
+            queryBuilder.append(" and id != :metaFieldValueId");
+        }
+        queryBuilder.append(" and meta_field_name_id = :metaFieldId");
+
+        SQLQuery query = getSession().createSQLQuery(queryBuilder.toString());
+        if (null != value.getId()) {
+            query.setInteger("metaFieldValueId", value.getId());
+        }
+        query.setInteger("metaFieldId", metaFieldId);
+
+        return query.list().size() > 0 ? Boolean.FALSE : Boolean.TRUE;
+    }
+    
     @SuppressWarnings("unchecked")
     public MetaField getFieldByName(Integer entityId, EntityType[] entityType, String name, Boolean primary) {
         DetachedCriteria query = DetachedCriteria.forClass(MetaField.class);
@@ -535,6 +552,32 @@ public class MetaFieldDAS extends AbstractDAS<MetaField> {
         return query.list();
     }
 
+    
+    private StringBuilder findMetafieldValueIdsByQueryBuilder(DataType type, MetaFieldValue value) {
+    	
+        StringBuilder queryBuilder = new StringBuilder(
+                "select mfv.id from meta_field_value mfv where ");
+        
+	    switch(type) {
+	    	case STRING:
+	    		queryBuilder.append("mfv.string_value = '").append(value.getValue()).append("' ");
+	    		break;
+	    	case BOOLEAN:
+	    		queryBuilder.append("mfv.boolean_value = '").append(value.getValue()).append("' ");
+	    		break;
+	    	case DATE:
+	    		queryBuilder.append("mfv.date_value = '").append(value.getValue()).append("' ");
+	    		break;
+	    	case INTEGER:
+	    		queryBuilder.append("mfv.integer_value = '").append(value.getValue()).append("' ");
+	    		break;
+	    	case DECIMAL:
+	    		queryBuilder.append("mfv.decimal_value = '").append(value.getValue()).append("' ");
+	    		break;
+	    }
+           
+        return queryBuilder;
+    }
 
     private StringBuilder getFindByValueQueryBuilder(DataType type, Object value, Boolean sensitive){
         StringBuilder queryBuilder = new StringBuilder(
@@ -542,12 +585,12 @@ public class MetaFieldDAS extends AbstractDAS<MetaField> {
 
         if(type.equals(DataType.STRING)){
             if(null == sensitive || sensitive.booleanValue()){
-                queryBuilder.append("mfv.string_value = '" + (String)value + "' ");
+                queryBuilder.append("mfv.string_value = '").append((String) value).append("' ");
             } else {
-                queryBuilder.append("lower(mfv.string_value) = '" + ((String)value).toLowerCase() + "' ");
+                queryBuilder.append("lower(mfv.string_value) = '").append(((String) value).toLowerCase()).append("' ");
             }
         }
-
+        
         return queryBuilder;
     }
 
@@ -579,6 +622,35 @@ public class MetaFieldDAS extends AbstractDAS<MetaField> {
 
         return query.list();
     }
+    
+    public List<String> getMetaFieldsByType(Integer entityId, EntityType type) {
+        if (null == entityId || null == type ) {
+            throw new IllegalArgumentException(" entity and entity type can not be null");
+        }
+
+        SQLQuery query = getSession().createSQLQuery("select name from meta_field_name where entity_id =:entity and entity_type=:type group by name");
+        query.setParameter("entity", entityId);
+        query.setParameter("type", type.toString());
+        
+
+        return query.list();
+    }
+    
+    public List<String> getMetaFieldsByCustomerype(Integer entityId, EntityType type) {
+        if (null == entityId || null == type ) {
+            throw new IllegalArgumentException(" entity and entity type can not be null");
+        }
+
+        SQLQuery query = getSession().createSQLQuery("select name from meta_field_name where entity_id =:entity and entity_type=:type");
+        query.setParameter("entity", entityId);
+        query.setParameter("type", type.toString());
+        
+
+        return query.list();
+    }
+    
+    
+    
 
 
 }

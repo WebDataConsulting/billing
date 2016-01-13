@@ -236,11 +236,6 @@ public class SimpleTaxCompositionTaskTest extends ApiTestCase {
         ItemDTOEx taxItem = new ItemDTOEx();
         taxItem.setCurrencyId(CURRENCY_USD);
 
-        PriceModelWS linePercentagePrice = new PriceModelWS();
-        linePercentagePrice.setType(PriceModelStrategy.LINE_PERCENTAGE.name());
-        linePercentagePrice.setRate(BigDecimal.TEN); // tax rate is %10
-        linePercentagePrice.setCurrencyId(CURRENCY_USD);
-        taxItem.addDefaultPrice(CommonConstants.EPOCH_DATE, linePercentagePrice);
         
         taxItem.setHasDecimals(1);
         taxItem.setDescription("Tax");
@@ -406,13 +401,6 @@ public class SimpleTaxCompositionTaskTest extends ApiTestCase {
         // add a new tax item & enable the tax plug-in
         ItemDTOEx taxItem = new ItemDTOEx();
         taxItem.setCurrencyId(CURRENCY_USD);
-
-        PriceModelWS linePercentagePrice = new PriceModelWS();
-        linePercentagePrice.setType(PriceModelStrategy.LINE_PERCENTAGE.name());
-
-        linePercentagePrice.setRate(BigDecimal.TEN); // tax rate is %10
-        linePercentagePrice.setCurrencyId(CURRENCY_USD);
-        taxItem.addDefaultPrice(CommonConstants.EPOCH_DATE, linePercentagePrice);
 
         taxItem.setHasDecimals(1);
         taxItem.setDescription("Tax");

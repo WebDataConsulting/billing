@@ -23,12 +23,6 @@
  */
 package com.sapienter.jbilling.server.user.tasks;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-;
-
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;
@@ -40,6 +34,8 @@ import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
+
+import java.util.Date;
 
 public class BasicSubscriptionStatusManagerTask extends PluggableTask implements
         ISubscriptionStatusManager {

@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import static org.testng.AssertJUnit.*;
 import static org.testng.AssertJUnit.assertEquals;
+import com.sapienter.jbilling.server.util.CreateObjectUtil;
 
 @Test(groups = { "web-services", "partner" })
 public class CommissionTest {
@@ -347,7 +348,8 @@ public class CommissionTest {
 
             newItem.setPriceModelCompanyId(new Integer(1));
             newItem.setDescriptions(descriptions);
-            newItem.setPrice(new BigDecimal("10.0"));
+            newItem.setPriceManual(0);
+            newItem.setPrices(CreateObjectUtil.setItemPrice(new BigDecimal("10.0"), new DateMidnight(1970, 1, 1).toDate(), Integer.valueOf(1), Integer.valueOf(1)));
             newItem.setNumber(description);
             newItem.setHasDecimals(0);
             newItem.setAssetManagementEnabled(0);

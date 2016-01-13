@@ -3,18 +3,17 @@
  */
 package com.sapienter.jbilling.server.util;
 
-import java.util.*;
-
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
-;
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.metafields.DataType;
 import com.sapienter.jbilling.server.metafields.db.MetaField;
 import com.sapienter.jbilling.server.metafields.db.MetaFieldDAS;
+import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.db.EnumerationDAS;
 import com.sapienter.jbilling.server.util.db.EnumerationDTO;
 import com.sapienter.jbilling.server.util.db.EnumerationValueDAS;
 import com.sapienter.jbilling.server.util.db.EnumerationValueDTO;
+
+import java.util.*;
 
 
 /**

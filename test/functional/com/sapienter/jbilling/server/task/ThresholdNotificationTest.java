@@ -107,7 +107,7 @@ public class ThresholdNotificationTest extends ApiTestCase {
         BigDecimal orglDynamicBal= new BigDecimal("10.00");
 
         //test if emails_sent.txt does not exist
-        String directory = Util.getSysProp("base_dir");
+        String directory = Util.getBaseDir();
 
         System.out.println("Base Directory: " + directory);
 

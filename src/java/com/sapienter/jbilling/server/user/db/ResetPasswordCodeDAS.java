@@ -25,7 +25,6 @@ package com.sapienter.jbilling.server.user.db;
 
 import com.sapienter.jbilling.common.FormatLogger;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
-;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 

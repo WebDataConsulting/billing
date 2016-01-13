@@ -68,7 +68,7 @@ public class TimePeriod {
         if (df_fm == null) {
             this.df_fm = null;
         } else {
-            this.df_fm = new Boolean(df_fm.intValue() == 1);
+            this.df_fm = Boolean.valueOf(df_fm.intValue() == 1);
         }
     }
 

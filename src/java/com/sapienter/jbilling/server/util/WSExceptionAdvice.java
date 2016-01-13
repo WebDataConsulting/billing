@@ -24,8 +24,6 @@
 
 package com.sapienter.jbilling.server.util;
 
-;
-
 import org.springframework.aop.ThrowsAdvice;
 
 import com.sapienter.jbilling.common.FormatLogger;

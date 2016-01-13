@@ -16,26 +16,6 @@
 
 package com.sapienter.jbilling.server.mediation.task;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.List;
-
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
-
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.item.PricingField;
@@ -43,13 +23,17 @@ import com.sapienter.jbilling.server.mediation.Format;
 import com.sapienter.jbilling.server.mediation.FormatField;
 import com.sapienter.jbilling.server.mediation.Record;
 import com.sapienter.jbilling.server.pluggableTask.admin.ParameterDescription;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-
-import org.apache.commons.collections.CollectionUtils;
+import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import org.apache.commons.digester.Digester;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+
+import java.io.*;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public abstract class AbstractFileReader extends AbstractReader {
 
@@ -199,11 +183,7 @@ public abstract class AbstractFileReader extends AbstractReader {
         protected Reader() throws FileNotFoundException, IOException, SAXException {
             files = new File(directory).listFiles(new FileFilter() {
                 public boolean accept(File pathname) {
-                    if (suffix.equalsIgnoreCase("all") || pathname.getName().endsWith(suffix)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return suffix.equalsIgnoreCase("all") || pathname.getName().endsWith(suffix);
                 }
             });
 

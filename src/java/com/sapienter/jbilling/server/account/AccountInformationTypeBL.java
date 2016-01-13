@@ -13,7 +13,7 @@ import com.sapienter.jbilling.server.util.Util;
 import javax.persistence.Transient;
 import java.util.*;
 
-;
+
 
 /**
  * Business logic class for managing the account information types
@@ -270,7 +270,7 @@ public class AccountInformationTypeBL {
             if (accountInformationTypeDTO.isUseForNotifications()) {
                 accountTypeDTO.setPreferredNotificationAitId(accountInformationTypeDTO.getId());
                 new AccountTypeBL().update(accountTypeDTO);
-            } else if (!accountInformationTypeDTO.isUseForNotifications()) {
+            } else {
                 if (checkUseForNotifications(accountInformationTypeDTO)) {
                     accountTypeDTO.setPreferredNotificationAitId(null);
                     new AccountTypeBL().update(accountTypeDTO);
