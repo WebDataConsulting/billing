@@ -1334,9 +1334,11 @@
             <column name="optlock" valueNumeric="1"/>
         </insert>        
 
-        <update tableName="item_price">
-            <column name="start_date" value="1970-01-01" />
-        </update>
+        <addColumn tableName="item_price">
+            <column defaultValueDate="1970-01-01" name="start_date" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
 
         <modifyDataType tableName="batch_job_execution_params" columnName="date_val" newDataType="datetime"/>
 
