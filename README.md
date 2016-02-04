@@ -41,6 +41,12 @@ Explanation: Set up PostgreSQL to allow all local connections to the database wi
 
 Restart the PostgreSQL server
 
+<pre><code>sudo service postgresql restart
+</code></pre>
+
+
+Connect to PostgreSQL and create the test user and database.
+
 <pre><code>sudo -u postgres psql
 </code></pre>
 
@@ -63,6 +69,12 @@ GRAILS_HOME -> /opt/lib/grails-2.4.3 or equivalent.
 Java and grails executables should be in your classpath.
 
 
+
+Copy the jbilling properties file from the src directory to the root of the project
+
+<pre><code>cp ./src/java/jbilling.properties .</code></pre>
+
+
 Run the grails `compile` target to compile the jBilling source code, then run the `prepare-test` target to load the reference database and prepare all the required resources.
 
 <pre><code>
@@ -75,9 +87,9 @@ grails prepare-test
 Running from Source
 -------------------
 
-**Windows**: ``run-app.bat``
+<pre><code>**Windows**: ``run-app.bat``</pre></code>
 
-**Linux/Mac**: ``./run-app.sh``
+<pre><code>**Linux/Mac**: ``./run-app.sh``</pre></code>
 
 
 Logging in
@@ -98,22 +110,17 @@ user: admin
 password: 123qwe
 
 
-
-
-
-
 Setup with an empty database
 ----------------------------
 
-<pre><code>
-grails compile
+<pre><code>grails compile
 grails prepare-test --init
 </pre></code>
 
 
+If you want to use a database that is not the standard one:
 
-<pre><code>
-grails prepare-test -init -user=<username> -db=<database_name> -pass=<password-for-dbuser> -url=<dburl> -driver=<driver-full-class-name>
+<pre><code>grails prepare-test -init -user=<username> -db=<database_name> -pass=<password-for-dbuser> -url=<dburl> -driver=<driver-full-class-name>
 </code></pre>
 
 
