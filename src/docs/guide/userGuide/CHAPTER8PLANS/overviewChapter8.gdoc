@@ -1,0 +1,13 @@
+Let's begin this chapter with a scenario that will help to explain the concept of *Plans*:
+
+A phone company sells a product: international calls, at $1 a minute. However, if a customer wants to pay $10 a month, they will receive a special reduced price for international calls: $0.50 a minute.  
+
+How would this phone company set up their purchase orders to reflect the change in price?
+
+*j*Billing has special functionality, which allows you to change the price of particular products, and group them together under a *Plan*. Common situations where you might have encountered a plan before are: when you bought your cell phone, internet service, or cable television. 
+
+Without this feature, a Billing Administrator would have to create the same product with different prices. They would then have to manually add *each individual item included in that plan*. Not only would this take a considerable amount of time and effort, there would also be a chance that through human error, a product could be left out of the plan. 
+
+{note}
+Please Note: it is important to remember that when these products are included in a purchase order outside of the plan, they maintain their regular price. It is *only* when they are included in a specific plan that their price will adjust to the pre-determined amount.
+{note}

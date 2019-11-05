@@ -1,0 +1,6 @@
+userName,BillingPeriod,BillingType,Status,ActiveSince,ActiveUntill,ProductId,ProductDescription,Price,Quantity,UseDefaultPricing
+uploadOrdersTestUser,2,1,1,05/22/2005,,2800,,1.1,2,1
+
+uploadOrdersTestUser,1,1,1,05/22/2005,05/22/2005,2800,some description,1.1,2,1
+uploadOrdersTestUser,1,1,1,05/22/2005,05/23/2005,2801,some description,1.1,2,1
+uploadOrdersTestUser,1,1,1,05/22/2005,05/23/2005,2801,some description,1.1,2,0

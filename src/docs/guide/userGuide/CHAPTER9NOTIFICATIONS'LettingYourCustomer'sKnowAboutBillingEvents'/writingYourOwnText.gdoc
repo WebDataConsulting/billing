@@ -1,0 +1,347 @@
+Let's start by getting a list of all the notifications that you can configure by clicking on Configuration, and Notification. 
+
+!configurationnotification.png!
+
+All notifications you will see here are email notifications except for, 'Invoice (paper)'. Once you click on a notification, the notification details will appear in a pane to  
+the right of your screen. 
+
+!notificationexampledefault.png!
+
+{note}
+Please Note: the image you see above has a few details filled in as an example. However, it will be up to you and your company to provide the subject and text for all of your  
+notifications.
+{note}
+
+To change the text, click on the 'Edit' button. This will open the Edit Notifications screen.
+
+!edit.png!
+
+!editnotification.png!
+
+Below you will find a list of the Edit Notification fields, and a brief description of their function.
+
+*Active?*
+
+If this check-box is selected, then the notification will be active and available for you to use.
+
+!activenotification.png!
+
+*Subject*
+
+In this field, you would provide the subject line of the email. In other words, a brief description of what the contents of the email refer to. 
+
+!subjectnotification.png!
+
+*Body (Text)*
+
+Here is where you will enter the message, or text that your customers will receive.
+
+!bodynotification.png!
+
+Here is where you enter the text for your own notifications. Note that the text is not static, it has variables. Please refer to the section below on *Tokens* for more  
+information.
+
+*Body (HTML)*
+
+Here is where you will enter the HTML if required.
+
+!htmlnotification.png!
+
+{note}
+Please Note: *j*Billing will always send HTML emails with the plain text content as an alternative. This means that you need to add your text to both the Text box and HTML  
+box. This allows those recipients of your emails that cannot or  
+don't want to receive HTML emails to still receive, open and read your notification in its plain text format.
+{note}
+
+*Dynamic Values with Variables*
+Some notifications use variables to generate dynamic text. To use a variable, put the name of the variable with the '$' character in front. For example, to display the user  
+name of a customer, you would write: $username, where username is the name of the variable. 
+The following is a list of all available variables:
+
+ {table}
+*Object*|*Description*|*Velocity Variable Name*
+ContactDTO | The user's main contact object | $contact
+ContactDTO#firstName | The user's first name | $contact.firstName or $first_name
+ContactDTO#lastName | The user's last name | $contact.lastName or $last_name
+ContactDTO#address1 | The user's address line 1 | $contact.address1 or $address1
+ContactDTO#address2 | The user's address line 2 | $contact.address2 or $address2
+ContactDTO#city | The user's contact city | $contact.city or $city
+ContactDTO#organizationName | The user's contact company name | $contact.organizationName or $organization_name
+ContactDTO#postalCode | The user's contact postal code | $contact.postalCode or $psotal_code
+ContactDTO#stateProvince | The user's contact state/province | $contact.stateProvince or $state_province.
+UserDTO | The main user object | $user
+UserDTO#userName | user name | $user.userName or $username
+UserDTO#password | user password | $user.password or $password
+UserDTO#userName | user id | $userid or $user_id
+CreditCardDTO | The user's primary payment credit card (if it exists) | $credit_card
+CreditCardDTO#ccNumberPlain | Last 4 credit card digits | $credit_cart.ccNumberPlain
+CreditCardDTO##ccExpiry | Credit card expiry date | $credit_card.ccExpiry
+ContactDTO | Company contact information | $company_contact
+ContactDTO#organizationName | Company Name | $compant_contact.organizationName or $company_name
+ContactDTO#field | Company contact fields | $company_contact.fieldName (as above with user contact info)
+Integer | Company ID within *j*Billing | $company_id
+ {table}
+
+You can also access any other field within ContactDTO using the same $contact.fieldName syntax.
+Invoice messages, payment messages, and ageing messages have additional fields. 
+
+ {table}
+*Order Notifications*
+$period_start
+$period_end
+$total
+ {table}
+
+ {table}
+*Ageing Notification*
+$total
+$invoice - InvoiceDTO object
+ {table}
+
+ {table}
+*Invoice Email Message*
+$total
+$number
+$due_date
+$notes
+$invoice - invoiceDTO object
+ {table}
+
+ {table}
+*Invoice Reminder Message*
+$days - days overdue
+$dueDate
+$number
+$total
+$date - date of reminder notification
+ {table}
+
+ {table}
+*Payment Message*
+$mthod - payment method, visa, mastercard etc. 
+$total
+$payment - PaymentDTO object
+$invoice_number
+$invoice - InvoiceDTO object
+PaymentDTO.id
+PaymentDTO.currency - CurrencyDTO object
+PaymentDTO.currency.code
+PaymentDTO.currency.symbol
+PaymentDTO.paymentMethod.id
+PaymentDTO.paymentMethod.description
+PaymentDTO.paymentResult.description
+PaymentDTO.creditCard - credit card information if paid using credit card
+PaymentDTO.ach - ACH information if paid using ACH
+PaymentDTO.paymentInfoCheque - cheque information if paid using a cheque
+PaymentDTO.attempt
+PaymentDTO.amount - amount paid
+PaymentDTO.balance - remaining balance of the payment after it has been applied to the account
+PaymentDTO.paymentDate
+PaymentDTO.isRefund - 1 if is refund, 0 if normal payment
+PaymentDTO.paymentNotes
+InvoiceDTO.publicNumber - invoice number
+InvoiceDTO.currency - CurrencyDTO object
+InvoiceDTO.currency.code
+InvoiceDTO.currency.symbol
+InvoiceDTO.invoiceStatus.id
+InvoiceDTO.invoiceStatus.description
+InvoiceDTO.createDatetime
+InvoiceDTO.dueDate
+InvoiceDTO.lastReminder - date of the last notification sent to the user
+InvoiceDTO.total - total amount due for the invoice (original balance + carriedBalance)
+InvoiceDTO.balance - remaining balance of the invoice after payments have been applied
+InvoiceDTO.carriedBalance - balance carried forward from a previous un-paid invoice
+InvoiceDTO.paymentAttempts - number of payment attempts for this invoice (successful and failed)
+InvoiceDTO.isReview - 1 if this invoice is a review invoice, 0 if not
+InvoiceDTO.invoiceLines - collection of InvoiceLineDTO
+InvoiceLineDTO.amount - total dollar amount of this line
+InvoiceLineDTO.quantity - total quantity
+InvoiceLineDTO.price - price per unit
+InvoiceLineDTO.item.id 
+InvoiceLineDTO.description - line description
+ {table}
+
+
+The following is a brief description of the variables that are in common to the specific notifications that are sent as emails to your customers:
+
+*Invoice Reminder*
+
+* $days - days before the invoice is due
+* $dueDate - date that the invoice is due
+* $number - the invoice number
+* $total - the total invoice amount that is due
+* $date - date that the reminder is sent
+
+*New Invoice Email*
+
+* $total - the total invoice amount that is due
+* $id - ID of the invoice
+* $number - invoice number
+* $due_date - date that the invoice is due
+* $notes - any notes that correspond to the invoice
+* $invoice - the invoice DTO object
+
+*Ageing Message*
+
+* $total - outstanding invoice balance
+* $invoice - the invoice DTO object that is still outstanding on the account
+
+*Order Expiry Notification*
+
+* $period_start 
+* $period_end
+* $total
+
+*Partner Payout Message*
+
+* $total
+* $company - company description (e.g. "Prancing Pony Inc.")
+* $period_start
+* $period_end
+* $partner_id
+
+*Credit Card Expiry Message*
+
+* $expiry_date
+
+In addition to these simple variables, there are other complete objects with a lot of information. You can access this information using Velocity's features (see section  
+later in this chapter.)
+
+*Using Velocity Template Engine*
+
+Velocity is an open source template engine that is part of the apache software foundation (http://velocity.apache.org/). With it, it is possible to enable *j*Billing's  
+notifications to have variables and even embedded logic. For example,  
+for an invoice total we need a variable; but to display the invoice lines, we need a way to loop over each invoice line to display it. We can't know how many invoice lines  
+every invoice will have when we are writing the invoice email  
+notification.
+
+This section will explain why and how jBilling implements the notification templates with Velocity, but it is not a replacement for Velocity's documentation. Velocity is a  
+feature-rich product, we encourage you to read its documentation  
+or some of the books written about it.
+
+*Variables and Objects*
+
+As mentioned before, with just a '$' we indicate the presence of a variable. There are many simple variables, but then there are also complete objects exposed as template  
+variables. For example this:
+$first_name
+
+... will produce the same results as this:
+
+$contact.firstName
+
+This is because the first is just a simple variable that jBilling adds for convenience, while the second form uses the 'contact' object which has all the customer's contact  
+information. With Velocity, you can 'navigate' through the object structure, that is why we can access the field 'firstName' from the 'contact' object.
+
+The contact object is of type ContactDTO. You can access any of its fields. To find out which fields this object (or any other object) has, please download jBilling's source  
+code.
+The integration guide is also a source of documentation of jBilling's object model.
+
+*Logic*
+
+Velocity implements its own scripting language that includes typical constructs such as
+'if', 'for', etc... This is very useful when trying to display the lines of an invoice:
+
+#foreach ($line in $invoice.invoiceLines)
+
+Qty: $line.quantity $
+
+line.description $
+
+line.amount
+
+#end
+
+The above loop will produce something like this:
+
+Qty: 1 - Subscription to monthly banner - 100
+
+Qty: 4 - Additional fees - 44
+
+....
+
+There are many other applications for embedded logic within notification templates, but keep in mind that templates should remain simple and easy to change by nontechnical  
+users.
+
+*Tools*
+As good as Velocity is, you will find the need for some additional functionality when it comes to show exactly what you want to the customer. For example, in the invoice line  
+from above, may be it would have been better to show this:
+
+Qty: 1 - Subscription to monthly banner - $100.00
+
+{note}
+Please Note: the formatting of the money value. It includes the currency symbol ($) and the cents.
+{note}
+
+There are a number of tools available for Velocity under the subproject 'Velocity Tools / Generic Tools' (http://velocity.apache.org/tools/releases/1.4/generic/). For the  
+previous example, you would use the 'NumberTool' which you can access through the variable 'tools-number'. jBilling makes all these tools available for you as variables:
+
+ {table}
+*Variable Name*|*Tool*
+tools-date | DateTool
+tools-math | MathTool
+tools-number | NumberTool
+tools-render | RenderTool
+tools-escape | EscapeTool
+tools-resource | ResourceTool
+tools-alternator | AlternatorTool
+tools-valueParser | ValueParser
+tools-list | ListTool
+tools-sort | SortTool
+tools-iterator | IteratorTool
+ {table}
+
+Here is an example of the 'DateTool' used to format a date:
+
+$toolsdate.
+
+format("MM/dd/yyyy",$payment.paymentDate)
+
+The date coming from the payment object will be rendered as '02/10/2009' rather than the default Java date format: 'Fri Apr 10 15:27:32 PDT 2009'.
+
+For a complete list of the methods available in each tool, you can look at: http://velocity.apache.org/tools/releases/2.0/generic.html
+
+*Invoice (paper)*
+
+Even if all of your customer's will be notified about their invoices by email, you still need to provide text for this notification. The reason for this is because text can  
+also appear in the PDF format of the invoice. 
+
+*Invoice Reminder:*
+
+This notification's purpose is to remind your customers that an invoice had been sent to them. When this option is selected (see the Invoice Reminder section below for more  
+details), one or several e-mails will automatically be sent to  
+your customers at intervals that you will have previously chosen.
+
+The messages will be sent after an invoice has been generated and until that invoice is paid or reaches its due date (whichever comes first).
+
+*Payments:*
+
+These two notifications (failed and successful) will let your customers know about the result of a payment attempt. The system automatically submits one of these when a  
+payment has been processed in real-time using a payment processor.
+
+Payment methods that fall in this category are: credit cards, direct debit, and ACH.
+
+When you enter a payment, without *j*Billing doing any processing through a payment processor, you can choose to send a notification by clicking on the submission link after  
+entering the payment. This applies to cheques and any other  
+payment that doesn't involve real-time processing.
+
+*Ageing Notifications:*
+
+You can find these notifications under Configuration, Notification. Click on Users. You will need to enter the text for those related to the ageing steps that you've selected  
+in the 'Ageing' options. Refer to the Ageing section of  
+Chapter 10: Configuration, for more information.
+
+*Trend* chooses to notify any late payer by e-mail up to 3 times over a set period. Here is the first message a late paying client will receive:
+
+Clicking on 'User Overdue' *Trend* checks the Active check-box and enters: Overdue Balance in the Subject text box. Then enter the following text into the Body (Text):
+
+@Dear Client,@
+
+@Our records show that you have an overdue balance on your account. Please submit payment as soon as possible.@
+
+@Regards,@
+
+@Trend's Billing Department@
+
+The notification 'User Overdue 2' the second message sent to a late payer will be more firm and in 'User Overdue 3', it will warn the faulty customer that their case will be  
+transferred over to Collections if they do not pay within the  
+next 24 hours.

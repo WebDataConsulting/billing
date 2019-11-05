@@ -1,0 +1,93 @@
+We can classify payments in two ways: 
+
+# *how* they are entered in the system
+# *if* the payment has been processed by a payment processor 
+
+Lets see these two categories in more detail:
+
+*By Method: Manual or Automatic*
+
+A payment can be entered *manually* by a staff user or a customer directly in the system, or it can be *automatically created* by the billing process.
+
+Entering a payment manually is described in detail below, in its own section. It basically means that *you* select the invoice that is getting paid, and enter the payment details (like the cheque number and amount in the case of a cheque).
+
+A payment is automatically created by the billing process when using a payment processor to, for example, submit credit card payments. To learn more about automatic payment processing, refer to Chapter 4: The Billing Process.
+
+*By Processor: Entered or Processed:*
+
+Payments can be either:
+
+# entered, or 
+# processed
+
+Entered payments are those that you simply enter in the system. There is *no* real-time processing to get the payment approved by a third party payment processor.
+
+For example: if you receive a cheque from one of your customers. Also, if you process a credit card payment outside the system, let's say, by directly calling the credit card issuer by phone, you will also enter the payment on the system, without any further processing.
+
+A processed payment is submitted to a payment processor, which replies with whether or not the payment has been successful. If the payment is accepted, the funds will be deposited directly into your merchant account. This process is all done in real-time, with the whole transaction taking only a few seconds. A typical example of this kind of payment is a credit card payment.
+
+When you are processing a payment, you will see the check-box field, 'Process Payment in Real-Time'. If you submit the payment with the check-box set, the payment will be processed through your payment processor; otherwise it will be simply entered.
+
+*Combinations*
+
+Let's review some combinations of these two types of payments. Note that some are not applicable, such as, an automatic payment that is entered (automatic payments are always processed in real-time).
+
+ {table}
+*Combination Type*|*Entered*|*Processed*
+Manual | A staff user, like the billing administrator, enters a cheque, or a credit card payment that has been approved on the phone. | A staff user or a customer submits a payment that is cleared in real-time by your payment processor. This is usually done for credit card payments.
+Automatic | Not applicable. | The billing process submits payment for each invoice immediately after if it has been generated. The payment processor returns the result of each payment in real-time. 
+ {table}
+
+h3. Payment Methods
+
+*j*billing supports several payment methods. By default, *j*billing is configured for credit cards and cheques. However, it also supports ACH (automatic clearing house). You can configure the system to specify which payment methods you want to accept. Please refer to Chapter 10: Configuration for more information. 
+
+Some payment methods can be processed in real-time and allow you to work with automatic payment processing (to learn more about these terms, see the 'Types of payments' section above). For this, you will need an account with a payment processor.
+
+A payment processor (also known as 'payment gateway') is an independent company, in no way related to *j*billing that provides you with a real-time processing of payments. This means that the payment processor will take your payment submission and forward it to the appropriate financial institution for instant approval. The result of the transaction will be captured by *j*billing, which will make the corresponding action on the customer's account.
+
+If you want to add credit card support, or add another credit card brand to your list of accepted credit cards, you will first have to contact your payment processor or open a merchant account. These and similar actions are outside your *j*billing account, they are all related to your payment processor.
+
+The following is a list of currently supported payment methods:
+
+* Credit cards.
+* Automatic clearing house (ACH): allows direct transfers from bank accounts. It is also called 'direct debit', because your customer's bank account is directly debited the payment's amount.
+* Cheque (paper).
+
+h3. New Payments'
+
+There are two ways to submit a new payment in the system. 
+
+# Click the Customer link, select the customer and then on the 'Make Payment' button located at the bottom of your screen.
+
+
+!makepaymentbutton.png!
+
+
+# Click the Invoices link, select the invoice you wish to pay and then click on the 'Pay Invoice' invoice button.
+
+!payinvoice.png!
+
+Both options will redirect you to the New Payment screen.
+
+*Linking to an Invoice*
+
+The next step is to select the invoice from the invoices list that this payment will be applied to. Only invoices that have some balance are displayed in this list. A payment should always be linked to an invoice. In theory, every time you enter a payment is because a customer has first received an invoice requesting the payment.
+
+Although it is technically possible to go ahead and enter a payment that is not linked to any invoices, this should only be done for very exceptional circumstances, usually related to migrating from a legacy billing system to *j*billing. 
+
+{note}
+Please Note: this option is not available to customers who login in to *j*billing to submit an on-line payment. Customers always have to select an invoice before being able to submit a payment.
+{note}
+
+Once you have selected an invoice, its balance will be copied to the amount field of the payment. You can modify this by editing the field.
+
+Partial payments are supported by the system. The amount paid will be deducted from the invoice's balance. If the balance reaches zero, the invoice is marked as 'Paid' (Status equal to 'Paid')
+
+*Submitting the Payments*
+
+The payment information varies depending on the payment method. Credit card payment will require the card number, name, etc. while cheque payment will have different required fields.
+
+For those payment methods that support real-time processing (see the section on Types above), you can select whether you want the payment to simply be entered, or if you want it to be submitted to the payment processor for immediate processing.
+
+Once you have entered all the payment information, click on the 'Make Payment' button to review all the payment information. The review screen will simply display all the payment's details for you to review before the payment is finally submitted.

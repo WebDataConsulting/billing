@@ -1,0 +1,78 @@
+Refunds represent the return of funds to a customer. Refunds can be summarized as payments that have the opposite effect. Instead of reducing an invoice's balance, they increase it. You will issue a refund only when you have received a payment from a customer first. When you create a refund, you will link it to the payment that is being refunded, just like a payment is linked to the invoice that is being paid.
+
+Except for the differences described above, managing refunds is just like managing payments. You select the payment to be refunded. You select the method: cheque, credit card, etc. Then you select the payment that you would like to refund to the customer. 
+
+{note}
+Please Note: Refunds can only be for the *total* amount of the payment that has been entered or processed. It is currently not possible to refund a customer for a partial payment.
+{note}
+
+h2. How to Create a Refund
+
+Wonder Television Inc. sells subscriptions for different television packages. Customer Sarah Wilson pays in advance for her monthly $200.00 subscription for Basic Cable. In April, she decides she wants to cancel her services. This means that Wonder Television Inc. now owes Sarah a refund of $200. 
+
+Wonder Television Inc.'s billing administrator would need complete the following steps in order to update Sarah's account: 
+
+From the Customer's tab, find customer Sarah Wilson. Select her so that her customer account information is displayed on the right. Scroll down and click on the 'Make Payment' button. 
+
+!makepayment.png!
+
+The New Payment screen will appear. In the 'Payments Paid' list, Sarah Wilson's payment for the April invoice will be displayed. When the payment is selected, the Payment Amount will immediately populate with the total payment amount. In this example, the total payment amount is $200. The Refund Payment checkbox will also automatically be selected. 
+
+!refundpayment.png!
+
+Complete the refund as a regular payment. To do this, click on the 'Review Payment' button.
+
+!reviewpayment.png!
+
+The system will redirect you to the Confirm Refund screen. Here, ensure that the payment information that has been entered is correct. 
+
+!confirmrefund.png!
+
+Click on the 'Make Payment' button to complete the refund.
+
+!makepaymentbutton.png!
+
+The result will look very similar to a payment. The refund will be linked to the invoice, but if we take a look at the invoice, the status has changed back to 'Unpaid'. 
+
+!invoicerefund.png!
+
+Recorded in the 'Payment and Refunds' section of the invoice will be the recorded Refund amount. 
+
+!refundandpayment.png!
+
+The balance of Sarah's account will now state that she has a balance of $200.
+
+!sarahwilson.png!
+
+At this point, it would be up to Wonder Television's billing administrator to manually enter a payment with a note to clarify that the payment is being made as the invoice was refunded for the customer. Once the payment has been entered, the customer's account information will return to $0. 
+
+h2. Refunds and Payment Gateways
+
+Refunds also follow the same rules as payments for the processing. They can be simply 'entered', or they can be 'processed' in real-time through your payment processor.
+
+For example: an 'entered refund' would be a cheque that you send to a customer because the customer over paid you or was overcharged for some services. For a 'processed refund', you would be refunding a payment that was processed on-line through a payment processor. In the case of a credit card refund, your customer's credit card will be refunded in real-time, just like a payment is cleared in real-time. 
+
+{note}
+Please Note: that not all payments processors allow you to submit on-line refunds.
+{note}
+
+For refunds involving a payment processor, *j*Billing only submits the refund request and shows you the result that is returned by the payment processor. For the details and ramifications of how this affects your customer's payment instrument (credit card, bank account), or how this affects your merchant account, you would have to contact your payment processor between the subsequent reminders, should you wish to have more than one. 
+
+!firstreminder.png!
+
+{note}
+Please note: be aware that if you put a small number in the 'Next reminder' box, your customer might receive too many reminders before the due date of their invoice. They could end up tuning out the messages.
+{note}
+
+For example: 
+
+*Trend* chooses to give to its clients 30 days before their invoice becomes overdue. *Trend* wishes to remind them up to 3 times before the due date that an invoice has been generated and should be paid as soon as possible.
+
+This is what Trend enters:
+
+!remindersexample.png!
+
+This is what will happen:
+
+Let's say that the invoice is generated on the first day of the month. If the client has not paid by the 15th, the previously composed text will be emailed. Should the client still not pay, a message will be sent again 5 days later, on  
+the 20th, and again on the 25th of the month. If by the due date the client has failed to pay, their account will then switch over to the ageing process.

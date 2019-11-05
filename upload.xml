@@ -1,0 +1,67 @@
+<!--
+    Usage:
+        ant upload-orders -f upload.xml
+-->
+
+<project name="jbilling Upload" basedir=".">
+
+    <property file="jbilling-build.properties"/>
+    <property environment="env"/>
+
+    <condition property="grails.home" value="${env.GRAILS_HOME}">
+        <isset property="env.GRAILS_HOME"/>
+    </condition>
+
+    <condition property="user.home" value="${env.HOME}">
+        <isset property="HOME"/>
+    </condition>
+
+    <path id="compile.classpath">
+        <!-- jbilling libraries -->
+        <fileset dir="${source.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+
+        <!-- grails libraries-->
+        <fileset dir="${grails.home}/lib/" includes="**/*.jar"/>
+        <fileset dir="${grails.home}/dist/" includes="**/*.jar"/>
+
+        <!--ivy cache -->
+        <fileset dir="${user.home}/.ivy2/cache/" includes="**/*.jar"/>
+    </path>
+
+    <path id="test.classpath">
+        <!-- test classes and junit -->
+        <pathelement location="${build.test.dir}"/>
+        <pathelement location="${junit.dir}/junit.jar"/>
+        <fileset dir="${easymock.dir}" includes="*.jar"/>
+
+        <!-- required dependencies -->
+        <fileset dir="${digester.dir}" includes="*.jar"/>
+        <fileset dir="${quartz.dir}" includes="*.jar"/>
+        <fileset dir="${spring.dir}" includes="*.jar"/>
+
+        <!-- compiled jbilling classes -->
+        <pathelement path="${build.classes.dir}"/>
+    </path>
+
+    <path id="spring.classpath">
+        <pathelement location="${source.spring.descriptor.dir}"/>
+    </path>
+
+    <target name="upload-orders" description="Uploads orders into jbilling">
+        <echo>Uploads orders into jbilling</echo>
+
+        <java classname="com.sapienter.jbilling.tools.UploadOrders" failonerror="true" fork="true">
+            <classpath>
+                <path refid="compile.classpath"/>
+                <path refid="spring.classpath"/>
+                <path refid="test.classpath"/>
+                <pathelement location="${build.classes.dir}"/>
+            </classpath>
+            <arg value="${source.java.dir}/com/sapienter/jbilling/tools/upload.properties"/>
+        </java>
+    </target>
+
+
+</project>

@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jbilling" basedir=".">
+
+    <property file="jbilling-build.properties"/>
+    <property environment="env"/>
+
+    <condition property="grails.home" value="${env.GRAILS_HOME}">
+        <not>
+            <isset property="grails.home"/>
+        </not>
+
+    </condition>
+
+    <echo message="Building with grails ${grails.home}"/>
+
+    <path id="compile.classpath">
+        <!-- jbilling libraries -->
+        <fileset dir="${source.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+
+        <!-- grails libraries-->
+        <fileset dir="${grails.home}/lib/" includes="**/*.jar">
+            <exclude name="javax/javaee-web-api/jars/javaee-web-api-6.0.jar"/>
+            <!--exclude name="org.slf4j/slf4j-simple/jars/slf4j-simple-*.jar"/-->
+        </fileset>
+        <fileset dir="${grails.home}/dist/" includes="**/*.jar"/>
+    </path>
+
+    <path id="test.classpath">
+        <!-- compiled classes -->
+        <pathelement path="${build.classes.dir}"/>
+
+        <!-- testing libraries -->
+        <fileset dir="${junit.dir}" includes="*.jar"/>
+        <fileset dir="${testng.dir}" includes="*.jar"/>
+        <fileset dir="${easymock.dir}" includes="*.jar"/>
+
+        <!-- required dependencies -->
+        <fileset dir="${opencsv.dir}" includes="*.jar"/>
+        <fileset dir="${digester.dir}" includes="*.jar"/>
+        <fileset dir="${jodatime.dir}" includes="*.jar"/>
+        <fileset dir="${quartz.dir}" includes="*.jar"/>
+        <fileset dir="${spring.dir}" includes="*.jar"/>
+    	<fileset dir="${selenium.dir}" includes="*.jar"/>
+    	<fileset dir="${hibernate.dir}" includes="*.jar"/>
+    </path>
+
+    <path id="test.run.classpath">
+        <path refid="compile.classpath"/>
+        <path refid="test.classpath"/>
+
+        <pathelement location="${source.java.dir}"/>
+        <pathelement location="${build.test.dir}"/>
+    </path>
+
+    <path id="spring.classpath">
+        <pathelement location="${source.spring.descriptor.dir}"/>
+    </path>
+
+    <!--
+         Testing targets
+    -->
+
+    <target name="replace-license-tokens" if="licenseAvailable">
+        <replace file = "${build.test.dir}/jbilling.properties" propertyFile = "${basedir}/license.txt">
+            <replacefilter token = "licensee name" property = "licensee"/>
+            <replacefilter token = "place license key here" property = "licenseKey"/>
+        </replace>
+    </target>
+
+    <target name="test" depends="test-unit, test-functional" description="Runs ALL test suites and test cases."/>
+    <target name="test-checkin" depends="test-unit, test-ws" description="Runs unit tests and web-service tests."/>
+
+    <target name="test-unit" depends="init.testng, clean.results" description="Run standalone unit tests. Use -Dgroups to control which test groups are run.">
+        <!-- compile tests -->
+        <antcall target="compile.tests">
+            <param name="suitename" value="unit"/>
+        </antcall>
+
+        <!-- copy jbilling.properties to build path -->
+        <copy file="${source.java.dir}/jbilling.properties" todir="${build.test.dir}"/>
+        <available file = "${basedir}/license.txt" property = "licenseAvailable" />
+        <antcall target="replace-license-tokens" inheritall="true"/>
+
+        <!-- copy spring bean descriptors to build path -->
+        <copy file="${source.spring.descriptor.dir}/jbilling-caching.xml" todir="${build.test.dir}"/>
+
+    	<copy todir="${build.resources.dir}/mediation">
+    		<fileset dir="${source.mediation.descriptor.dir}" includes="RateCard.*"/>
+		</copy>
+
+        <!-- run unit tests -->
+        <testng suitename="${ant.project.name} Unit Test Suite"
+                testname="test-unit"
+                classpathref="test.run.classpath"
+                outputDir="${build.test-results.dir}/unit/xml"
+                failureProperty="test.failure"
+                verbose="2"
+                mode="mixed">
+
+            <classfileset dir="${build.test.dir}">
+                <include name="**/*Test*.class"/>
+                <exclude name="**/*Tester*.class"/>
+                <exclude name="**/*TestCase*.class"/>
+            </classfileset>
+        </testng>
+
+        <antcall target="test.reports">
+            <param name="suitename" value="unit"/>
+        </antcall>
+    </target>
+
+    <target name="test-functional" depends="init.testng, clean.results, copy.mediation-files" description="Run functional tests. Use -Dtestname and -Dgroups to control which test suites and groups are run.">
+        <condition property="testname" value="web-services,integration,billing-and-discounts">
+            <not>
+                <isset property="testname"/>
+            </not>
+        </condition>
+
+        <condition property="groups" value="${testname}">
+            <not>
+                <isset property="groups"/>
+            </not>
+        </condition>
+
+        <!-- compile tests -->
+        <antcall target="compile.tests">
+            <param name="suitename" value="functional"/>
+        </antcall>
+
+        <!-- copy remote spring bean descriptors to build path -->
+        <copy file="${source.spring.descriptor.dir}/jbilling-remote-beans.xml" todir="${build.test.dir}"/>
+
+        <copy file="${source.test.dir}/log4j.properties" todir="${build.test.dir}"/>
+
+        <!-- run functional tests -->
+        <echo message="Running groups '${groups}' for test config '${testname}'"/>
+
+        <testng suitename="${ant.project.name} Functional Test Suite"
+                testnames="${testname}"
+                groups="${groups}"
+                classpathref="test.run.classpath"
+                outputDir="${build.test-results.dir}/functional/xml"
+                failureProperty="test.failure"
+                haltonfailure="true"
+                verbose="2">
+
+            <xmlfileset dir="${source.test.dir}" includes="testng-functional.xml"/>
+        </testng>
+
+        <antcall target="test.reports">
+            <param name="suitename" value="functional"/>
+        </antcall>
+    </target>
+
+    <target name="copy.mediation-files">
+    	<delete  dir="${build.resources.dir}/mediation"/>
+        <mkdir dir="${build.resources.dir}/mediation"/>
+        <mkdir dir="${build.resources.dir}/mediation/errors"/>
+
+        <copy todir="${build.resources.dir}/mediation">
+            <fileset dir="${source.mediation.descriptor.dir}" includes="mediation.dtd"/>
+            <fileset dir="${source.mediation.descriptor.dir}" includes="asterisk.xml"/>
+            <fileset dir="${source.mediation.descriptor.dir}" includes="subscription.xml"/>
+            <fileset dir="${source.mediation.descriptor.dir}" includes="subscription.csv"/>
+            <fileset dir="${source.mediation.descriptor.dir}" includes="asterisk-sample1.csv, asterisk-sample.csv.glo, mediation-batch-test.csv"/>
+            <fileset dir="${source.mediation.descriptor.dir}" includes="jbilling_cdr.*"/>
+        </copy>
+    </target>
+   
+    <target name="test.reports" if="suitename" unless="test.noreport">
+        <junitreport todir="${build.test-results.dir}">
+            <fileset dir="${build.test-results.dir}/${suitename}/xml">
+                <include name="*/*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${build.test-results.dir}/${suitename}/html"/>
+        </junitreport>
+        <fail if="test.failure" message="${ant.project.name} ${suitename} tests failed, see test reports in ${build.test-results.dir}"/>
+    </target>
+
+    <target name="compile.tests" if="suitename" depends="clean.tests">
+        <mkdir dir="${build.test-results.dir}/${suitename}/xml"/>
+        <mkdir dir="${build.test-results.dir}/${suitename}/html"/>
+
+        <echo message="Compiling test suite '${suitename}'"/>
+
+        <javac srcdir="${source.test.dir}/${suitename}"
+               destdir="${build.test.dir}"
+               source="1.8"
+               target="1.8"
+               includeantruntime="false"
+               debug="true" fork="true" deprecation="false" nowarn="true">
+
+            <classpath refid="compile.classpath"/>
+            <classpath refid="test.classpath"/>
+        </javac>
+    </target>
+
+    <target name="run-test" depends="init.testng, clean.results, copy.mediation-files" description="Run a specific test. Use -Dtest to set the class name (use -Dmodule to differenciate suites) for the test to run">
+        <fail message="The property test is missing. Use -Dtest=ClassName">
+            <condition>
+                <not>
+                    <isset property="test"/>
+                </not>
+            </condition>
+        </fail>
+
+        <condition property="module" value="*">
+            <not>
+                <isset property="module"/>
+            </not>
+        </condition>
+
+        <!-- compile tests -->
+        <antcall target="compile.tests">
+            <param name="suitename" value="functional"/>
+        </antcall>
+
+        <path id="absolute.path.id">
+            <fileset dir="${build.test.dir}" includes="**/${module}/${test}.class" />
+        </path>
+        <property name="absolute.path" value="${toString:absolute.path.id}" />
+
+        <fail message="Test class ${test} not found">
+            <condition>
+                <equals arg1="${absolute.path}" arg2=""/>
+            </condition>
+        </fail>
+
+        <echo message="Test ${test} found: ${absolute.path} in ${build.test.dir}" />
+
+        <!-- copy remote spring bean descriptors to build path -->
+        <copy file="${source.spring.descriptor.dir}/jbilling-remote-beans.xml" todir="${build.test.dir}"/>
+
+        <!-- run functional tests -->
+
+        <echo message="Running test '${test}'"/>
+
+        <testng suitename="Single test (${module}/${test}) Functional Suite"
+                testname="${test}"
+                dumpcommand="true"
+                classfilesetref="absolute.path.id"
+                classpath="${absolute.path}"
+                classpathref="test.run.classpath"
+                outputDir="${build.test-results.dir}/functional/xml"
+                failureProperty="test.failure"
+                haltonfailure="true"
+                verbose="2">
+        </testng>
+
+        <antcall target="test.reports">
+            <param name="suitename" value="functional"/>
+        </antcall>
+
+    </target>
+
+    <target name="clean.tests">
+        <delete dir="${build.test.dir}"/>
+        <mkdir dir="${build.test.dir}"/>
+    </target>
+
+    <target name="clean.results" unless="test.noclean">
+        <delete dir="${build.test-results.dir}"/>
+        <mkdir dir="${build.test-results.dir}"/>
+
+        <!-- only clean test results once per build, otherwise we lose our test reports -->
+        <property name="test.noclean" value="true"/>
+    </target>
+
+    <target name="init.testng">
+		<taskdef resource="testngtasks" classpathref="test.classpath"/>
+    </target>
+
+
+
+	<!--
+		Shortcuts for common test groups
+	-->
+
+	<target name="test-ws">		
+		<antcall target="test-functional">
+			<param name="testname" value="web-services"/>
+		</antcall>
+	</target>
+	<target name="test-notes">
+		<antcall target="test-functional">
+			<param name="testname" value="web-services"/>
+            <param name="groups" value="notes"/>
+		</antcall>
+	</target>
+
+    <target name="test-diameter">
+        <antcall target="test-functional">
+            <param name="testname" value="diameter"/>
+        </antcall>
+    </target>
+
+	<target name="test-pricing">		
+		<antcall target="test-functional">
+			<param name="testname" value="web-services"/>
+			<param name="groups" value="pricing"/>
+		</antcall>
+	</target>
+	
+	<target name="test-integration">		
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+		</antcall>
+	</target>
+
+	<target name="test-mediation">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="mediation"/>
+		</antcall>
+	</target>
+	
+	<target name="test-hbase-mediation">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="hbase_mediation"/>
+		</antcall>
+	</target>
+	
+	<target name="test-hbase">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="hbase"/>
+		</antcall>
+	</target>
+	
+	<target name="test-subscription">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="subscription"/>
+		</antcall>
+	</target>
+
+	<target name="test-provisioning">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="provisioning"/>
+		</antcall>
+	</target>
+	
+	<target name="test-partner">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="partner"/>
+		</antcall>
+	</target>	
+
+	<target name="test-process">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="process"/>
+		</antcall>
+	</target>
+
+	<target name="test-account-type">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="accountType"/>
+    	</antcall>
+	</target>
+        	
+    <target name="test-billing">
+        <antcall target="test-functional">
+            <param name="testname" value="billing"/>
+            <param name="groups" value="billing"/>
+        </antcall>
+    </target>
+
+    <target name="test-payment">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="payment"/>
+        </antcall>
+    </target>
+
+    <target name="test-order">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="order"/>
+        </antcall>
+    </target>
+
+	<target name="test-pluggable">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="pluggable"/>
+        </antcall>
+    </target>
+
+    <target name="test-processws">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="process"/>
+        </antcall>
+    </target>
+
+    <target name="test-partnerws">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="partner"/>
+        </antcall>
+    </target>
+
+    <target name="test-meta-fields">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="meta-fields"/>
+        </antcall>
+    </target>
+
+    <target name="test-accountType">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="accountType"/>
+        </antcall>
+    </target>
+
+    <target name="test-item">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="item"/>
+        </antcall>
+    </target>
+
+    <target name="test-invoice">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="invoice"/>
+        </antcall>
+    </target>
+
+    <target name="test-user">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="user"/>
+        </antcall>
+    </target>
+
+    <target name="test-ageing">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="ageing"/>
+		</antcall>
+	</target>
+
+	<target name="test-dynamic-balance">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="dynamic-balance"/>
+		</antcall>
+	</target>
+    <target name="test-auto-recharge">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="auto-recharge"/>
+		</antcall>
+	</target>
+
+ 	<target name="test-purchase-auth">
+		<antcall target="test-functional">
+			<param name="testname" value="web-services"/>
+			<param name="groups" value="purchase-auth"/>
+		</antcall>
+	</target>
+ 	<target name="test-pricing-rate-card">
+		<antcall target="test-functional">
+			<param name="testname" value="web-services"/>
+			<param name="groups" value="pricing-rate-card"/>
+		</antcall>
+	</target>
+	<target name="test-rate-cards">
+        <antcall target="test-functional">
+                <param name="testname" value="web-services"/>
+                <param name="groups" value="route-rate-cards"/>
+        </antcall>
+	</target>
+
+    <target name="test-single">
+        <antcall target="test-functional">
+            <param name="testname" value="test-single"/>
+        </antcall>
+    </target>
+	
+	<target name="test-currency">
+		<antcall target="test-functional">
+			<param name="testname" value="integration"/>
+			<param name="groups" value="currency"/>
+		</antcall>
+	</target>
+
+	<target name="selenium-ui-functional">
+		<antcall target="test-functional">
+			<param name="testname" value="selenium-ui-functional"/>
+			<param name="groups" value="sanity"/>
+		</antcall>
+	</target>
+
+    <target name="test-discounts">
+        <antcall target="test-functional">
+            <param name="testname" value="discounts"/>
+            <param name="groups" value="discounts"/>
+        </antcall>
+    </target>
+
+    <target name="test-orderStatus">
+        <antcall target="test-functional">
+            <param name="testname" value="orderStatus"/>
+            <param name="groups" value="orderStatus"/>
+        </antcall>
+    </target>
+
+    <target name="test-paymentMethod">
+        <antcall target="test-functional">
+            <param name="testname" value="paymentMethod"/>
+            <param name="groups" value="paymentMethod"/>
+        </antcall>
+    </target>
+
+	<target name="test-billing-and-discounts">
+        <antcall target="test-functional">
+            <param name="testname" value="billing-and-discounts"/>
+            <param name="groups" value="billing-and-discounts"/>
+        </antcall>
+    </target>
+
+    <target name="test-order-line-tier">
+        <antcall target="test-functional">
+            <param name="testname" value="order-line-tier"/>
+            <param name="groups" value="order-line-tier"/>
+        </antcall>
+    </target>
+
+    <target name="test-asset">
+        <antcall target="test-functional">
+            <param name="testname" value="web-services"/>
+            <param name="groups" value="asset-assignment"/>
+        </antcall>
+    </target>
+
+    <target name="test-debug">
+        <antcall target="test-functional">
+            <param name="testname" value="debug"/>
+            <param name="groups" value="debug"/>
+        </antcall>
+    </target>
+
+    <target name="test-late-usage-rating">
+        <antcall target="test-functional">
+            <param name="testname" value="rating-late-usage"/>
+            <param name="groups" value="plan-enhancements, late-usage"/>
+        </antcall>
+    </target>
+
+</project>

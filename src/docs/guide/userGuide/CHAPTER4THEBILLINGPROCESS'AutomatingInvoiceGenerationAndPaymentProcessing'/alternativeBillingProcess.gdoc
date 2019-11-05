@@ -1,0 +1,110 @@
+h2. Overview
+
+In jBilling 3.2, changes have been made to the set up of the Billing Period. In previous versions of jBilling, the Billing Period was indicated in one area: the Billing Process configuration screen. Once set, the Billing Period applied to all customers, company wide. This meant that all active customers had the same Billing Period. 
+
+New functionality allows you to select the Billing Period at the customer level. This gives you much more flexibility in determining who, when, and what purchase orders are generated into invoices by the Billing Process. 
+
+Please continue reading for more information on how to set up and use the new Billing Process functionality. 
+
+h2. Billing Period
+
+The Billing Period has been removed from the 'Billing Process' Configuration screen, and moved to the Customer Information screen. This field is now labelled as: 'Main Subscription'. 
+
+The Main Subscription field allows a billing administrator to select any billing period required for a specific customer. 
+
+For example,
+
+Brian Smith's invoices should be generated on a monthly basis. 
+
+This set up means two things: 
+1. The customer is going to be billed on the 1st of the month, every month.
+
+2. The customer's billing period will be a month (30, 31, 28/29 days) in length. 
+
+Therefore, the set up of Brian's main subscription should look like this:
+
+!mainsub1.png!
+
+Purchase Orders with a 'Next Invoice' that falls on a date between the 1 - 31 for a month will be generated into an invoice. This concept should already be familiar to you. At its core, the Billing Period has not changed. All that has been done, is that the field has been moved, and the Billing Period applies to the individual customer.
+
+Another example: customer Sarah Wilson requires a different Billing Period. Her Billing Cycle should also be monthly, however, it should start on the 17th instead of the 1st.
+
+Therefore, her main subscription should be:
+
+!mainsubscription17.png!
+
+This means that on the 17th of every month, Sarah's the 'Next Invoice' date on her purchase orders will be checked by the Billing Process to see if they fall between a Billing Period of: 17 - 16.
+
+You can set the Main Subscription in the following ways:
+
+* Month - select a number between 1 and 31
+* Week - select a number between 1 and 7
+* Bi-Weekly - select a number between 1 and 14
+* Annually - select a number between 1 and 365
+* Daily - select the number 1
+
+h3. Scheduled Plug-In
+
+The Next Run Date field on the billing process configuration screen will still move forward. This has not changed. However, the period of time it moves forward is now based on what you have set up in the scheduled Plug-In.
+
+Remember: this does *not* affect the generation of invoices unless the main subscription for the customer 'sees' an active invoice, or Next Invoice date that the Main Subscription sees.
+
+All the scheduled plug-in does, is tell the system when to trigger the billing process. Via the Next Run Date field, you can then view when the next time the Billing Process is scheduled to run.
+
+To access the plug-in, click on the Configuration tab, and then on Plug-Ins, located in the menu on the left hand side of the screen.
+
+!configplug.png!
+
+Scroll down until you find the plug-in category, Scheduled Plug-Ins. Click on it, and then scroll back up to the top of the screen. 
+
+!schedplug.png!
+
+The plug-in you are interested in editing, is: BillingProcessTask.
+
+!billingprocesstask.png!
+
+Select the plug-in and click on the 'Edit' button. You will be redirected to the Edit plug-in screen.
+
+!intervalplugin.png!
+
+In the interval field needs to be a number value. The lowest value that you can enter is: 1. This means that the Billing Process is scheduled to run every hour.
+
+!interval.png!
+ 
+You can increase the interval to run less often. For example, if you wanted to run the Billing Process every day, you would set the interval to: 24. This means that the Billing Process would run every day. This also means that the Next Run Date would then change from June 1 to June 2. 
+
+If you wanted to run the Billing Process every month, you would set the interval to: 720. This means that the Billing Process would run every month. In this example, the Next Run Date would move from June 1, to July 1. 
+
+h2. Pro-Ration
+
+The Cycle Start Date field has been removed from the purchase order. You will not see this field, even when the preference is configured. The reason for this is because when you set the Main Subscription field for a customer, you are also indicating the cycle start date. 
+
+If you want to use pro-ration, you would configure the functionality as you normally would (preference and plug-ins). If you do not want to use pro-rating, then do not configure the functionality. 
+
+Let's take a look at an example of how the pro-rating works with this new Main Subscription field. 
+
+!prorateexample.png
+
+Brian Smith has a Main Subscription of: 1 Monthly. This means that on the first of every month, the system will see if he has any active orders, and generate invoices. 
+
+He has recurring monthly purchase order with an Active Since date of: July 15. 
+
+Quite simply, the main subscription takes the place of the Cycle Start date field. The system takes the information and interprets it as the following:
+
+The Main Subscription is the first of every month. This means that the order period needs to be aligned to the first of a month. In this case, it would be July 1, since the Active Since date is July on the purchase order. 
+
+When the invoice is generated for this purchase order, the period will be from July 15 - July 31. This functionality remains the same. 
+
+If the Main Subscription was set to: 8 monthly. This would mean that the period would start from the 8th of a month. Therefore, if a purchase order was created with an Active Since date of: July 21, the pro-rated period that would appear on the invoice would be: July 21 - August 7. 
+
+h2. Mediation
+
+On the purchase order screen, you will notice that the Main Subscription check box no longer exists. The reason for this is because the system now acknowledges the Main Subscription field on the Customer screen as the date for which the system uses to resolve which date the one-time current order should be created on.
+
+For example:
+Brian Smith has a Main Subscription of October 5. He has mediation related events recorded on the 2, 3, 5, 6 and 7 of October. When the mediation is processed, Brian Smith is going to end up with two one-time current orders. 
+
+Why? Well, the system is looking to the Main Subscription field date. On the first order, you would see the events made on the 2, 3, and 5. This order would have an Active Since date of October 5. The reason for this is because the Main Subscription is always looking for events in the past up until the Main Subscription date.
+
+The events created on the 6 and 7 would be generated with an Active Since date of November 5. The reason for this is because the events occur AFTER the Main Subscription date. In order for these events to be seen in the past, they must be associated to the NEXT billing period.
+

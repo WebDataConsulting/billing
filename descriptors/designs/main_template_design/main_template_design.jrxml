@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="main_template_design" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8e47aa05-72e2-4f80-9538-2d388907c43b">
+	<property name="com.jasperassistant.designer.GridHeight" value="12"/>
+	<property name="com.jasperassistant.designer.GridWidth" value="12"/>
+	<property name="com.jasperassistant.designer.SnapToGrid" value="false"/>
+	<property name="com.jasperassistant.designer.Grid" value="false"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="invoiceNumber" class="java.lang.String"/>
+	<parameter name="entityName" class="java.lang.String"/>
+	<parameter name="entityAddress" class="java.lang.String"/>
+	<parameter name="entityCity" class="java.lang.String"/>
+	<parameter name="entityProvince" class="java.lang.String"/>
+	<parameter name="entityPostalCode" class="java.lang.String"/>
+	<parameter name="invoiceDate" class="java.lang.String"/>
+	<parameter name="invoiceDueDate" class="java.lang.String"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<parameter name="customerAddress" class="java.lang.String"/>
+	<parameter name="customerCity" class="java.lang.String"/>
+	<parameter name="customerProvince" class="java.lang.String"/>
+	<parameter name="customerPostalCode" class="java.lang.String"/>
+	<parameter name="customerMessage1" class="java.lang.String"/>
+	<parameter name="customerId" class="java.lang.String"/>
+	<parameter name="entityLogo" class="java.io.File"/>
+	<parameter name="customerMessage2" class="java.lang.String"/>
+	<parameter name="notes" class="java.lang.String"/>
+	<parameter name="customerOrganization" class="java.lang.String"/>
+	<parameter name="totalWithTax" class="java.lang.String"/>
+	<parameter name="totalWithoutTax" class="java.lang.String"/>
+	<parameter name="invoiceId" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currency_symbol" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT source_user_id, bu.user_name FROM invoice_line il, base_user bu
+WHERE bu.id = il.source_user_id and il.invoice_id=$P{invoiceId} order by bu.user_name]]>
+	</queryString>
+	<field name="source_user_id" class="java.lang.Integer"/>
+	<field name="user_name" class="java.lang.String"/>
+	<group name="sub-account-group">
+		<groupExpression><![CDATA[$F{source_user_id}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField>
+					<reportElement x="0" y="3" width="100" height="20" uuid="0488ad92-21b7-41b3-b8ae-4556f0038a35"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="181" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="181" backcolor="#F8F8F8" uuid="9695103f-ed26-482d-a422-fe5f9c9c0ddb"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<image>
+				<reportElement positionType="Float" x="26" y="10" width="88" height="43" uuid="68020d91-4973-4689-a384-078e9a413e7c"/>
+				<imageExpression><![CDATA[$P{entityLogo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="26" y="87" width="100" height="20" uuid="aefe8394-8de9-4fe4-8cd0-9334214a6d41"/>
+				<textFieldExpression><![CDATA[$P{customerAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="26" y="107" width="100" height="20" uuid="9853ed2e-0947-4098-af39-be6e022cf9eb"/>
+				<textFieldExpression><![CDATA[$P{customerCity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="26" y="127" width="100" height="20" uuid="7884ae26-af89-4502-90bf-e407a11942ad"/>
+				<textFieldExpression><![CDATA[$P{customerPostalCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="10" width="100" height="20" uuid="b4a7927c-da29-4310-8253-d2fcfade40a5"/>
+				<textFieldExpression><![CDATA[$P{entityName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="33" width="100" height="20" uuid="fd2e9ec2-f24c-41c3-b46e-476672c84851"/>
+				<textFieldExpression><![CDATA[$P{entityAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="53" width="100" height="20" uuid="ea639b5b-aae3-4a48-a1f1-d9af80b48aae"/>
+				<textFieldExpression><![CDATA[$P{entityCity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="73" width="100" height="20" uuid="8cf520f1-1e0f-4b64-b6ff-6d333c710e52"/>
+				<textFieldExpression><![CDATA[$P{entityProvince}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="93" width="100" height="20" uuid="dde777b0-2a33-40af-9460-947dae33d509"/>
+				<textFieldExpression><![CDATA[$P{entityPostalCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="26" y="67" width="100" height="20" uuid="ea4ea157-8e42-42ea-808b-5c797b525769"/>
+				<textFieldExpression><![CDATA[$P{customerName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="106" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="6" width="555" height="100" uuid="843ff285-1636-4e74-b211-2e4f823f42c2"/>
+				<subreportParameter name="invoiceId">
+					<subreportParameterExpression><![CDATA[$P{invoiceId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="srcUsrId">
+					<subreportParameterExpression><![CDATA[$F{source_user_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="currency_symbol">
+					<subreportParameterExpression><![CDATA[$P{currency_symbol}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "main_template_design_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="25">
+			<textField>
+				<reportElement x="0" y="0" width="160" height="15" uuid="f88fe060-5812-4d31-9125-60e1b53ac579"/>
+				<textFieldExpression><![CDATA[$P{customerMessage1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="455" y="0" width="100" height="20" uuid="1546143c-7ee8-400c-84ed-3f043b1450a2"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="25">
+			<staticText>
+				<reportElement x="397" y="0" width="81" height="20" uuid="ecc84c74-dbb9-462c-84d1-78ed67084dfe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grand Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="504" y="0" width="90" height="20" uuid="3a778e1d-c72f-4bf8-9a2e-17136232e35d"/>
+				<textFieldExpression><![CDATA[$P{totalWithoutTax}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

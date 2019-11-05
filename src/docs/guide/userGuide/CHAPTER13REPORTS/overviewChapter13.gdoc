@@ -1,0 +1,37 @@
+*j*billing's Reports Engine is a powerful and flexible tool that will allow you to query all your billing information. To start, click on the Reports link, located at the top of the screen.
+
+!reports.png!
+
+Here you can see a list of the available report types: Invoice Reports, Order Reports, Payment Reports and User Reports. 
+
+!reporttypes.png! 
+
+To access a report, click on the report type that you require. A list will appear on the right hand side of your screen. Select the report you require. Some of the available reports have parameters associated with them, such as a start date, end date, or period breakdown. These are the parameters you use to specify what information is generated on the report. 
+
+Let's take a brief look at each of the standard reports:
+
+h3. Invoice Reports
+
+* GL Summary: General ledger summary of all invoiced charges for the given day, grouped by item type.
+
+* GL Detail: General ledger details of all invoiced charged for the given day.
+
+* Accounts Receivable: Simple accounts receivable report showing current account balances.
+
+* Ageing Balance Detail: Detailed balance ageing report. Shows the age of outstanding customer balances.
+
+* Total Amount Invoiced: Total amount invoiced grouped by period. 
+
+h3. Order Reports
+
+* Product Subscribers: Number of users subscribed to a specific product.
+
+h3. Payment Reports
+
+* Total Payments: Total payment amount received grouped by period.
+
+h3. User Reports
+
+* Top Customers: Total revenue (sum of received payments) per customer.
+
+* User Signups: Number of customers created within a period.

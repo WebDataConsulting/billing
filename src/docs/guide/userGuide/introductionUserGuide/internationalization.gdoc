@@ -1,0 +1,25 @@
+h1. Overview
+
+Many companies run It is possible in jBilling, to select the primary lanugage in which you want to view the system in. This is extremely helpful when you have clients and users who read in different languages. 
+
+h2. Selecting a Language
+
+In order to select the language you want to see jBilling in, click on the dropdown menu beside 'Language'. All languages that currently exist will be displayed. Select the language you require from the list and log into the system. The default language is 'English'. 
+
+!languageselector.png!
+
+When you return to the system at another time, it will remember what language you had selected and default to it. For example, Sarah Wilson's primary language is French. If she selects French from the drop down menu and logs into the system, when she returns to log in, the language displayed will be French. 
+
+In the example screen shot above, the user's primary language is English, so every time he or she logs into the system, it will always display all text in English.
+
+A user can also change the language of the system by clicking on 'My Account' located at the top of the screen. 
+
+!myaccount.png!
+
+The screen will refresh to an 'Edit User' page. Here is where you can change your login information, password and address. There is a drop down menu on this page as well, located beside 'Language' that allows you to change the language to suit your preference. 
+
+!languagemyaccount.png!
+
+{note}
+Please note: if a language is no longer needed, and is removed from the system, it will no longer appear in the Language dropdown menu.
+{note}

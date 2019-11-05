@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_design_page2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true">
+	<property name="ireport.zoom" value="6.115909044841465"/>
+	<property name="ireport.x" value="378"/>
+	<property name="ireport.y" value="1697"/>
+	<parameter name="owner_company" class="java.lang.String"/>
+	<parameter name="owner_street_address" class="java.lang.String"/>
+	<parameter name="owner_city" class="java.lang.String"/>
+	<parameter name="owner_state" class="java.lang.String"/>
+	<parameter name="owner_country" class="java.lang.String"/>
+	<parameter name="owner_phone" class="java.lang.String"/>
+	<parameter name="owner_email" class="java.lang.String"/>
+	<parameter name="owner_zip" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 1 from entity]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="74" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="50">
+			<staticText>
+				<reportElement x="11" y="16" width="133" height="16" forecolor="#1F5868"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Instructions]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="345" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="237" width="449" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Use the following link :https://www.paypal.com/us/cgi-bin/webscr?cmd=_send-money ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="27" width="44" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Mail to]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="194" width="53" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BIC Address:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="247" width="449" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[In the 'Send Money' form, enter 'admin@jbilling.com' into the 'To' Field]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="114" width="74" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Option 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="174" width="63" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Account Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="84" y="27" width="405" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[(Note: This is a Canadian address, it requires additional postage if mailed from the US)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="144" width="51" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bank Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="134" width="449" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[By Electronic Wire Transfer:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="207" width="74" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Option 3)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="154" width="60" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bank Address:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="227" width="449" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[By credit card, eCheck or PayPal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="10" width="74" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Option 1)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="184" width="72" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Account Number:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="40" y="47" width="449" height="67" isRemoveLineWhenBlank="true" forecolor="#000000"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{owner_company}+"\n"+
+$P{owner_street_address}+"\n"+
+$P{owner_city}+" "+$P{owner_state}+"\n"+
+$P{owner_zip}+"\n"+
+$P{owner_country}+"\n"+
+$P{owner_phone}+"\n"+
+$P{owner_email}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="164" width="48" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bank Code:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="91" y="144" width="398" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Royal Bank of Canada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="154" width="389" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[200 Bay Street, Toronto, Ontario, Canada M5J 2J5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="88" y="164" width="401" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[003]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="103" y="174" width="386" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Enterprise jBilling Software Ltd.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="112" y="184" width="377" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[000024016309]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="93" y="194" width="396" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ROYCCAT2 ​]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

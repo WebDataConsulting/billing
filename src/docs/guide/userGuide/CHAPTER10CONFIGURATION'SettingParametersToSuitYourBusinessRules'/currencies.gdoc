@@ -1,0 +1,21 @@
+You can sell your products and services in markets that have different currencies. *j*Billing will invoice your customers in the currency that they are expecting, and will also make any currency exchange calculations. 
+
+To access this area of the system, click on Configuration, and then on Currencies, located on the left hand side of your screen. The Currencies window will appear.
+
+!configurationcurrencies.png!
+
+*Activate a Currency*
+
+Click on the check-box beside the currency you wish to turn 'on'. This currency will now be available in the dropdown menu field: Currency, located on the Customer information screen. You have the option to use either the sytem rates that come with jBilling, or you can update the exchange rates by entering them into the 'Exchange Rate' field. If you want the rates to change, it will have to be done manually. If you do not enter any currency rates into the Exchange Rate field, and you have selected the active field beside a currency, the system will automatically use the default system rates. 
+
+When calcuating a currency, you must use this formula: How many 'X' dollars go into 1 US dollar. You will enter the answer to what 'X' is into the Exchange Rate field beside the appropriate currency. 
+
+For example: How many Canadian Dollars go into 1 US dollar? How many Pounds go into 1 US dollar?
+
+*Add a New Currency*
+
+To add a new currency, click on the 'Add New' button. The new currency pane will open on the right hand side of your screen. 
+
+!newcurrency.png!
+
+Fill in the applicable fields, and if you want this currency to be active, check the check-box beside 'Active'. When you are finished, click the 'Save Changes' button to save the new currency, which will then appear listed in the Currencies pane.

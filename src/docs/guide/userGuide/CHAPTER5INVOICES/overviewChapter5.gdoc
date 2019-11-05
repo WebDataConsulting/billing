@@ -1,0 +1,9 @@
+An invoice is a list of services rendered to your customer, containing prices and charges. Any invoice will feature: the name of your company and your contact information, the name of your customer, their contact information, the invoices number and ID, the date at which it was issued, its due date, whether there is a carried overbalance, and so on.
+
+Sometimes an invoice will reflect the items of a corresponding purchase order, while in other cases, it will include additional charges not directly related to a purchase order, such as taxes, additional fees, special discounts, late payment fees, etc.
+
+An invoice can be represented in the following ways:
+
+* Web (HTML): The HTML representation is the one you can see in your web browser, when using the web-based graphic user interface of *j*billing.
+* PDF: The PDF version is normally called a 'paper invoice', because this version is the one used for printing invoices. Paper invoices can be customized to match your company's corporate image.
+* Email: You can write the text of an email, using variables to represent values such as total, due date, etc. Invoice emails can optionally have an attachment of a PDF version of the invoice as well. The email representation of an invoice is handled by *j*billing as a notification. Please see the notifications documentation for more information.

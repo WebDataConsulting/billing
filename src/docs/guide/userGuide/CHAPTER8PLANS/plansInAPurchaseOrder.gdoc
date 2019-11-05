@@ -1,0 +1,21 @@
+Now that you have a product and the product in a plan, let's take a look at how it would appear in a purchase order: 
+
+You will have to create two purchase orders. One purchase order will include the plan you just created, with a Period of: monthly. 
+
+!monthlyorderplan.png!
+
+It is a monthly purchase order because you know that the customer has signed up for this plan. The specifics include that they pay a monthly fee of $10.
+
+The other purchase order will include the product, with the Period field set to: one time. Notice when you add the product, the price adjusts to show the plan amount of: $0.50.
+
+!productplanpurchaseorder.png!
+
+This purchase order has a period of one time because the phone company cannot know for certain how many minutes a customer will use per month. For the month of June a customer could use 4000 minutes. The next month, they might only use 20. A onetime purchase order allows the system to gather all the one time purchase orders that pertain to the plan, and apply them to the appropriate monthly billing period. 
+
+*The Product Outside of the Plan*
+
+What would happen if you created a purchase order with just the international calls product? Let's find out:
+
+!productonown.png!
+
+As you can see, because this new purchase order does not have the plan attached to it, the product will cost its regular price of $1.

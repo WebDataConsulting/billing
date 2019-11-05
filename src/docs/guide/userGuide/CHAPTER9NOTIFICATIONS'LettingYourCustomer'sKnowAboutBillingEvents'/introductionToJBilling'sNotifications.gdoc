@@ -1,0 +1,15 @@
+An important aspect to any billing process is notifying customers about billing events. Imagine a manual billing process. A large portion of the total effort will be to remind  
+customers about their invoices, tell them that a payment is  
+still due, etc. This applies even for large volume billing processes that are highly automated. You need to retry failed payments, cancel accounts that have not been paid for  
+a while, etc. In short, communication with your customers is key,  
+and needs to be automated as much as possible.
+
+*j*Billing will notify your customers about various events, the most important one most likely being, a new invoice. These notifications have default text that might not suit  
+your company, so it is very important that you review and edit  
+the text for the notifications that you will be using.
+
+The emails sent by *j*Billing can be as simple or as elaborate as you want. You can send a simple text email, or you can send a HTML rich email with colors and graphics. You  
+can also add as much information as you want in a notification;  
+by using the Velocity template engine, *j*Billing allows you to do complex notifications that include variable amounts of data. 
+
+For example: you can send complete invoices with all the data that a customer expects from a paper invoice as an email.

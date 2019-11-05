@@ -1,0 +1,19 @@
+In a nutshell: *any change made to your customers must be backed by a purchase order.*
+
+A subscription, a single purchase, a tax or interests on a late payment, are all represented by a purchase order.
+ 
+Purchase orders provide the main source of information for the next generation of invoices. A purchase order will generate at least one invoice, and in many cases, several invoices across many billing cycles. Many purchase orders can also be involved in the generation of a single invoice. Let's take a look at examples for both cases. 
+
+h2. One Purchase Order Generating Many Invoices
+
+In this case, a purchase order could be valid for several months and generate one invoice per billing cycle.
+ 
+For example: one of *Trend's* customer's order the top banner for four months, paying monthly. This subscription is represented by just one purchase order. The customer will receive four invoices, one for each month. 
+
+h2. Many Purchase Orders Generating One Invoice
+
+This occurs when many purchase orders are active for the same customer, for a given billing cycle.
+ 
+For example: let's say that a customer, after one month of running the top banner, also decides to buy from *Trend*, a lateral banner in other pages. This would involve creating a new purchase order. As long as both orders are active, they will generate one invoice with both charges: the top and lateral banners. 
+
+Customers will receive a single invoice per billing cycle. This invoice compiles all active purchase orders.

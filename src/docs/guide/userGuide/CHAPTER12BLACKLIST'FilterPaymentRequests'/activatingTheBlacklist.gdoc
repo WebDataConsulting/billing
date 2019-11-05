@@ -1,0 +1,30 @@
+To active the blacklist, two plug-ins need to be added to your system configuration, as well as a preference enabled with the id of the payment filter plug-in configuration.
+
+h3. Payment Filter Plug-in Setup
+
+Click on Configiration, then Plug-ins to access the plug-in configuration page. By default, you will not be replacing an existing plug-in, but adding a new one.
+
+The new plug-in is the following:
+
+@com.sapienter.jbilling.server.payment.tasks.PaymentFilterTask@
+
+It's important that plug-in is configured to be the first payment processor in the plug-in processing order. This is so a payment only reaches a real payment processor if it isn't first stopped by the blacklist payment filter. See Plug-ins under the Configuration chapter for more information.
+
+h3. Plug-in Parameters
+
+By default, all filter types are disabled. Each filter type you wish to use must be explicitly enabled as a plug-in parameter. The following table lists all possible parameters. Setting a value of false or removing a parameter causes it to be disabled.
+
+ {table}
+*Name*|*Value*
+enable_filter_user_id | true
+enable_filter_name | true
+enable_filter_cc_number x | true
+enable_filter_address | true
+enable_filter_phone_number | true
+enable_filter_ip_address ** | true
+ip_address_ccf_id xx | 3
+ {table}
+
+Notes: 
+x In *j*Billing 1.1.2, this was unfortunately left as 'enable_filter_test'. 
+xx The IP address is a custom contact field (CCF). If this filter is enabled, the id of the IP address CCF must be provided as the value of the 'ip_addres_ccf_id' parameter. Please see Chapter 10: Configuration for more information.

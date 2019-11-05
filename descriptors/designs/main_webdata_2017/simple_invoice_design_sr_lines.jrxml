@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="simple_invoice_design_sr_lines" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="436a482f-75a5-4ad1-a863-17ec1bf07d33">
+	<property name="ireport.zoom" value="1.4641000000000015"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="currency_symbol" class="java.lang.String"/>
+	<parameter name="invoiceId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tax" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="totalWithTax" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+             il.amount,
+             il.quantity,
+             il.price,
+             il.description,
+             bu.user_Name,
+             bu.id
+        FROM
+             invoice_line il
+        INNER JOIN base_user bu ON bu.id=il.source_user_id
+        WHERE
+             il.invoice_id = $P{invoiceId}
+        --ORDER BY i.internal_number]]>
+	</queryString>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<field name="quantity" class="java.math.BigDecimal"/>
+	<field name="price" class="java.math.BigDecimal"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="user_name" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<variable name="invoice_line_total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<group name="G1">
+		<groupExpression><![CDATA[$F{user_name}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField>
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="2" width="163" height="13" forecolor="#000000" uuid="d7bd6bcf-c45a-499f-9b36-bdd8526b7170"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{user_name}+"("+$F{id}+")"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement mode="Opaque" x="0" y="17" width="553" height="1" forecolor="#E9E7E7" uuid="a9b990e9-c0b5-4e50-b065-50a12602aff2"/>
+					<graphicElement>
+						<pen lineWidth="1.5"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="25">
+			<staticText>
+				<reportElement mode="Transparent" x="197" y="2" width="127" height="15" backcolor="#FFFFFF" uuid="8e5c2eed-96f2-4f7b-8797-846aa1ebbba0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="2" width="234" height="15" backcolor="#FFFFFF" uuid="6b73943f-0502-4258-81d6-91b595824112"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="414" y="2" width="100" height="15" backcolor="#FFFFFF" uuid="ad8fd7a5-c8af-4eea-be35-305a36970c25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="324" y="2" width="90" height="15" backcolor="#FFFFFF" uuid="b560d3e3-7126-49ef-b2e3-7ebbb31a6174"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Price]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="0" y="22" width="553" height="1" forecolor="#000000" uuid="b593558d-561e-4571-b133-6252e1d5f493"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="24" splitType="Prevent">
+			<textField>
+				<reportElement x="0" y="5" width="234" height="15" uuid="eb59a4dd-737c-464a-8239-6e18c342534d"/>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="5" width="100" height="15" uuid="f77e77ba-0ca6-4f44-89df-3f53f233311b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$F{amount}.setScale(4, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="369" y="5" width="45" height="15" uuid="1fc513e0-3355-42fd-8c4b-5eb8d764ef61"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA[$F{price} != null ? (new java.text.DecimalFormat("#,##0.##")).format($F{price}) : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="5" width="67" height="15" uuid="de329779-a878-4696-a1e9-362adda4d266"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA[$F{quantity} != null ? (new java.text.DecimalFormat("#,##0.##")).format($F{quantity}) : "N/A"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Opaque" x="0" y="23" width="553" height="1" forecolor="#E9E7E7" uuid="5060f157-73ca-462f-8a9e-e9edf307281a"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<summary>
+		<band height="49">
+			<staticText>
+				<reportElement x="314" y="3" width="100" height="16" uuid="736b5645-9fd7-42c4-b133-f51abb1c6e16"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Sub Total:]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="345" y="41" width="175" height="1" forecolor="#000000" uuid="de070740-aea1-49aa-9ff0-abd7a0b8be20"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="414" y="21" width="100" height="16" uuid="af74ebaf-6719-4296-a8bf-7cdd79b08dec"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tax}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="314" y="21" width="100" height="16" uuid="4e71ffdd-d09c-476a-889c-2414c75d41ee"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Tax:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="414" y="3" width="100" height="16" uuid="09a8ecf7-41f2-4126-97a4-40efd5630873"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$V{invoice_line_total}.setScale(4, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="345" y="20" width="175" height="1" forecolor="#E9E7E7" uuid="d728e4ce-1fac-4713-a551-bc9e7ded3dc7"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

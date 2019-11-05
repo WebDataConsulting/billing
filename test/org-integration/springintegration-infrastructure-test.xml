@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                  http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="ftpTestSessionFactory"
+          class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory"
+          scope="prototype">
+        <property name="host" value="localhost"/>
+        <property name="port" value="9187"/>
+        <property name="username" value="user"/>
+        <property name="password" value="password"/>
+    </bean>
+
+    <bean id="ftpTestSessionFactoryClean"
+          class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory"
+          scope="prototype">
+        <property name="clientMode" value="0"/>
+        <property name="fileType" value="0"/>
+        <property name="bufferSize" value="100000"/>
+    </bean>
+
+</beans>

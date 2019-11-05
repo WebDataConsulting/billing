@@ -1,0 +1,66 @@
+Preferences are used to modify the behaviour of a *j*Billing module, and can be set at the company level. This means that if you are running several companies in a single *j*Billing installation, each of them can have their own set of preferences.
+
+If you want to change the grace period of the ageing process, you will simply click on Configuration, and then Ageing. You will enter the value that you want in the 'Grace period' field. In this case, you don't need to know that it is a preference that you are dealing with.
+
+However, there are some features that require you to set up a preference. You can access the Preferences by clicking on Configuration. You will be automatically redirected to the list of preferences. You can click on a preference to make any desired changes to its value.  
+
+!preferencevalues.png!
+
+The following is a complete list of preferences:
+
+{table}
+*Number*|*Name*|*Default Value*|*Description*
+1 | This preference is obsolete | n/a | n/a
+2 | This preference is obsolete | n/a | n/a
+3 | This preference is obsolete | n/a | n/a
+4 | Grace Period | none | This preference is part of the ageing component and is editable through the GUI. See the System section of this documentation.
+5 | Partner percentage rate | none | This preference is part of the partner component and is editable through the GUI. See the Partner section of this documentation.
+6 | Partner referral fee | none | This preference is part of the partner component and is editable through the GUI. See the Partner section of this documentation.
+7 | Partner one type payout | none | This is part of the partner component and is editable through the GUI. See the Partner section of this documentation.
+8 | Partner period unit payout | none | This is part of the partner component and is editable through the GUI. See the Partner section of this documentation.
+9 | Partner period value payout | none | This is part of the partner component and is editable through the GUI. See the Partner section of this documentation.
+10 | Partner automatic payment | none | This is part of the partner component and is editable through the GUI. See the Partner section of the documentation.
+11 | User in charge of partners | none | This is part of the partner component and is editable through the GUI. See the Partner section of the documentation.
+12 | Partner fee currency | none | This is part of the partner component and is editable through the GUI. See the Partner section of the documentation. 
+13 | Self delivery of paper invoices | none | This is part of the branding component and is editable through the GUI. See the System section of this documentation.
+14 | Include customer notes in invoice | none | This is part of the notifications component and is editable through the GUI. See the Notifications section of the documentation. 
+15 | Days before expiration for order notification | none | This is part of the notifications component and is editable through the GUI. See the Notifications section of the documentation.
+16 | Days before expiration for order notification 2 | none | This is part of the notifications component and is editable through the GUI. See the Notification section of the document.
+17 | Days before expiration for order notification 3 | none | This is part of the notifications component and is editable through the GUI. See the notifications section of the documentation. 
+18 | Invoice number prefix | none | This part of the invoices component and is editable through the GUI. See the Invoices section of the documentation. 
+19 | Next invoice number | none | This is part of the invoices component and is editable through the GUI. See the invoices section of this documentation.
+20 | Manual invoice deletion | 1 | If it is not possible to delete invoices or not. A '1' would allow this to be done (by users with the right role or permission). Otherwise the option won't be available to any user.
+21 | Use invoice reminders | 0 | This is part of the notifications component and is editable through the GUI. See the notifications section of the documentation.
+22 | Number of days after the invoice generation for... | none | This is part of the notifications component and is editable through the GUI. See the Notifications section of the documentation.
+23 | Number of days for next reminder | none | This is part of the notifications component and is editable through the GUI. See the notifications section of the documentation.
+24 | Data Fattura Fine Mese | 0 | Only applicable to Italian users.
+25 | Use overdue penalties (interest) | 0 | If set to '1', the batch process that follows the billing process will go over overdue invoices calculating interests. This preference is only a switch (on/off), the actual calculations (if this preference is '1') will happen in a plug-in.
+26 | This preference is obsolete | n/a | n/a
+27 | Use order anticipation | 0 | If to use 'order anticipation' for the invoice generation. If set to '1', a new field is considered for orders that indicates a number of months to invoice in advance. This has to be configured along with the right plug-in: @OrderFilterAnticipatedTask@
+28 | PayPal account | none | The account to use with PayPal.
+29 | PayPal button URL | http://www.paypal.com/en_US/I/btn/x-click-but6.gif | A URL where the graphic of the PayPal button is. The button is displayed to customers when they are about to pay. The default is usually the best option, except when other languages are needed.
+30 | URL for HTTP callback | none | This is part of the ageing component and is editable through the GUI. See the System section of the documentation.
+31 | Use continuous invoice dates | 2000-01-01 | If this preference is used, the system will make sure that all your invoices have their dates in an incremental way. Any invoice with a greater 'ID' will also have a greater (or equal) date. In other words, a new invoice cannot have an earlier date than an existing (older) invoice. To use this preference, set it as a string with the date where to start.
+32 | Attach PDF invoice to email notification | 0 | If '1', all the invoice emails will have as an attachment the PDF version of the invoice. 
+33 | Force one order per invoice | 0 | If set to '1', the system will show the field 'Include in separate invoice'. This is a flag that if set, will force the order to be included in one invoice, preventing it from being added with many other orders in the same invoice. 
+34 | This preference is obsolete | n/a | n/a
+35 | Add order ID to invoice lines | 0 | If set to '1', the ID of the order will be added as part of the text in the description of the resulting invoice line. This can help to easily track which exact orders are responsible for a line in an invoice, considering that many orders can be included in a single invoice. 
+36 | Allow customers to edit own contact information | 1 | If to allow customers to edit their own contact information when they login to the *j*Billing GUI.
+37 | Hide (mask) credit card numbers | 0 | If '1', the system will never show a complete credit card number, not even to administrator users or in log files. 
+38 | Link ageing ID to subscription status | 1 | If '1', the system will change the ageing status of a user when the subscription status changes.
+39 | Lock-out user on failed login attempts | 0 | If greater than zero, the system will change the password of a user if they fail to login after a number of retries. This number is the value of the preference. The password will be changed to the value of lockout_password in the file jbilling.properties.
+40 | Expire user passwords after days | 0 | If greater than zero, it represents the number of days that a password is expired and the user is forced to change it. 
+41 | Use main-subscription orders | 0 | If '1', then allow the usage of the 'main subscription' flag for orders. This flag is read only by the mediation process when determining where to place charges coming from events. 
+42 | Use pro-rating | 0 | If '1' your company will be using pro-rating to allow invoicing of fractions of a period. The 'cycle' attribute of orders is displayed. Note that you need to configure the corresponding plug-ins for this feature to be fully functional. 
+43 | Use payment blacklist | 0 | If the payment blacklist feature is used, this is set to the id of the configuration of the PaymentFilterTask plug-in. See the Blacklist section of the documentation.
+44 | Allow negative payments | 0 | If '1', then negative payments (credits) are allowed to be sent to payment processors. 
+45 | Delay negative invoice payments | 0 | If '1', then invoices created with a negative amount during the billing process have their payments delayed, causing them to be carried over to the next invoice. Invoices that have had negative balances from other invoices transferred to them are allowed to immediately make a negative payment (credit) if needed. Preference 44 & 46 usually also enabled.'
+46 | Allow invoices without orders | 0 | If '1', allows invoices with negative balances to generate a new invoice that isn't composed of any orders, so that their balances will always get carried over to a new invoice for the credits to take place. Preference 44 & 45 usually also enabled. 
+47 | Last read mediation record id | 0 | Id of the last record read by the mediation process. This is used to determine what records are 'new' and need to be read.
+48 | Use provisioning | 0 | Set to '1' to allow the use or provisioning. Set to '0' to disable. 
+49 | Automatic customer recharge threshold | 0 | The threshold for automatic payments. Pre-paid users with an automatic recharge value set will generate an automatic payment whenever the account balance falls below this threshold. Note that you need to configure the AutoRechargeTask plug-in for this feature to be fully functional. 
+{table}
+
+{note}
+Please Note: all preferences have a default value. This means that your company does not need to have an explicit value in the table preference to set every preference. If a row for that preference number does not exist in the table preference, then the default value is taken. 
+{note}

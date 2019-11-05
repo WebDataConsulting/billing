@@ -1,0 +1,21 @@
+h2. Overview
+
+In jBilling 3.1, an additional Order Period Type has been added to the Bundle Period drop down list: All Orders.
+
+This is a default field, like the period, 'one-time. This means that you do not need to configure it along with the other Purchase Order Periods. You are also not able to delete it. 
+
+The purpose of this field is to give you the ability to apply a particular product to all orders, for all periods. Depending on your requirements, this feature may come in handy, particularily if you want a discount to apply to all products in the plan, for all periods. 
+
+In the screen shot below, you can see that the Bundle Period has been set to All Orders. This means that when this plan is added and saved to a purchase order, the Long Distance Plan A - fixed rate will appear on *all* purchase orders that are created. 
+
+!allordersplan.png!
+
+In this example, two orders are created. One with the monthly products, 
+
+!allordermonth.png!
+
+and the other with the one-time products. 
+
+!allorderone.png!
+
+As you can see, the Long Distance Plan A - fixed rate product appears on both purchase orders. The reason for this is because the Bundle Period was set as: All Orders.

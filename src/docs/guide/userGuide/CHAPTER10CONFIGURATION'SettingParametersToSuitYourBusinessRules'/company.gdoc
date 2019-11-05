@@ -1,0 +1,9 @@
+This area of the *j*Billing system is for you to add your company information. Fields such as: your company name and address can appear on the invoices that you generate for your customers. Here, you will also set the default currency and language for your customers. These default settings will save you time when you are adding new customers or products. 
+
+{note}
+Please Note: although you are setting defaults, it is possible to add other currencies and languages. Please refer to these respective areas within this chapter for more information. 
+{note}
+
+To access this functionality, click on Configuration, and then on Company, which is located in the sidebar on the left hand side of your screen.
+
+!configurationcompany.png!

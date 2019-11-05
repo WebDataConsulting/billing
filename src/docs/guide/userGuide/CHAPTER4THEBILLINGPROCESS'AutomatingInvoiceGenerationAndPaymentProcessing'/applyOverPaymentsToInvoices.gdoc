@@ -1,0 +1,16 @@
+By using this option, the system will *automatically link new invoices to payments that have some balance left*. If you receive a payment that exceeds the latest invoice, or receive the payment in advance, you can use this option to automatically apply the balance of that payment to future invoices.
+
+!applytooverpayments.png!
+
+When an invoice is generated (either manually or by the billing process) the system will verify if the related customer has payments with a balance greater than zero. If that is the case, it will use those payments towards the payment of the new invoice. A payment can have a balance greater than zero when it has been created without linking it to an invoice, or when its amount is greater than the balance of the invoice that it was linked to.
+
+Let's take a look at an example: one of *Trend's* customers receive a $100 invoice every month. This month the customer, by mistake, sent a cheque for $150. Since it is more trouble to send the cheque back and get a new one for the right amount, it's been agreed that the extra 50$ will go as a partial payment for the next invoice.
+
+By turning the 'Apply over payments to invoices' option on, *Trend* doesn`t do anything special about this situation. It will simply enter the $150 payment and link it to the current invoice. Next month, a new invoice for $100 will be generated. But this time it will be already linked to a payment and will have a balance of just $50.
+
+If you are using automatic payment processing, it is important to remember that if this field is *not* selected (along with the Automatic Payment Processsing field), the system will *not* automatically link a payment to an invoice. 
+
+For example, if you are making a manual payment of $150 on an invoice, and you select the 'Process Payment in Real-Time' field, the balance of the payment will remain as $150. The invoice will remain unpaid. When the Billing Process runs, the system will then see the payment, and link it to the invoice. 
+
+To summarize, if the 'Apply overpayments to invoice' and 'Automatic Payment Processing' fields are not selected, any manual automatic payments that you create will *not* be applied, or linked, until the Billing Process runs.
+

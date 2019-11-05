@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_revenue_design" language="groovy" pageWidth="700" pageHeight="950" columnWidth="700" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0a57aaad-4d9a-4fb3-96f5-e3f7693b1676">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="start_date" class="java.util.Date"/>
+	<parameter name="end_date" class="java.util.Date"/>
+	<parameter name="entityLogo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+il.item_id,
+ild.content,
+e.description,
+sum (amount) as amount
+from invoice_line il
+inner join invoice i on i.id=il.invoice_id
+inner join item im on im.id = il.item_id
+inner join international_description ild on ild.foreign_id = il.item_id
+inner join entity e on e.id = im.entity_id
+inner join jbilling_table jt on jt.id = ild.table_id
+WHERE i.create_datetime between $P{start_date} and $P{end_date} and ild.language_id = 1 and  jt.name ='item'
+group by
+il.item_id,
+e.description,
+ild.content
+order by
+amount DESC ;]]>
+	</queryString>
+	<field name="item_id" class="java.lang.Integer"/>
+	<field name="content" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<title>
+		<band height="166" splitType="Stretch">
+			<rectangle>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="700" height="166" backcolor="#C9C5C5" uuid="bbecbe8f-fec1-4358-9d49-e3102b3f53bd"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="284" y="11" width="416" height="58" uuid="8b5bac96-923c-4e3d-988a-da9d59c93b50"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="22" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCT REVENUE REPORT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="113" width="87" height="32" uuid="b3c2328f-335a-4345-b52c-abadf38cbf92"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[End Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="80" width="87" height="33" uuid="47f25cbf-a0d4-46e4-b033-145d06e1e865"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Start Date:]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
+				<reportElement x="562" y="113" width="138" height="32" uuid="d7da026b-1d92-408d-9e35-a7dcab7455d0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{end_date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
+				<reportElement x="562" y="80" width="138" height="33" uuid="03464c46-929f-47aa-a604-4111f0bc4387"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="79" y="19" width="263" height="50" uuid="18fb48f2-4038-4eaf-89c3-ec16832ea3e1"/>
+				<imageExpression><![CDATA["/home/rinkykumari/webdata/descriptors/logos/entity-1.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="21" y="99" width="211" height="34" uuid="3bdee14a-eba6-4061-9d51-cf4578649a28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="73" y="25" width="94" height="36" backcolor="#C9C5C5" uuid="9265ca22-d60d-4aec-951e-3e1ec7229276"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Item ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="519" y="25" width="96" height="36" backcolor="#C9C5C5" uuid="69cb1915-4696-497e-a3b6-aaf35ab16cae"/>
+				<box leftPadding="1">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="167" y="25" width="352" height="36" backcolor="#C9C5C5" uuid="41426888-32dc-406a-a8a4-f9b536c61768"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Item Description]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="519" y="0" width="96" height="20" uuid="b1a31b8e-7351-4f5f-ae6b-fa9a39854f36"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="13"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}== null ? "" : $F{amount}.setScale(2, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="0" width="94" height="20" uuid="4facb63a-10b5-4160-8038-2fdbb1ba36b7"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph lineSpacing="Double" rightIndent="12">
+						<tabStop position="0" alignment="Left"/>
+					</paragraph>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="167" y="0" width="352" height="20" uuid="4769fe27-89f5-4031-a28c-a57b24795ee3"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="13"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{content}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="395">
+			<elementGroup/>
+			<pie3DChart>
+				<chart>
+					<reportElement x="0" y="0" width="700" height="395" uuid="d4477587-4ebf-4bc5-9b56-2296f7f743bf"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{content}]]></keyExpression>
+					<valueExpression><![CDATA[$F{amount}]]></valueExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="webdata_2017" pageWidth="625" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="35" rightMargin="35" topMargin="10" bottomMargin="20" uuid="52639b59-bf76-4b5e-8403-27c84a7c49d3">
+	<property name="com.jasperassistant.designer.GridHeight" value="12"/>
+	<property name="com.jasperassistant.designer.GridWidth" value="12"/>
+	<property name="com.jasperassistant.designer.SnapToGrid" value="false"/>
+	<property name="com.jasperassistant.designer.Grid" value="false"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="299"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jbilling_test psql local 5432"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="invoiceId" class="java.lang.Integer"/>
+	<parameter name="invoiceNumber" class="java.lang.String"/>
+	<parameter name="invoiceStatus" class="java.lang.String"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<parameter name="customerAddress" class="java.lang.String"/>
+	<parameter name="customerCity" class="java.lang.String"/>
+	<parameter name="customerPostalCode" class="java.lang.String"/>
+	<parameter name="customerCountry" class="java.lang.String"/>
+	<parameter name="entityLogo" class="java.io.File"/>
+	<parameter name="entityStamp" class="java.io.File"/>
+	<parameter name="signatory" class="java.io.File"/>
+	<parameter name="customerOrganization" class="java.lang.String"/>
+	<parameter name="totalWithTax" class="java.lang.String"/>
+	<parameter name="totalWithoutTax" class="java.lang.String"/>
+	<parameter name="tax" class="java.lang.String"/>
+	<parameter name="paid" class="java.lang.String"/>
+	<parameter name="invoiceDate" class="java.lang.String"/>
+	<parameter name="invoiceDueDate" class="java.lang.String"/>
+	<parameter name="entityName" class="java.lang.String"/>
+	<parameter name="entityAddress" class="java.lang.String"/>
+	<parameter name="entityAddress2" class="java.lang.String"/>
+	<parameter name="entityCity" class="java.lang.String"/>
+	<parameter name="entityProvince" class="java.lang.String"/>
+	<parameter name="entityPostalCode" class="java.lang.String"/>
+	<parameter name="entityCountry" class="java.lang.String"/>
+	<parameter name="convertAmountToWords" class="java.lang.String"/>
+	<parameter name="currency_symbol" class="java.lang.String"/>
+	<parameter name="accountTypeName" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT id FROM invoice i WHERE i.id = $P{invoiceId}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<group name="payment" footerPosition="StackAtBottom"/>
+	<title>
+		<band height="298">
+			<image>
+				<reportElement positionType="Float" x="-4" y="6" width="168" height="53" uuid="853cc5ba-6044-463d-87ce-e9c233858923"/>
+				<imageExpression><![CDATA[$P{entityLogo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="68" width="120" height="30" uuid="93329102-f6d3-43ab-86a4-1b69083d8317"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="365" y="6" width="190" height="12" isRemoveLineWhenBlank="true" uuid="f6f45db9-f5a0-45c6-9e96-f6e36377714b">
+					<printWhenExpression><![CDATA[new Boolean($P{entityName} != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entityName}.isEmpty() ? "N/A" : $P{entityName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="365" y="18" width="190" height="12" isRemoveLineWhenBlank="true" uuid="715a23c8-703c-448a-9b7c-94c4e24eb13f">
+					<printWhenExpression><![CDATA[new Boolean(!$P{entityAddress}.isEmpty())]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entityAddress}.isEmpty() ? "N/A" : $P{entityAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="365" y="30" width="190" height="12" isRemoveLineWhenBlank="true" uuid="9f14b15d-fc8a-4b5c-801d-0155eaf8c2c1">
+					<printWhenExpression><![CDATA[new Boolean($P{entityAddress2} != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entityAddress2}.isEmpty() ? "N/A" : $P{entityAddress2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="365" y="42" width="190" height="12" isRemoveLineWhenBlank="true" uuid="5c53f643-b29a-43c8-9a05-f03e7d1bad9b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entityCity} + ", " + $P{entityProvince} + " " + $P{entityPostalCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="365" y="54" width="190" height="12" isRemoveLineWhenBlank="true" uuid="40bab1d3-34dc-46c3-bddd-21360436878e">
+					<printWhenExpression><![CDATA[new Boolean($P{entityCountry} != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entityCountry}.isEmpty() ? "N/A" : $P{entityCountry}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="365" y="66" width="190" height="12" uuid="b3e64d71-3679-4d22-aa29-4febf3da6c30"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PAN#: AACCGO527D]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="365" y="78" width="190" height="12" uuid="a1f935d2-cb61-40e9-bed9-bac9b016ef07"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Service Tax Regd#: AACCGO527DST001]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="135" width="73" height="16" uuid="d1f0327e-28bf-4b24-a044-d9bc32b51aa0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bill to]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="2" y="153" width="225" height="16" uuid="ec8b20af-7290-42d0-819a-0f4fc2a9838c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customerName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="2" y="168" width="225" height="16" uuid="d791f654-3fdf-4be5-8abd-4bbf1ff9d1d4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customerOrganization}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="2" y="183" width="225" height="16" uuid="faba2def-0d07-4c17-b72f-de6cdf4f9946"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customerAddress}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="2" y="198" width="225" height="16" uuid="5c173b88-5250-4a73-bf7c-9c28f2f06bc9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customerCity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="2" y="213" width="225" height="16" uuid="cabdb6f7-43aa-4de4-af6f-1fa48978beed"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customerCountry} + " " + $P{customerPostalCode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="242" y="134" width="73" height="16" uuid="42b14836-6344-407c-8195-7cade2bced6c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Details]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="242" y="153" width="146" height="16" uuid="824fa9fb-0b56-47ae-8ff2-b4423f4a5901"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Invoice Number:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="382" y="153" width="146" height="16" uuid="20878bd9-4096-4b1a-9f50-8faac0b550e9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceNumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="242" y="170" width="146" height="16" uuid="fd77cf24-aeef-48bc-a5a0-c9d0f18a5df3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Issue date:]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement positionType="Float" x="382" y="170" width="146" height="16" uuid="c1d46a45-e7b9-496a-b214-3a6b1e570719"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="242" y="187" width="146" height="16" uuid="424e9058-b924-410b-9c6a-e0c4a2c26ee2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Payment terms:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="382" y="187" width="146" height="16" uuid="490d01d7-bad8-468c-a7d6-97cd45784b86"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceStatus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="242" y="204" width="146" height="16" uuid="fa5c2bf5-b1e8-4ffd-bc12-32da15c3d10c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Billing ID:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement positionType="Float" x="382" y="204" width="146" height="16" uuid="da8cff88-1904-45f2-9029-f1c54c35295a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceId}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="242" y="221" width="146" height="16" uuid="1affcdcd-607f-4c08-a4ce-1b4f446e2c30"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Billing Account Number:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement positionType="Float" x="382" y="221" width="146" height="16" uuid="9210755c-d7a1-423e-a8eb-8250908f71fb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceNumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="257" width="60" height="16" isRemoveLineWhenBlank="true" uuid="6556105c-98f2-4c64-94e6-868274431138"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Period:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="276" width="70" height="16" uuid="fe0b7a39-8158-44b7-bd4f-af30e3aa4e9f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Category:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="62" y="276" width="187" height="16" isRemoveLineWhenBlank="true" uuid="3b2db866-a2a0-47ff-90a4-29a1b025cf06">
+					<printWhenExpression><![CDATA[new Boolean($P{accountTypeName} != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{accountTypeName}.isEmpty() ? "N/A" : $P{accountTypeName}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="2" y="294" width="553" height="1" forecolor="#000000" uuid="0af7205c-9375-4a64-803c-c94eff586c94"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="62" y="257" width="263" height="16" uuid="413a2cb4-9366-4aff-b330-a2d0f8348a5f"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceDate}+ "  -  " +$P{invoiceDueDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="26" splitType="Prevent">
+			<subreport isUsingCache="false">
+				<reportElement positionType="Float" x="2" y="2" width="529" height="24" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="7b317a60-1a5d-43ee-b4a0-c430c616493f">
+					<printWhenExpression><![CDATA[true]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="entityCity">
+					<subreportParameterExpression><![CDATA[$P{entityCity}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceDate">
+					<subreportParameterExpression><![CDATA[$P{invoiceDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="accountTypeName">
+					<subreportParameterExpression><![CDATA[$P{accountTypeName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerCity">
+					<subreportParameterExpression><![CDATA[$P{customerCity}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceDueDate">
+					<subreportParameterExpression><![CDATA[$P{invoiceDueDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerPostalCode">
+					<subreportParameterExpression><![CDATA[$P{customerPostalCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityPostalCode">
+					<subreportParameterExpression><![CDATA[$P{entityPostalCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerCountry">
+					<subreportParameterExpression><![CDATA[$P{customerCountry}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="currency_symbol">
+					<subreportParameterExpression><![CDATA[$P{currency_symbol}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="convertAmountToWords">
+					<subreportParameterExpression><![CDATA[$P{convertAmountToWords}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="paid">
+					<subreportParameterExpression><![CDATA[$P{paid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityLogo">
+					<subreportParameterExpression><![CDATA[$P{entityLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="totalWithTax">
+					<subreportParameterExpression><![CDATA[$P{totalWithTax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityCountry">
+					<subreportParameterExpression><![CDATA[$P{entityCountry}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerName">
+					<subreportParameterExpression><![CDATA[$P{customerName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerOrganization">
+					<subreportParameterExpression><![CDATA[$P{customerOrganization}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceId">
+					<subreportParameterExpression><![CDATA[$P{invoiceId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceNumber">
+					<subreportParameterExpression><![CDATA[$P{invoiceNumber}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceStatus">
+					<subreportParameterExpression><![CDATA[$P{invoiceStatus}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityName">
+					<subreportParameterExpression><![CDATA[$P{entityName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tax">
+					<subreportParameterExpression><![CDATA[$P{tax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityAddress2">
+					<subreportParameterExpression><![CDATA[$P{entityAddress2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityProvince">
+					<subreportParameterExpression><![CDATA[$P{entityProvince}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityAddress">
+					<subreportParameterExpression><![CDATA[$P{entityAddress}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerAddress">
+					<subreportParameterExpression><![CDATA[$P{customerAddress}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityStamp">
+					<subreportParameterExpression><![CDATA[$P{entityStamp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="totalWithoutTax">
+					<subreportParameterExpression><![CDATA[$P{totalWithoutTax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="signatory">
+					<subreportParameterExpression><![CDATA[$P{signatory}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "simple_invoice_design_sr_lines.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="51" splitType="Prevent">
+			<staticText>
+				<reportElement x="3" y="0" width="153" height="17" uuid="24687092-cce7-478c-9988-721f9cac8a55"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Details:]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="2" y="22" width="553" height="1" forecolor="#000000" uuid="f51881f5-ba16-487f-bfc8-32af43f12459"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<subreport>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="3" y="28" width="528" height="19" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="aada94e2-849f-4488-9be3-eb8ab5590cb1"/>
+				<subreportParameter name="entityCity">
+					<subreportParameterExpression><![CDATA[$P{entityCity}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceDate">
+					<subreportParameterExpression><![CDATA[$P{invoiceDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="accountTypeName">
+					<subreportParameterExpression><![CDATA[$P{accountTypeName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerCity">
+					<subreportParameterExpression><![CDATA[$P{customerCity}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceDueDate">
+					<subreportParameterExpression><![CDATA[$P{invoiceDueDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerPostalCode">
+					<subreportParameterExpression><![CDATA[$P{customerPostalCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityPostalCode">
+					<subreportParameterExpression><![CDATA[$P{entityPostalCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="paid">
+					<subreportParameterExpression><![CDATA[$P{paid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerCountry">
+					<subreportParameterExpression><![CDATA[$P{customerCountry}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="currency_symbol">
+					<subreportParameterExpression><![CDATA[$P{currency_symbol}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="convertAmountToWords">
+					<subreportParameterExpression><![CDATA[$P{convertAmountToWords}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="totalWithTax">
+					<subreportParameterExpression><![CDATA[$P{totalWithTax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityLogo">
+					<subreportParameterExpression><![CDATA[$P{entityLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityCountry">
+					<subreportParameterExpression><![CDATA[$P{entityCountry}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerName">
+					<subreportParameterExpression><![CDATA[$P{customerName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerOrganization">
+					<subreportParameterExpression><![CDATA[$P{customerOrganization}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceId">
+					<subreportParameterExpression><![CDATA[$P{invoiceId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceNumber">
+					<subreportParameterExpression><![CDATA[$P{invoiceNumber}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoiceStatus">
+					<subreportParameterExpression><![CDATA[$P{invoiceStatus}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityName">
+					<subreportParameterExpression><![CDATA[$P{entityName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tax">
+					<subreportParameterExpression><![CDATA[$P{tax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityAddress2">
+					<subreportParameterExpression><![CDATA[$P{entityAddress2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityAddress">
+					<subreportParameterExpression><![CDATA[$P{entityAddress}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityProvince">
+					<subreportParameterExpression><![CDATA[$P{entityProvince}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customerAddress">
+					<subreportParameterExpression><![CDATA[$P{customerAddress}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="entityStamp">
+					<subreportParameterExpression><![CDATA[$P{entityStamp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="totalWithoutTax">
+					<subreportParameterExpression><![CDATA[$P{totalWithoutTax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="signatory">
+					<subreportParameterExpression><![CDATA[$P{signatory}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "main_webdata_2017_SR_payment.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="186">
+			<line>
+				<reportElement mode="Transparent" x="2" y="1" width="553" height="1" forecolor="#000000" uuid="802a90b4-907c-439c-97a8-512545609bf6"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="2" width="100" height="16" uuid="b4823e8f-50a0-4e88-bba7-82c9428ca344"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Bill to:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="95" y="2" width="200" height="16" uuid="4d98f6dd-4a73-43cd-b0ed-4fd0ceca03ab"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customerOrganization}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="18" width="100" height="16" uuid="77a69d75-3b08-484b-acb1-680aa17d1c7a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Billing ID:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="95" y="18" width="200" height="16" uuid="98c8824e-c081-43f3-804f-6543be50f704"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceId}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="34" width="100" height="16" uuid="776a7e6b-acc4-4c0d-9955-9e97f52a03cd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Invoice Number:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="95" y="34" width="200" height="16" uuid="18dd1025-a531-4958-a063-6d39114805b0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoiceNumber}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="284" y="7" width="245" height="18" forecolor="#0000FF" uuid="52d83cd6-c133-40cb-ac4b-31d334609ef2"/>
+				<graphicElement>
+					<pen lineWidth="1.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="287" y="8" width="101" height="16" uuid="f6331aa7-a455-45ed-943c-ef76a49af60c"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount due:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="414" y="8" width="108" height="16" uuid="a28b9c78-ce76-4086-8c05-5e50a060848c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalWithTax}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="346" y="28" width="176" height="16" uuid="12589757-3cc8-4ec2-a3b6-b865fa0ed59f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{currency_symbol} +" "+ $P{convertAmountToWords}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="347" y="41" width="175" height="1" forecolor="#000000" uuid="84be6360-6a94-46d7-81d3-f5504380f4a2"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="347" y="43" width="168" height="16" uuid="650c7e46-8a6c-46a9-a6d1-0b0eb46bc7de">
+					<printWhenExpression><![CDATA[new Boolean($P{entityName} != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entityName}.isEmpty() ? "N/A" : $P{entityName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="52" width="320" height="26" uuid="ce1fe88c-b9e0-438a-9aa4-1fcce4d4ee59"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Tax may be deducted at Source @2% under section 194C of the Income Tax Act, 1961]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="77" width="320" height="42" uuid="32282ba9-94f9-42e1-85c4-ae0462439ba2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Tax should not be deducted on the Service Tax component charged on the invoice as per Circular No. 1/2014 issued by the Central Board of Direct Taxes, Ministry of Finance, Govt of India]]></text>
+			</staticText>
+			<image hAlign="Right">
+				<reportElement positionType="Float" x="347" y="80" width="82" height="32" uuid="68a0a978-061a-4a60-ae0b-bde6cf3962f3"/>
+				<imageExpression><![CDATA[$P{signatory}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Right">
+				<reportElement positionType="Float" x="460" y="60" width="90" height="84" uuid="b2386616-e099-478c-9fd3-5a04b8fc95a2"/>
+				<imageExpression><![CDATA[$P{entityStamp}]]></imageExpression>
+			</image>
+			<line>
+				<reportElement mode="Transparent" x="346" y="117" width="112" height="1" forecolor="#000000" uuid="73f10716-5d47-403e-add9-a380b5e24333"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="347" y="119" width="130" height="16" uuid="6290fc04-fe74-4cbd-a88c-832613ba76e6"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Authorised Signatory]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="154" width="549" height="16" uuid="772f1881-c077-4f56-99f9-07bac1bac7e5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[You will be automatically charged for the amount due. No action is required on your part.]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="2" y="179" width="553" height="1" forecolor="#000000" uuid="03179a35-ec39-4e63-9c9a-2623fbf280dd"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<textField>
+				<reportElement x="242" y="0" width="57" height="15" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="dfeaa062-b97c-45e6-b3c2-e727cb3b3a98"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + String.valueOf($V{PAGE_NUMBER}) + " of "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="293" y="3" width="17" height="12" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="4983a726-e3f4-44f9-b6c6-36ae295f4925"/>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

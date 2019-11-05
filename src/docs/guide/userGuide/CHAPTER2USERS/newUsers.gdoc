@@ -1,0 +1,135 @@
+h2. Creating a Customer
+
+To create a customer, click on 'Customer', and then click on the '+ Add New' button.
+  
+!newcustomer.png!
+
+The New Customer screen requires you to enter your customer's basic login information. Once this basic information has been saved, you can start creating purchase orders for this customer. 
+
+The fields you will see on this screen are defined below:
+
+*Number*
+
+!numbernew.png!
+
+When you first create a customer, the Number will show up as: New. Once you save the customer, *j*Billing will assign a number to them.
+
+!number2.png!
+
+*Login Name / Password*
+
+The login name and password will allow your customer to access his/her billing information. This information can be included on the invoices sent to them. To learn more, please refer to, Chapter 9: Notifications. 
+
+!loginpassword.png!
+
+*Status*
+
+Most customers will have a status of active, meaning they have continuing purchase orders. A customer's status can change to overdue or suspended if they have not paid their invoices. They can also be deleted, for example, if they no  
+longer require your services.
+
+!status.png!
+
+*Subscriber Status*
+
+This field describes what kind of subscription the customer has with your company.
+
+!subscribestatus.png!
+
+*Language*
+
+Select from the drop down menu, the languages that you want to associate with the customer. 
+
+!language.png!
+
+*Currency*
+
+Select the preferred currency this customer will operate with.
+
+!currency.png!
+
+*Partner ID*
+
+If this customer has been referred to you by a partner, enter the partner's ID number here.
+
+!partnerid.png!
+
+*Parent ID*
+
+If this customer belongs to a 'Parent Customer', enter the 'Parent Customer's' ID here. This field is related to the sub accounts feature which is described in further detail in Chapter 11. 
+
+!parentid.png!
+
+*Allow Sub-Accounts*
+
+Check this box if this customer will have 'children' accounts. This field is also related to the sub accounts feature, which is further explained in Chapter 11.
+ 
+!allowsub.png!
+
+*Exclude from Ageing*
+
+If this field is selected, the customer will *not* be included in the ageing process. For more information, please refer to Chapter 10: Configuration.
+
+!excludeage.png!
+
+*Contact Type*
+
+This feature allows you to organize the multiple types of contacts you might have for each customer.
+
+!contacttype.png!
+
+For example: you have the main contact information for a customer, as well as for their accounting contact. This means that you can submit all the email notifications (invoices, payments, reminders, etc), to both your customer and  
+his/her accountant. 
+
+Each contact type you create can be included in the email notifications. For more information, please refer to Chapter 10: Configuration.
+
+{note}
+Please Note: one contact type must be the primary contact. This contact will be used for the address on the printed invoice. The primary contact will always be included in the email notifications, whether the 'Include in Notifications' box has been checked or not.  
+{note}
+
+*Email*
+
+This field requires the electronic address where all email notifications for this customer will be sent. This email address will be assigned to the customer's primary contact.
+ 
+!email.png!
+
+This field is mandatory, so you will need to enter a fake email address if you do not have it, or are not interested in email notifications. The reason why this field is so important in *j*Billing is because the system is much more effective when customers can be easily (and cheaply) contacted to notify them of billing events: a new invoice, an invoice reminder, the result of a payment, etc. Please refer to Chapter 9: Notifications for more information. 
+
+*Include in Notifications*
+
+You have the option of sending email notifications to your customers (reminders, announcements, warnings etc.). Check this box if you want to include this contact's email on the list of recipients. 
+
+!includenotification.png!
+
+{note}
+Please Note: this is only relevant if you are working with more than one contact type, and will only take effect on those types that are not the primary one. The contact type considered 'primary' is always preference included in the email notifications. If you don't want a customer to get any notifications, provide a fake email address in his/her contact information. 
+{note}
+
+*Credit Card*
+
+Enter your customer's credit card information here by clicking on the plus sign '+' to open the information pane.
+
+!creditcard.png!
+
+*ACH*
+
+To enter your customer's ACH (Direct Debit) information, click on the plus sign '+' to open the information pane.  
+
+!ach.png!
+
+*Save*
+
+To save your new customer, click on the 'Save Changes' button located at the bottom of the New Customer screen.
+
+!savechanges.png!
+
+*Edit*
+
+You can modify a customer's information at any time. To do this, click on the customer who's information you wish to change, scroll down to the bottom of the page, and click on the 'Edit' button.
+
+!edit.png!
+
+*Deleting Users*     
+       
+To remove a user of any type, click on the Customers link, click on the customer you wish to delete, scroll down to the bottom of the screen, and click on the 'Delete' button.
+ 
+!delete.png!

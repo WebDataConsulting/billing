@@ -1,0 +1,15 @@
+When an invoice is generated, the system assigns it a due date. This date is calculated by adding the period of time you configured under Configuration, to the billing process date. 
+
+For example: if the billing process is running on October 1, and the configured due date is 1 month, the resulting invoices will have November 1 as their due date. If the configured due date is 30 days, the result will be October 31.
+
+It is possible to override the due date for a specific customer. These are optional values. If you enter 1 month for the billing process due date configuration (company wide), but then create a customer with a due date of 90 days, the latter value will take precedence for that customer only.
+
+!billingperiod1month.png!
+
+!duedate90.png!
+
+The same applies at the purchase order level. You can enter a due date value that will apply to that specific purchase order, regardless of that particular customer's due date, or the company wide due date's value. 
+
+{note}
+Please Note: what happens if two purchase orders should be included in one invoice, but the two purchase orders have different due dates? In such a case, the system will generate one invoice per purchase order, each invoice with its own due date.
+{note}

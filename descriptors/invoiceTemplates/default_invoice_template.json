@@ -1,0 +1,174 @@
+{
+    "id": "0",
+    "name": "New Invoice Design",
+    "format": "A4",
+    "sections": [
+        {
+            "id": 1,
+            "name": "main Section",
+            "pageBreakBefore": false,
+            "kind": "Section",
+            "header": {
+                "elements": [
+                    {
+                        "id": 2,
+                        "expr": "PO Box 8482  Ottawa, Ontario, K1G 3H9  Canada",
+                        "thickness": 1,
+                        "roundCornerRadius": 10,
+                        "left": 10,
+                        "top": 70,
+                        "height": 60,
+                        "width": 500,
+                        "font": {
+                            "size": 10,
+                            "face": "SansSerif",
+                            "color": "#000000",
+                            "bold": false,
+                            "italic": false
+                        },
+                        "color": "#808080",
+                        "kind": "TextBox",
+                        "name": "Invoice",
+                        "borderColor": "#000000",
+                        "padding": "10",
+                        "transparent": false,
+                        "bgColor": "#FFFFFF",
+                        "entityId": 3
+                    },
+                    {
+                        "id": 21,
+                        "left": 10,
+                        "top": 10,
+                        "height": 80,
+                        "width": 140,
+                        "color": "#808080",
+                        "kind": "Image",
+                        "name": "Logo",
+                        "imageUrl": "http://cdn.jbilling.com/img/logo-community.png"
+                    },
+                    {
+                        "thickness": 0,
+                        "font": {
+                            "face": "SansSerif",
+                            "size": 10,
+                            "bold": false,
+                            "italic": false,
+                            "color": "#000000"
+                        },
+                        "roundCornerRadius": 10,
+                        "borderColor": "#FFFFFF",
+                        "bgColor": "#A0A0A0",
+                        "transparent": true,
+                        "left": 10,
+                        "top": 90,
+                        "width": 500,
+                        "height": 50,
+                        "kind": "TextBox",
+                        "id": "",
+                        "name": "Address",
+                        "expr": "1 (866) 920-4348  jBilling.com",
+                        "padding": "10",
+                        "entityId": "3"
+                    },
+                    {
+                        "thickness": "1",
+                        "font": {
+                            "face": "SansSerif",
+                            "size": "16",
+                            "bold": false,
+                            "italic": false,
+                            "color": "#000000"
+                        },
+                        "roundCornerRadius": "10",
+                        "borderColor": "#FFFFFF",
+                        "bgColor": "#A0A0A0",
+                        "transparent": true,
+                        "left": "10",
+                        "top": "180",
+                        "width": "500",
+                        "height": "10",
+                        "kind": "TextBox",
+                        "id": "",
+                        "name": "Address1",
+                        "expr": "",
+                        "padding": 10,
+                        "entityId": 3
+                    }
+                ]
+            },
+            "footer": {
+                "elements": [
+                    {
+                        "name": "New Text Box",
+                        "thickness": 1,
+                        "font": {
+                            "face": "SansSerif",
+                            "size": 10,
+                            "bold": false,
+                            "italic": false,
+                            "color": "#000000"
+                        },
+                        "roundCornerRadius": 5,
+                        "borderColor": "#808080",
+                        "bgColor": "#A0A0A0",
+                        "transparent": true,
+                        "left": 10,
+                        "top": 300,
+                        "width": 500,
+                        "height": 50,
+                        "kind": "TextBox",
+                        "id": "",
+                        "expr": "Payment Terms: Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas sed diam eget risus varius blandit sit amet non magna.   Nulla vitae elit libero, a pharetra augue.",
+                        "padding": 10,
+                        "entityId": 3
+                    }
+                ]
+            },
+            "content": {
+                "id": 4,
+                "font": {
+                    "face": "SansSerif",
+                    "color": "#404040",
+                    "size": 14,
+                    "bold": false,
+                    "italic": false
+                },
+                "headerFont": {
+                    "face": "Serif",
+                    "color": "#FFFFFF",
+                    "size": 16,
+                    "bold": true,
+                    "italic": false
+                },
+                "headerBgColor": "#050580",
+                "groupHeaderFont": {
+                    "face": "Monospaced",
+                    "color": "#000000",
+                    "size": 14,
+                    "bold": true,
+                    "italic": false
+                },
+                "groupBgColor": "#000000",
+                "sortCriterion": null,
+                "groupCriteria": null,
+                "columns": [],
+                "recordSeparation": "Line",
+                "recordSeparationThickness": 2,
+                "recordSeparationColor": "#030340",
+                "kind": "InvoiceLines",
+                "name": "Main table"
+            }
+        }
+    ],
+    "pageHeader": {
+        "elements": []
+    },
+    "pageFooter": {
+        "elements": []
+    },
+    "marginLeft": 30,
+    "marginRight": 30,
+    "marginTop": 30,
+    "marginBottom": 30,
+    "entityId": 3
+}

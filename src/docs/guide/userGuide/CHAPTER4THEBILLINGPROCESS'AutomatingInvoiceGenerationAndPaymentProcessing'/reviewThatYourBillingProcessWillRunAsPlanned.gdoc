@@ -1,0 +1,66 @@
+1.5.14 Review that Your Billing Process Will Run as Planned
+
+In order to make sure that your billing process will run as you expect, there are four aspects of the system that you need to review. These four aspects are:
+
+* BillingProcessTask 
+* Next Run Date
+* Review Report
+* jbilling.properties
+
+h2. BillingProcessTask
+
+The very first thing you should check for when reviewing your billing process set up is that the BillingProcess Task plug-in has been  configured and set up.
+
+h2. Next Run Date
+
+The next run date field can be found in Configuration, under Billing Process.
+
+It is important to confirm that this date has not been set in the future. Meaning, that if today's date is August 21, 2011, in order for the billing process to run, the next run date will need to be in the past. 
+
+For Example: It is April 20, 2011. If you want the billing process to run on March 1, 2011, you will set the next run date to March 1, 2011. When the calendar date and the next run date match, the billing process will run.
+
+h2. Review Report
+
+The next field you need to check is Generate Review Report. This field can be found in Configuration, under Billing Process.
+
+If this field is selected, it means that a review report will be generated for your billing administrator to review before your actual billing runs, and your invoices are sent to your customers. However, if the billing administrator has not approved the most recent review report, and the next run date has come and gone, your billing process will not run. The review report *must* be approved to let jBilling know that it can continue with the billing process. 
+
+If this field is not selected, then there should be nothing preventing your billing from being processed as planned (provided you follow through reviewing the next 2 features of the system).
+
+To learn more about the review report, please see section 1.5.13 Viewing the Process Results.
+
+
+h2. jbilling.properties File
+
+If the Next Run Date is set to a date in the past, and the most recent review report has been approved, you will want to test the billing process by changing an aspect of your jbilling.properties file.
+
+Access this file while jBilling is running, through a commmand prompt window by entering: cd jbilling.properties. A group of text should appear. About half way down you will find the text that pertains to the Billing Proccess. It contains the following information:
+
+
+# Process time configuration
+# These two properties set the frequency of the jbilling batch process
+# The fist property indicates at what time of the day the trigger has to 
+# happen for the very first time. After this first run you will need X minutes 
+# (specified by 'process.frequency') to run the trigger again.
+# The first property is optional. If it is not present, then the next trigger will happen at 
+# startup + minutes indicated in 'process.frequency'.
+#   time: YYYYMMDD-HHmm (a full date followed by HH is the hours in 24hs format and mm the minutes).
+process.time=
+#   frequency: the number of minutes between runs
+process.frequency=10
+
+In summary, from this file, you can override jBilling's configuration and start trigger the billing process to run whenever you want. By setting the process.time with a date and time, you can effectively dictate exactly when you wnat your billing process to run. This field is not mandatory.
+
+In order to test your billing process however, you will need to set the process.frequency. All you need to do is enter the number of minutes you want to wait in between the attempts the system will make to process your billing. As you can see from the example above, it is set to 10. This means, that every 10 minutes, the system will attempt to run the billing process.
+
+Change this field to 5 minutes and restart jBilling. 5 minutes after you have restarted the system, attempt to manually generate your billing.
+
+{note}
+Please Note: it is very important that when completing this step of the process that you are not currently billing your customers. If you are, and you manually start your billing process, they will be billed.
+{note}
+
+If you have selected the Generate Review Report field, one should be generated. If not, then a billing report will be generated. You can find either of these reports in the list displayed on the Billing screen. 
+
+
+
+

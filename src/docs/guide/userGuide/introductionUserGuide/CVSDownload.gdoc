@@ -1,0 +1,9 @@
+On the customers, invoices, payments and refunds, and orders screens you have the option to download a spreadsheet that displays information from the list. 
+
+It is possible to filter the information that appears on the spreadsheet by using the filters available in each of the above mentioned sections of the system. 
+
+!cvsdownload.png!
+
+To download a report, click on the CVS download link provided on the customers, invoices, payments and invoices, and orders lists. A spreadsheet will automatically be downloaded to your computer. Open the spreadsheet to view the report. 
+
+!cvsspreadsheet.png!

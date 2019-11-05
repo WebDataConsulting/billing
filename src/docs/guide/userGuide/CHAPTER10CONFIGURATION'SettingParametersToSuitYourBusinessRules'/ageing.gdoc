@@ -1,0 +1,91 @@
+h3. Introduction: The Ageing Process
+
+What happens when a customer hasn't paid their invoice and the due date has come and gone? This is the issue that the ageing process addresses. The term 'Ageing' reflects the several steps that a customer account goes through, beginning with 'Active' and ending with 'Deleted'. This process *notifies your customers about their overdue invoices, and changes the status of that customer's account*. 
+
+To access Ageing, click on the Configuration link, and then click on Ageing, located in the sidebar on the left hand side of your screen. 
+
+!configurationageing.png!
+
+Let's review the events that relate to the ageing process:
+
+# An invoice is overdue, because the due date is past the current date.
+
+# The grace period gives the customer a few more days before any action is taken.
+
+# After the grace period is over, the ageing steps are applied, depending on which ones you have configured.
+ 
+{note}
+Please Note: if you do not want the ageing process to take place at all, you just need to make sure all the check-boxes beneath the column 'In Use' are unchecked, and click the 'Save Changes' button.
+{note}
+
+Let's go over each of these parameters in more detail:
+
+*Grace Period*
+
+A customer's invoice has to be overdue in order for them to be put into the Ageing Process. When this happens, the system will wait the amount of days that you specify under 'Grace Period' before moving the customer to the first step. The grace period allow for cheques to arrive by mail, for instance, should you have customers sending in their payment using slower means. 
+
+!activegraceperiod.png!
+
+*Steps*
+
+The key attribute of an ageing step is its status. The status of a step is pre-configured: step 1 is 'Active', step 2 is 'Overdue', step 5 is 'Suspended', step eight is 'Deleted'. Each of these statuses has very important consequences to a customer account:
+
+*Active:* This is the normal status of a customer, before they enter the ageing steps. 
+
+*Overdue:* A customer has failed to submit a payment before the due date. The customer will receive emails containing text you will have selected, and at a frequency of your choice (see examples below). Other than these notifications, there are no other changes to the customer's account. All the purchase orders remain the same. 
+
+!overdue.png!
+
+*Suspended:* Once a customer's account is suspended, the system will update all of the customer's active purchase order to a status of 'Suspended'. *j*Billing will therefore *stop generating invoices* for this account.  The system will also send a notification to the customer. 
+
+!suspended.png!
+
+*Deleted:* A this stage a customer's account is *deleted from the system*. For obvious reasons, you must be careful when using this step. Normally, you will *only* use this ageing step when you are sure a customer will not pay her invoices and you just want to remove their account from the system. 
+
+!deleted.png!
+
+{note}
+Please Note: there is also a column called 'Can login'. This is not related to logging into *j*Billing. Your customers can always login to the system (except when they have a 'Deleted' status). This way, they can get up-to-date with their payments, update their credit card information or submit a payment. The column 'Can login' is only relevant when integrating your system with *j*Billing through one of the integration APIs.
+{note}
+
+You can select which steps your customers will go through in the Ageing Process by using the 'In Use' check-box of each step. If the check-box is checked, the ageing process will use the step, otherwise it will be ignored. 
+
+The column 'Days' of each step represents the amount of days your customers will stay in this step before moving on to the next one. For the last step, this value has to be zero. A customer reaching the last ageing step will stay in that state until they actually pay, and is set back to 'Active'.
+
+The 'Welcome Message' is a message that will be displayed right after login. Here you can also specify the welcome message for an 'Active' status. This is an important message that will be displayed to all your active customers immediately after they log into *j*Billing. Please note that this text accepts HTML tags, you can use these tags to customize the look of your welcome screen.
+
+{note}
+Please Note: you might not want your customers to ever login to *j*Billing. If that is the case, the welcome message is irrelevant for you.
+{note}
+
+The 'Failed login message' is only relevant when using an integration method. When a customer wants to access your services, your system can query *j*Billing for this message to be displayed.
+
+For each step that you select (by checking the 'In use' check-box), *you will have to specify the notification email message*. You can do this by clicking on menu option Notification and then on each of the notifications that apply to the statuses you selected for your Ageing process.
+
+For example: if you've selected the steps 2 (Overdue), 5 (Suspended) and 8 (Deleted), you will have to enter the text for the notifications: User Overdue, User Suspended and User Deleted. Additionally, you will need to enter the text for the notification 'User Reactivated', which is sent when a customer in the Ageing process goes back to 'Active' status after a payment.
+
+h3. Example
+
+*Trend* has a 5 day grace period, which indicates it wants to have 5 days go by before a customer gets notified by e-mail that their payment is late. In other words, a customer will be bothered with emails only 5 days after an invoice is actually overdue.
+
+This is done mostly because many of *Trend's* customers pay by cheque, and this kind of payment requires someone from the accounting department to actually login to *j*Billing and manually enter the payment. Since there is some human intervention required, *Trend* chooses to use a grace period of five days.
+
+For the ageing steps, *Trend* switches on 3 steps: Overdue, Overdue 2 and Overdue 3.
+
+!trendoverdue.png!
+
+There are no steps from the 'Suspended' group. *Trend* prefers not to automate these steps because they involve more than just sending emails asking customers to pay their late invoices. Suspended steps go farther, suspending purchase orders that otherwise would be active.
+
+!trendsuspended.png!
+
+For *Trend* this is not a good option. They do not have such a large number of customers that would require automation of this part of the collection process. *Trend* prefers to take those customers that had reached the 'Overdue 3' step and give them a call directly before any further action is taken.
+
+The purpose of this example is to show you that the best choice for the ageing process configuration depends on many factors based upon how you run your company: how large it is? Is the relationship with your customers personalized, or do you favour a fully automated system? *Trend* finds a balance by automating part of the process with *j*Billing, and leaving the rest to its human resources.
+
+Let's take a closer look to the parameters of these three steps for *Trend*: We will assume an invoice with a due date of June 1st.
+
+Overdue: (7 Days). The message related to this step is sent right after the grace period is over, on June 6th. A customer would be in 'Overdue' state for 7 days, starting on June 6th and ending on June 13th.
+
+Overdue 2: (10 Days). The message related to this step is sent on June 13th, when the customer is moved from 'Overdue' state to 'Overdue 2' state. A customer would be in 'Overdue 2' state for 10 days, starting on June 13th and ending on June 23rd.
+
+Overdue 3: (0 Days). Since this period is the last one selected; the value next to it needs to be zero. The message related to this step will be sent on June 23rd. From here, the only change of status that can occur automatically is when the customer pays and they return to an 'Active' status. The only other way that their status can change is manually: an employee of *Trend* would have to edit their account and changing them to 'Suspended', 'Deleted', etc.

@@ -1,0 +1,36 @@
+h1. Overview
+
+In jBilling, customers have the ability to log into their account. For sub-accounts, the Parent of that account may want to have access to or control over the data available in the children accounts that belong to them. This functionality is also available in the system.
+
+Examples of users, or Parent accounts who might want to have access to their Children account information are, Service Providers, Resellers, and General Customers.
+
+The primary purpose of this functionality is to allow a Parent account to manage their own sub-accounts. 
+
+h2. How it Works
+
+Permissions need to be enabled for the Parent account in order for them to be able to view their Children accounts. When enabled, the user will see Customer, Order, Payment, and invoice list pages to show entries that belong to the Child Accounts. It is important to note that when the permissions are enabled, but the 'View all Customers' field is disabled, the list pages are restricted to showing only the Child account users who are logged-in.
+
+*j*Billing comes standard with several roles. The 'Customer' Role is automatically assigned to any customer who is created in the system. This role can be found in Configuration under the Roles menu located on the left hand side of the screen. If you take a look at the permissions that are assigned to this role, you will notice that there are a few which are specific to viewing sub-accounts:
+
+* Under Customer: View Customer sub-accounts
+* Under Orders: View Customer sub-accounts
+* Under Payment: View Customer sub-accounts
+* Under Invoice: View Customer sub-accounts
+
+!customerrolesample.png!
+
+The image above is a sample of what these fields look like.
+
+These selected fields enable any customer, who has sub-accounts beneath them, to view these accounts in each of the areas specified above. By viewing their sub-accounts, Parent accounts are able to better manage their accounts.
+
+For Example,
+
+Customer Sam Wilson has a sub-account, Laura Walker. Since these fields are selected in the customer role, when he signs in, he is able to view information for Laura. 
+
+!maintainsubaccount.png!
+
+However, if Laura were to sign into the system, she would only see her account, and no other. The reason for this is because she does not have any sub-accounts listed beneath her. 
+
+!customernosubaccount.png!
+
+It is of course, possible to change the customer role to give the parent account access to more areas of the system. This guide simply covers what is included in the system when you receive it. 

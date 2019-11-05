@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE format SYSTEM "mediation.dtd" >
+<format>
+    <field>
+    	<name>call_type</name>
+    	<type>string</type>
+    	<isKey/>
+    </field>
+    <field>
+    	<name>dgts</name>
+    	<type>string</type>
+    </field>
+    <field>
+    	<name>price</name>
+    	<type>decimal</type>
+    </field>
+    <field>
+    	<name>grp</name>
+    	<type>integer</type>
+    </field>  
+</format>

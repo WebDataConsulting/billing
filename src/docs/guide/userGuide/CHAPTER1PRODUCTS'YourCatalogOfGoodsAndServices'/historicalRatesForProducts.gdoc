@@ -1,0 +1,103 @@
+h2. Overview
+
+The historical rates functionality is very useful if you have products with a constant flux of rates. This feature will allow you to add prices to a product, based on a timeline. In other words, it's possible for you to set up different rates over a period of time. This could include rates after a day, week, month, etc. Rates are captured and available to view directly on the product timeline. 
+
+When a purchase order is created, if you add a product with a historical rate timeline, the system will search for the rate that the date in the 'Active Since' field belongs to. The system will then automatically apply the appropriate historical or current rate for the product to the purchase order. 
+
+{note}
+Please Note: this feature is only available in the Enterprise Edition of jBilling, as it relates to pricing models. 
+{note}
+
+!historicalratesdiagram.png!
+
+When you first set up a product, there will be a field that reads: Start Date: 01/01/1970.  
+
+!timelinenewproduct.png!
+
+After you save the product, edit it. You will notice that the product timeline has appeared. You will now be able to add a historical rate, using the Start Date field. 
+
+!timelineappear.png!
+
+
+h2. How to Set up a Historical Rate on a Product
+
+Taking a look at a scenario will help to explain the process of setting up a historical rate for a product:
+
+Telecall Systems is a cell phone service provider. In jBilling, they have set up a category of cell phones with a product: Cell Phone 1002, at a metered rate of $100. 
+
+In March, Telecall Systems decides that they want to sell this phone at a discounted price of: $80. In order to do this, they need to add a date to the timeline, and change the rate of the product.
+
+{note}
+Please Note: before we get into the details of how to add a date to the historical timeline, there is a default field that is important to take note of. This field is the default date that appears on the timeline: 01/01/2011. 
+
+This date acts as a starting point for the system, and should not be altered. This is not to say that it *can't* be altered, it is just highly recommended that you leave it as is.
+{note}
+
+*To Add a Date to The Historical Timeline*
+
+Click on the 'Add Date' link, located on the timeline. It is important to remember this step because if you do not click on this link, you will remove whatever date exists before it. This is something you do not want to do, especially for the default 01/01/1970 date.
+ 
+!adddate.png!
+
+The Start Date field will default to the current date. This date will also be reflected on the timeline until you change the 'Start Date'. The Pricing field will return to the default pricing model, Flat.
+
+!newhistoricalrate.png!
+
+Select the desired date from the Start Date field. In this example, it's March 1, 2011 (03/01/2011).
+
+!selectdate.png!
+
+Change the rate of the product. In this scenario, the rate will be changed to: $80. 
+
+!changerate.png!
+
+Click on the 'Save Changes' button, located beside the 'Add Chain' button. 
+
+{note}
+Please Note: if you click on the 'Save Changes' button beside the 'Cancel' button, the historical rate will not save on the timeline. 
+{note}
+
+The new rate and date will be saved. Click on the 'Save Changes' button beside the 'Cancel' button to confirm the changes, and you will be returned to the Products screen. 
+
+!historicalfinalsave.png!
+
+To summarize, Telecall Systems now has a rate of $100 for Cell Phone 1002 from January 1, 1970, until February 28, 2011, and a discounted rate of $80 from March 1, 2011 and onward. To add another rate, simple repeat the process described above. 
+
+For example, let's say that Telecall Systems wants to end the discounted Cell Phone price on April 1, 2011. To do this, they would simply need to follow the steps for creating a historical rate on the product timeline. The new date would be: April 1, 2011, and the rate would be metered: $100. Any purchase order created with an 'Active Since' date of April 1, 2011 and onwards will receive the cell phone at a rate of $100.
+
+
+h2. Historical Rates and Purchase Orders
+
+Now that you have an understanding of how to set up a historical rate, it's important to know how purchase orders are affected. 
+
+Telecall Systems has a customer named Peter Smith. In February, Peter ordered Cell Phone 1002. Since it is a one time purchase, a one-time purchase order is created on February 1, 2011. 
+
+!historicalactivesince.png!
+
+When the cell phone product is added, notice the price:
+
+!historicalrate100.png!
+
+The product is charged at a rate of $100 because February 1, 2011 falls *before* March 1, 2011. The rate of the product *before* March 1, 2011, is $100.
+
+Telecall Systems has another customer, David Smith, who purchases Cell Phone 1002 on March 7, 2011. Since it is a one time purchase, a one-time purchase order is created on March 7, 2011. 
+
+!historicalactivesince2.png!
+
+When the cell phone product is added, notice the price:
+
+!historicalrate80.png!
+
+The product is charged at a rate of $80 because March 7, 2011 falls *after* March 1, 2011. The rate of the product *after* March 1, 2011, is $80. 
+
+It is important to note that once the Active Since date is set, the plan will not change rates, even if they change on the historical timeline. 
+
+Using a previous example:
+
+* Active Since: February 11, 2011
+* Product Rate = $100
+
+When an invoice is generated for March, even though the rate of the product changes, the rates applied to the customer will not change to match the timeline. They will remain as they are. When a purchase order is created and the active since date is set, the system will find the correct rate to use, and moving forward will apply only that rate until configured otherwise. 
+
+To summarize, by adding different rates and dates to the product's historical timeline, these changes will be reflected on purchase orders based on the 'Active Since' date that is selected. This enables you to keep an automatic and accurate historical record of all rates that exist for the product.
+

@@ -1,0 +1,31 @@
+--- web-app/css/all.css
++++ web-app/css/all.css
+@@ -858,7 +858,7 @@ hr {
+ 
+ /* line 583, sass/all.sass */
+ .submit2, .submit, .submit3, .submit4 {
+-  background-color: #6471B5;
++  background-color: #337ab7;
+   color: #f8f8f8;
+   font-size: 11px;
+   line-height: 26px;
+@@ -1096,13 +1099,15 @@ hr {
+ }
+ /* line 722, sass/all.sass */
+ .msg-box.warn {
+-  background: white;
+-  border: 1px solid #e9a66b;
++  color: #8a6d3b !important;
++  background: #fcf8e3;
++  border: 1px solid #faebcc;
+ }
+ /* line 725, sass/all.sass */
+ .msg-box.error {
+-  background: #f8dec7;
+-  border: 1px solid #e9a66b;
++  color: #a94442 !important;
++  background: #f2dede;
++  border: 1px solid #ebccd1;
+   margin: 23px 0 -22px 10px;
+ }
+ .columns-holder .msg-box {

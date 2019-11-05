@@ -1,0 +1,9 @@
+When you have a customer with 'Paper' as a delivery method the billing process will generate a PDF invoice and include the resulting document in a file, along with the invoices of all the other customers that also have 'Paper' for delivery method.
+
+This is done to simplify printing and mailing paper invoices. Instead of having to go to each invoice and download the paper version of it for printing, you will have one single file containing all the invoices to be printed.
+
+The system will email this file to the billing administrator if this preference is set, or to the *j*Billing system administrator if it is not set. In other words, when you set 'Self deliver paper invoices' you are indicating that you want to print and mail the invoices yourself. 
+
+You can set this preference by clicking on Configuration, and email, located on the left hand side of your screen. 
+
+!selfdeliver.png!

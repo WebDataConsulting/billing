@@ -1,0 +1,65 @@
+h1. Overview
+
+An enumeration is a feature of *j*Billing, which allows you to create values in a list, which can then be used as a Meta Field. 
+
+h2. Creating an Enumeration
+
+To create an Enumeration, you need to click on Configuration, and then on Enumerations, located in the menu on the left hand side of your screen.
+
+!accessenumerations.png!
+
+To create a new enumeration, click on the 'Add New' button. Your screen will refresh to the New Enumeration screen.
+
+The following is the description of the fields you will see in this area:
+
+*Name*
+
+This is where you enter the name of your enumeration.
+
+*Provide some values below:*
+
+This field has a little green '+' button beside it, and a value below it, which reads: 0. There is also a text box beside it.
+
+Here is where you add the values for your list. To do this, enter the first value in the field beside '0'. To add another value, click on the green '+'. You can add as many values as you require. 
+
+h2. Enumeration Set-up Example
+
+The name of this enumeration is: Certification. There are two values that fall under this enumeration, and they are: Microsoft and RedHat.
+
+Microsoft is entered into the value beside '0', as it is the first value. To add the second value, you need to click the green '+' button. 
+
+!addingvalues.png!
+
+Another value field will appear. Here is where you can enter, RedHat.
+
+!redhat.png!
+
+Once you are finished, click on the 'Save Changes' button. To discard the enumeration, you can click on the 'Cancel' button. You also have the ability to edit the enumeration. This can be done by selecting it from the enumerations list, and clicking on the 'Edit' button.
+
+!editenumeration.png!
+
+h2. Creating a Meta Field Using an Enumeration
+
+Now that you have successfully created your enumeration, you are now ready to add it to the user interface by creating it as a Meta Field. For the purpose of this example, you will be adding it to the customer information screen. 
+
+Click on the Configuration tab, and then on Meta Fields, located in the menu on the right hand side of your screen. Because you want to create the enumeration for the customer screen, you need to select the 'Customer' Entity Type. To add the enumeration to the Meta Field, click on the 'Add New' button.
+
+!enumerationmetafield.png!
+
+You will be taken to the New Meta Field page. 
+
+{note}
+For more information on Meta Fields, and how to fill in the values on this page, please refer to 1.3.5 Meta Fields.
+{note} 
+
+For this example, you are calling the Meta Field: Certification, the data type needs to be ENUMERATION (this applies whenever you are creating a Meta Field using an enumeration), you want it to apply to all customers, and it needs to be a mandatory field. Once you have completed filling in the information, click on the 'Save Changes' button. 
+
+!examplemetasetup.png!
+
+The newly created Meta Field will appear listed on the right hand side of the screen. 
+
+Because the Meta Field was added to the 'Customer' Entity Type, we can view your newly created Meta Field by clicking on the Customer tab. Click on any customer, and then on the 'Edit' button, or click on the 'Add New' button. In both cases, you will see that the Meta Field has used the values entered in the enumeration to create a dropdown list in the user interface. 
+
+!metafieldenumeration.png!
+ 
+From here, a user can select the appropriate option for the customer.

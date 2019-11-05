@@ -1,0 +1,15 @@
+This parameter sets a limit on *how many periods from a purchase order will be included in an invoice*. It applies *only* to recurring purchase orders. Under normal circumstances, you will always have just one period going into a new invoice. If it is June, and you create a new monthly purchase order (Active Since June 1st), the month of June will be billed in that first invoice.
+
+The following is an example of how the maximum periods to invoice field would affect your customer's invoices: 
+
+Today is July 1st. You have just created a back dated, monthly, pre-paid purchase order with an Active Since date of January 1st.
+
+If you were to manually generate an invoice for this purchase order (outside of the billing process), one would be generated that covers all periods: January to July 1st. 
+
+!maxperiodsinvoice.png!
+
+However, if you were to set the maximum periods to invoice field to: 3, and let the billing process run, an invoice would be generated for the purchase order with only three periods: January, February and March. Since the field contains a value, the system will not try to 'catch-up' with the billing of a backdated order.
+
+If we continue with the above example, When the billing process runs again on August 1st, another invoice will be generated with the periods for: April, May and June. Again, because the maximum periods to invoice has been set to: 3, when the billing process runs, it will limit the number of periods on the invoice to 3. 
+
+On September 1, when the billing process runs again, an invoice will be generated with the periods for: July, August and September. At this point, the purchase order period has caught up with the billing process, and when it runs again the following month, only one period (October) will be generated on the invoice. 

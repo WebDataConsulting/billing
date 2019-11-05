@@ -1,0 +1,114 @@
+When a subscriber calls to cancel one or more services, it could be that the cancellation is in effect for a period that has been already invoiced. If that is the case, you need to produce some way to credit the account. Another way to think about it is that you invoiced too much, too soon, and a correction is needed.
+
+This does *not* apply for orders that are post-paid. In this case, a cancellation will not affect a period that has already been invoiced simply because you invoice *after* the service has been provided. 
+
+For example: if a monthly order is post-paid, and a customer cancels that order on the 15th of the month, changing the 'Active Until' date is all you need to do. The next invoice will cover the fraction of a period left in the order, and the order's status will change to 'Finished'.
+
+If the order is pre-paid, then you might need to create a credit depending when the customer calls, and when the service should end. If the service should finish sometime within the next period, then you don't need a credit. If the service finishes earlier, within an already invoiced period, then a credit is necessary.
+ 
+h2. Activating Automatic Credits
+
+Credits are usually made on fractions of a period. This means that if you are cancelling a monthly order and credit is necessary, it is going to be for less than a full month. Because of this (the end period being only partial), you will need to first activate the pro-rating features, which is described in its own section.
+
+Activating automatic credits can be done with the addition of one Plug-In. Click on Configuration, then Plug-ins to access the plug-in configuration page.
+
+You will not be replacing an existing Plug-In, but adding a new one.
+
+Add the following Plug-In:
+
+@com.sapienter.jbilling.server.order.task.RefundOnCancelTask@
+
+{note}
+Please Note: for more information on how to add a Plug-In, please refer to Chapter 10: Configuration.
+{note}
+
+h2. Using Automatic Credits
+
+One the plug-in is configured; the system will create credit orders when appropriate. This is triggered by adding an 'Active Until' date. The new value for 'Active Until' must fall within an already invoiced date.
+
+!automaticcredit.png!
+
+In the above screen-shot, what date for 'Active Until' would trigger a credit order? 
+
+It will have to fall *before* July 30, 2011. This date is also the 'Next day to invoice' as well as a date that is within the period that has been  invoiced already. You would therefore have to change the date to something like: July 20, 2011.
+ 
+When this order is edited with a new 'Active Until' date, two things happen: 
+
+* This order's status is changed to finished, and a note is added.
+* A new order is created to represent the credit.
+
+The main parameters of the new order are:
+* The order has all the items from the original (cancelled) order, but the prices are negative. 
+* The credit order covers only the period of time that needs to be refunded. In this case, it is the last 10 days of the original subscription.
+* The credit order comes with a note, to clarify why it was created. 
+
+Partial order cancellations are also possible. If the quantity of an item is reduced in an order (or an item is deleted from it), and today's date is within an already invoice billing period, a refund is granted.
+
+h2. Applying the Credit
+
+Once you have created the purchase order to represent the credit note, you need to decide what to do with it. There are a few possibilities. The best one depends on the status of the latest invoice and if the customer remains subscribed to some other services or not. 
+
+*The last invoices remain unpaid:* In this case, you can take the credit order and apply it to the latest invoice. You can do this by selecting the credit order and clicking on the 'Apply to Invoice' button. 
+
+*The customer still has active orders:* In this case it might be best not to do anything. Just leave the credit order so that it will be picked up by the billing process and added to the next invoice. All the active orders will contribute products to the next invoice. This includes the current active subscriptions plus your new credit order. This alternative makes sense as long as the total of the next invoice remains positive. 
+
+*The customer is no longer a customer:* If the customer has cancelled all their services, it means that they don't have any remaining recurring, active orders. What you do with the credit order will depend on how your company deals with refunds. You can immediately generate an invoice (manually or with the help of the billing process), and then send a cheque along with the negative invoice to the customer. You could also have automatic payment processing setup with a payment gateway that will process negative amounts as refunds. See preferences 44-46 in Appendix A: Preferences for information on activating automatic negative payments (credits). 
+
+h2. Fees for Early Cancellation
+
+Fees can also be generated when an order is cancelled. Fees are not only generated for cancellations within a period that has already been invoiced, but also for cancellations on future periods.
+
+The 'Active Until' field of an order is used for cancellations. When an 'Active Until' field is moved forward to an earlier date, a fee is generated for every period that will no longer be invoiced. If the 'Active Until' date was empty instead, then a fee is only generated if the cancellation includes a period that has already been invoiced. 
+
+Partial order cancellations are also possible. When the quantity of an order line in an existing order is reduced, fees can be generated.
+ 
+The business logic for applying fees is handled by BRMS (business rules management system) rules. For more information, please refer to Chapter Rules and BRMS from the *j*Billing [Extension Guide|http://www.jbilling.com/documentation/jbilling-extension-guide].
+
+h2. Rules for Fees
+
+See section: Item Relationship Management in the Chapter Rules and BRMS from the *j*Billing [ExtensionGuide|http://www.jbilling.com/documentation/jbilling-extension-guide] for more information about the RulesItemManager plug-in from which CancellationFeeRulesTask is extended.
+
+h2. Data Model
+
+As CancellationFeeRulesTask is a subclass of RulesItemManager, the rules you create have available to them all the information related to the cancelled order, including order lines, user and contact details, etc. For partial cancellations, the only order line added to the Drools 'working memory' is the modified line, which has its quantity set to the amount of the item that was cancelled.
+
+h2. Helper Service
+
+The rules will have access to the helper service CancellationFeeRulesTask.FeeOrderManager, which is a subclass of RulesItemManager.OrderManager. The name of the global that is an instance of this class is also 'order'.
+
+FeeOrderManager adds the following useful methods:
+
+* void applyFee(Integer itemId, Double quantity, Integer daysInPeriod)
+
+This applies the item as a fee with the quantity specified. daysInPeriod is used for calculating how many periods have been cancelled. The number of periods calculated to be cancelled is multiplied with the item quantity.
+
+* void applyFee(Integer itemId, Double quantity) Applies the item as a fee with the quantity specified. A default period of 30 days is used for the number of periods canceled calculation.
+
+* void applyFee(Integer itemId) Applies the item as a fee with the default quantity of 1.0 and period of 30 days.
+
+* Date getNewActiveUntil() The order's original 'active until'.
+
+* Date getOldActiveUntil() The order's new 'active until'.
+
+*Example:*
+The following rule applies fee 24 with the same quantity as the number of item 1 that were cancelled. Note that the item quantity is also multiplied by the periods cancelled. rule 'Cancel Item 
+1 Fee'
+
+When
+
+OrderLineDTO( itemId == 1, $quantity : quantity )
+
+then
+
+order.applyFee(24, $quantity);
+
+end
+
+h2. Using Automatic Fees
+
+When an order is cancelled, a 'one time' order is generated with any fees applied by the rules.
+
+Order cancellation can be total or partial.
+
+* A total order cancellation is achieved by moving the order's 'Active Until' date forward to an earlier date (which will generate fees multiplied by the number of periods cancelled). If the 'Active Until' date is empty, a total order cancellation can be achieved by setting an 'Active Until' date within an already invoiced period.
+* A partial order cancellation is achieved by reducing the quantity of an item in an order (this includes deleting the item). If the 'Active Until' date has been set, the fee will be multiplied by the number of periods cancelled. Otherwise, if the order is currently within a billing period, fees for one period are generated. One order fee is generated for each reduced order line. 

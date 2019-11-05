@@ -1,0 +1,393 @@
+h2. Overview
+
+There may be situations in your billing where a product is not going to have a straight forward or simple price. Due to this fact, when you create a product in *j*Billing, the system allows you to use different pricing models to accommodate these special prices.
+
+For example: you may wish to have a product that is on sale during a certain time of the year. You may want to give a discount to your VIP customers after they purchase a certain amount of a particular product. You may also wish to have a product that doesn't have a cost associated to it. Through an internal based system, *j*Billing can do all this, and more. 
+
+Let's take a look at the different pricing models which *j*Billing currently supports:
+
+h2. Flat
+
+If this pricing model is selected for a product, there will be no cost associated to it in the purchase order.
+
+!pricingflat.png!
+
+For example: an internet provider includes a free modem with a two year subscription. The company would create the modem as the product, and assign a 'Flat' pricing model to it. When they create a purchase order for a client, the modem will show up with a price of $0.
+
+!flatorder.png!
+
+h2. Metered
+
+If this pricing model is selected, one unit will equal a set price. This means that if you have a product that costs $40, on the purchase order you will see $40. If you need to add that product twice to the purchase order, the total cost will then be $80. 
+
+!meteredpricing.png!
+
+For example: a company sells a Test Product for $100. A customer wants to buy two of them.  Therefore, the purchase order will be a total of: $200.
+
+!meteredpurchaseorder.png!
+
+h2. Graduated
+
+If you select this model, the customer will receive a set amount or an *included quantity* of that particular product for free. After that set number runs out, they are charged for that product. 
+
+!graduatedpricing.png!
+
+For example: a customer would like 5 Test Products. Since the included quantity is set to 5, notice that the total of this purchase order is $0.
+
+!graduatedorder.png!
+
+Before the purchase order is complete, the customer changes his mind and would now like 7 Test Products. The rate for each Test Product is $30. Since 7 is two more than 5, the total cost is $60, because the customer is really only being charged for 2 Test Products. 
+
+The breakdown of cost is a little different for this purchase order. It does not show 7 Test Products: $30 multiplied by 2. It divides the total cost, (in this case $60) over the quantity, which, in this case is 7. Therefore, the cost for each Test Product displays as: $8.57.
+
+!graduatedorder2.png!
+
+h2. Graduated Cap
+
+This pricing model is very similar to Graduated. However, there is a cap on the maximum amount on the total.
+
+For example: if you look at the previous example, but add a cap of $100 to the product, your customer will not be charged if they purchase up to 5 Test Products. They will be charged for the additional Test Products, until the total reaches $100. If the customer decides they want 10 Test Products, they will only be charged $100, instead of $300 (30 multiplied by 10). 
+
+!graduatedcap.png!
+
+h2. Time of Day
+
+This field allows you to set pricing based upon the time of day it runs on. 
+
+For example: a cell phone company would like to give their customers:  an evening free, on all local phone calls. Free calling will start at 6:00 PM, every weekday evening. 
+
+When this model is selected, several fields will appear that you will need to configure in order to set up your product correctly.
+
+*Date Field:*
+
+The Date Field represents the date from incoming data, when using mediation. If you are using mediation to tie the purchase of a product to an event, you would need to enter a field name. You can see an example of this below. If nothing is specified in this field, the system will use the time when it was created. 
+
+!eventdatetime.png!
+
+*00:00:* 
+
+This represents midnight (the beginning of a day) and it uses the current system time. This field specifies the price after a specific time. For example: 
+
+!timeofday.png!
+
+Entering $10.00 into the 00:00 field indicates that after midnight, the price of the product will be $10:00.
+
+*Attributes:* 
+
+In order to indicate a different price starting at a different time, you need to use the attributes available below the 00:00 field. For example:
+
+!attributes.png!
+
+Entering 12:00 and $8:00 will indicate to the system that after 12:00, the product will be at a price of $8.00. Entering 7:00 and $10.00, will let the system know that at 7:00, the price of the product needs to return to its original price of $10.00.
+
+It is possible to build as many attributes as you'd like, indicating a different price for any hour(s) of the day.
+
+h2. Volume Pricing
+
+This pricing model calculates the product by how much a customer purchases. It's generally used to give a discount; the more of a product that is purchased, the cheaper the cost. 
+
+*Volume Pricing Example*
+
+Product - cell phones:
+
+0 = $10.00
+
+10 = $9.50
+
+20 = $8.00
+
+As you can see, as the volume of the product goes up, the rate goes down.
+
+If a customer were to purchase 9 cell phones:
+
+$10.00 per unit: 9 x $10.00 = $90.00
+
+If a customer were to purchase 10 cell phones:
+
+$9.50 per unit: 10 x $9.50 = $95.00
+
+If a customer were to purchase 19 cell phones:
+
+$9.50 per unit: 19 x $9.50 = $180.50
+
+If a customer were to purchase 25 cell phones:
+
+$8.00 per unit: 25 x $8.00 = $200
+
+!volumemodel.png!
+
+{note}
+Please note: you can create as many levels to this pricing model as desired by adding attributes.
+{note}
+
+
+h2. Tiered
+
+The tiered pricing model is very similar to volume in that the product is calculated at a different price when larger quantities are purchased. However, tiered breaks down and groups the number of products purchased. Rate changes are based on a selected group of quantities purchased, and is calculated in the following manner:
+
+*Tiered Pricing Example* 
+
+Product - cell phones: 
+
+Tier 1: 0 to 10 = $10.00
+
+Tier 2: 10 to 20 = $9.50
+
+Tier 3: Greater than 20 = $8.00
+
+If a customer were to purchase 13 cell phones:
+
+Tier 1: (10 x $10.00) + Tier 2: (3 x $9.50) = $128.50
+
+If a customer were to purchase 25 cell phones:
+
+Tier 1: (10 x $10.00) + Tier 2: (10 x 9.50) + Tier 3 (5 x $8.00) = $152.50
+
+!tieredmodel.png!
+
+{note}
+Please note: a tier can be set to any price, and you can create as many tiers as needed to generate the different prices for the product.
+{note}
+
+h2. Pooled
+
+A pooled pricing model is based off of how much you buy of another item. It is based on free units applied to another product that has been purchased. The calculation of how many included is based off of the quantity of another item. 
+
+For example: if a customer buys 100 text messages for $5, they will receive another product: 50 minutes of calls for free. 
+
+When this model is selected, a few fields will appear. You will need to configure them in order to set up the product correctly.
+
+*Pooled Item ID:*
+
+Enter the ID number of the product you wish to pool in this field. For example, if you were creating a product that pooled a 100MB mail box, and the ID number for that mailbox product is: 2100, you would enter that into the Pooled Item ID field. 
+
+!pooleditemid.png!
+
+As each purchase of the product would give you 100MB, you would want to enter this number in the multiplier field so that the system knows to assign 1 mailbox to each purchase of the pooled product.
+
+!multiplierpooled.png!
+
+This pricing model is different from graduated because the calculation is based on *something else* that a customer has bought instead of specifying *how much* of the product the customer is buying.
+
+{note}
+Please note: although the attribute fields are available on the screen, they are not needed for this pricing model.
+!pooledattributes.png!
+{note}
+
+h2. Item Selector
+
+This pricing model adds a quantity of a product to an order based on the customer's existing purchase. However, the selector doesn't just look at a single Product. It looks at the purchases across an entire Category. 
+
+The easiest way to understand how this pricing model works, is to take a look at an example.
+
+In this setup of jBilling, we have the following Category:
+
+*Category ID 1: Smart Phones*
+
+Within this Category there are the following Products:
+* Product ID 100, Blackberry
+* Product ID 101, IPhone
+* Product ID 102, Android
+
+One of the requirements for this particular company is that when any Product(s) under category ID 1 is added to a customer's account, they also need to receive a set number of Mailboxes. When the quantity of smart phones on an account is changed (increased or decreased), the 'Mailbox' product should change accordingly. This means that the category of smart phones is considered as a *whole*. It does not deal with each product separately. 
+
+Here are the mailbox products that need to be added, based on how many Smart Phone products a customer purchases. (These Products need to be created under their own category):
+
+* Product ID 200: up to 10 Mailboxes - $25
+* Product ID 201: up to 25 Mailboxes - $50
+* Product ID 202: unlimited Mailboxes - $100
+
+Therefore, the Mailbox Item Selector Product would look like this:
+
+* Selection Category: 1 (category ID: Smart Phones)
+* 1 = 200 (Product ID: up to 10 Mailboxes)
+* 10 = 201 (Product ID: up to 25 Mailboxes)
+* 25 = 202 (product ID: unlimited Mailboxes)
+
+In this particular setup, the billing administrator has specified that if a customer has up to a quantity of 10 Smart Phones, they also need the '10 Mailbox' item purchased. If the customer has more than 10 Smart Phones, then they need to be moved up to '25 Mailboxes'. If they have more than 25, they will need 'Unlimited Mailboxes'.
+
+Now that you have a better understanding of how this pricing model functions, we need to take a closer look at the fields you will need to use to set it up. 
+
+*Selection Category*
+
+This field represents the Category you want to link the Item Selector Product to. You need to enter the Category ID into the text box. Based on the example, the Category ID for Smart Phones is: 1. Therefore, you would enter: 1 into the field.
+
+!selectioncategory.png!
+
+*1 and Attributes*
+
+The remaining fields are very similar to the set up of Tiered and Volume pricing. The difference is, instead of a rate, you need to enter the ID of the product you want added, based on the number of Selection Category Products purchased. 
+
+In the example provided, we have stated that if the customer has up to 10 Smart Phones, they will receive 10 Mailboxes. If the customer has up to 25 Smart Phones, they will receive 25 Mailboxes. And if the customer has more than 25 Smart Phones, they will recieve unlimited Mailboxes. Please refer to the screen shot to view how the example provided above would be set up:
+
+!itemselector.png!
+
+Remember, for this pricing model, instead of entering a rate, you are entering a Product ID in the field on the right hand side. Based on the example provided, ID 200, 201, and 202 are the Mailbox products. 
+
+The fields on the left hand side represent the hierarchy of quantities that pertain to the quantity of Smart Phones the customer purchases. The set up of this aspect is exactly the same as Tiered and Volume. 
+
+{note}
+Please note: it is possible to add as many attributes as needed to create the structure for your product.
+{note}
+
+On a purchase order, when the Item Selector Product is selected, and any Products from the Smart Phone Category are added, the Mailbox Products will update according to the quantity.
+
+In this screen shot, you can see that the quantity of IPhones is less than 10. Therefore, the 'up to 10 Mailboxes' Product appears.
+
+!uptoten.png!
+
+In this screen shot, you can see that the quantity of IPhones is less than 25. Therefore, the 'up to 25 Mailboxes' Product appears.
+
+!upto25.png!
+
+In this screen shot, you can see that the quantity of IPhones and Blackberry products are more than 25. Therefore, the 'unlimited Mailboxes' Product appears.
+
+!unlimited.png!
+
+h2. Item Percentage Selector
+
+The Item Percentage Selector is very similar to the Item Selector in that the pricing model will add a quantity of a product based on the customer's existing purchase. However, the difference is, this pricing model uses a percentage instead of a quantity.  
+
+There are several fields that you will see on this pricing model. The following are definitions for each:
+
+*Selection Category and Percent of Category*
+
+Each of these fields needs to have a Category ID entered into it. The reason for this is because the products that belong to these categories are what the system will be searching for when the Item Percentage Selector product is added to a Purchase Order. Based on a calculation, the system will figure out the percentage value from these two category's products, then include the appropriate '0 and Attributes' product.
+
+The calculation is as follows:
+
+Quantity of Selection Category Products DIVIDED BY Quantity of Percentage of Category Products MULTIPLIED BY 100 = Percentage that the system will use to define the ranges found in the '0 and Attributes' set up. 
+
+Before we take a look at an example, let's define the above mentioned set up.
+
+*0 and Attributes*
+
+This section of the pricing model functions the same way as Item Selector. The only difference is, instead of representing a quantity, the column on the left represents a percentage. The column on the right still represents the product that should be added based on the determined ranges.
+
+In the example below, we have the following:
+
+* 0 - 10 (percent) = product 608
+* 11 - 20 (percent) = product 609
+* 21 and above (percent) = product 610
+
+!attributepercent.png!
+
+As stated above, the system will search the customer's purchase orders for products that belong to the categories entered in the Selection Category and Percent of Category fields. When adding the Item Percentage Selector product to a purchase order, the system will perform a calculation, the result of which is the percent amount that will then be used to determine the range, or tier. When the system finds the correct range, it will automatically apply the product associated to it. 
+
+h2. Item Percentage Selector Example
+
+Let's start by taking a look under the 'Products' tab so that you can gain a better understanding of the product set up.
+
+Category 1 is our Percentage of Category. The ID is 503. 
+
+!category1.png!
+
+Category 2 is our Selection Category. The ID is 504.
+
+!category2.png!
+
+As you can see, each of these categories has 2 metered products. In your set up, the products don't have to be metered. They can be any pricing model required. You can also have as many products within each category as needed. 
+
+The products we want to include with this pricing model are in a third category. Product 1, Product 2, and Product 3. 
+
+!category3.png!
+
+A fourth category is where we set up the Item Percentage Selector Product. You would add this product as you would for any regular product. You must have a Description and a Product Code. Select the Item Percentage Selector from the Pricing drop down menu. You also have the option to give this product a rate, however, this example does not.
+
+Category ID 503 is entered into Percentage of Category.
+
+!percentcat.png!
+
+Category ID 504 is entered into Selection Category
+
+!selectioncat.png!
+
+The Product ID's for Product 1, 2 and 3 are entered into the right column of the '0 and Attributes' fields. The tiers for the percentages are entered on the left (this example was already shown). 
+
+!attributepercent.png!
+
+Customer Brian Wilson is subscribed to this Item Percentage Selector product. First we need to ensure that he has a recurring order with the Main Subscription field selected. This order could be the order with the Percentage of Category or Selection Category products (as shown in the example), or a separate order. 
+
+!mainsub.png!
+
+{note}
+Please Note: the important thing to remember is that in order for this pricing model to work you *must* have this field selected on a purchase order for the customer. The reason for this is so that system knows the period in which to look for the products that belong to the Percentage of Category, and Selection Category. Otherwise you would bill the customer for services they have already paid for, or should not yet pay for. 
+{note}
+
+As stated, in our example, we have a main subscription order, with the Percentage of Category, and Selection Category products.
+
+!linequantity.png!
+
+* Metered 1 has a quantity of: 2
+* Metered 2 has a quantity of: 2
+* Metered 3 has a quantity of: 1
+
+The calculation is as follows:
+
+1 / 4 x 100 = 25%
+
+(Quantity of Selection Category Products DIVIDED BY Quantity of Percentage of Category Products MULTIPLIED BY 100 = Percentage that the system will use to define the ranges found in the '0 and Attributes' set up.) 
+
+The system then looks to the '0 and Attributes' set up and sees that Product 3 is associated to it. Therefore, on the purchase order with the Item Percentage Selector product, Product 3 will also be automatically added. 
+
+!percentageproduct.png!
+
+h2. Add a Chain
+
+Another function included with these pricing models is the ability to add a chain. This allows you to add a percentage, which will then be applied in addition to the pricing model for the product. To add a chain, click on the 'Add Chain' button.
+
+!addchain.png!
+
+Let's refer back to the graduated example, and add a chain to it:
+
+!addchainexample.png!
+
+When a purchase order is created, the first 5 Test Products are free. When a customer orders 6 however, there is an additional 50% discount, therefore the total cost is $15 instead of $30.
+
+!addchainorder.png!
+
+{note}
+Please Note: if you have filled out the line percentage field, you will not be able to enter information into the pricing section of the product.
+{note}
+
+h2. Quantity Addon
+
+This pricing model pertains to items that can be added onto a customer's purchase order to increase the number of included items. By using the Quantity Addon model, you have the ability to build a larger chain, or bundle, one that includes additional products, based on either the Graduated pricing model or Pooled pricing model. 
+
+Quantity Addon requires a bit more configuration than the other pricing models. The following instructions will help you to better understand the set-up and functionality. 
+
+Start by creating the Quantity Addon product as you normally would, giving it a Description and Product Code. In the Prices pane from the Pricing drop down menu, select Quantity Addon.
+
+!quantityaddonmodel.png!
+
+Click on the 'Add a Chain' button. Select either Graduated or Pooled from the drop down list. (This pricing model is most typically paired with Graduated.)
+
+Enter values into the Rate and Included Quantity fields as you would for any regular Graduated set up. 
+
+!quantitygrad.png!
+
+{note}
+Please Note: for more information on how to set up the Graduated pricing model, please see the Graduated component, located in this section of the user guide.
+{note}
+
+Now, you can add the attributes for the Quantity Addon products. In the Attributes fields, the text box on the right will contain the ID of the product you want to 'Addon' to the Graduated pricing model. The text box to the left will contain the Included Quantity. 
+
+!addonsetup.png!
+
+{note}
+Please Note: in this example there is only one Addon product. By clicking on the green plus sign '+', it is possible to Addon as many products as required. 
+{note}
+
+Let's test the setup of our Addon product on a purchase order. The name of the product that was created, is Additional Minutes. When we add this product to a purchase order, notice that it acts like a regular Graduated pricing model product.
+
+!exampleaddon.png!
+
+Here we have a quantity of 11. The included quantity for this product is 10. Therefore, the amount is correct. 1 x 0.08 = $0.08. 
+
+However, when the Local Minutes product is added (the Addon product), watch what happens to the included quantity.
+
+!addonexample.png!
+
+The rate goes back down to zero. The reason for this is because when the Addon product is added, the system sees that we've also increased the included quantity by 10. Therefore, the total included quantity is now: 20 Additional minutes.
+
+!addoncalculation.png!

@@ -1,0 +1,14 @@
+It is possible to have fields of contact information customized to your needs. These fields can show up on the printed invoice. 
+
+For example: you might need a tax number to appear on the printed invoices, for legal or accounting purposes. Or, you might wish to have customers' home phone and work phone numbers.
+
+Custom contact fields (CCF) are also important when using some of jBilling's extensions. Many plug-ins require a CCF as part of their configuration. 
+
+For example: There is a payment processor plug-in that allows you to assign a payment gateway to a customer. The payment gateway that all the customer's payments will be processed through is entered in a CCF. The plug-in then reads the  
+CCF content before routing the payment request to the appropriate gateway.
+
+In the current jBilling system, once a custom contact field has been created, you will not be able to delete or remove it from the customer screen. This functionality is being developed for future implementation.
+
+You can access this area of the system by clicking on 'Configuration', and then on the Custom Contact Fields link, which is located on the left hand side of the screen.
+
+!customcontactfields.png!

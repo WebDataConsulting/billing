@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="main_webdata_2017_SR_payment" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4838737e-0af4-40f8-bba4-bfac1f5de772">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="invoiceId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currency_symbol" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     p.id,
+     p.method_id,
+     pi.payment_id,
+     pi.invoice_id,
+     pi.amount,
+     pi.create_datetime,
+     pmt.id,
+     pmt.method_name
+FROM
+     payment p, payment_invoice pi, payment_method_type pmt
+WHERE
+    pi.payment_id=p.id and pmt.id = p.method_id and
+    pi.invoice_id =$P{invoiceId}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="method_id" class="java.lang.Integer"/>
+	<field name="payment_id" class="java.lang.Integer"/>
+	<field name="invoice_id" class="java.lang.Integer"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<field name="create_datetime" class="java.sql.Timestamp"/>
+	<field name="method_name" class="java.lang.String"/>
+	<variable name="subtotal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="sub-var" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$V{subtotal}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="8" width="123" height="17" backcolor="#FFFFFF" uuid="e5401bc3-d404-4c63-b3c2-1e7255913bbb"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="139" y="8" width="149" height="17" backcolor="#FFFFFF" uuid="f37c8644-ff64-4628-8525-f54c995ba6f5"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Method Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="419" y="8" width="136" height="17" backcolor="#FFFFFF" uuid="1a9c7e14-d9d1-4da9-bbe2-610129608817"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="310" y="8" width="109" height="17" backcolor="#FFFFFF" uuid="fed2dc46-26c9-49f4-9e15-0f8eec5af7ce"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Date]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="0" y="30" width="555" height="1" forecolor="#000000" uuid="2496e467-a500-4025-ba3e-735d8d064138"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="22" splitType="Prevent">
+			<textField>
+				<reportElement x="188" y="0" width="112" height="17" uuid="3f18fd38-e8c6-47ea-860b-bdbeef1cb47f"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{method_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="73" height="17" uuid="e3c2b91a-e4be-4de0-a653-72d2989520c4"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="119" height="17" uuid="a65e011e-a9d3-49d7-b078-2808c24616d5"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{create_datetime})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="0" width="100" height="17" uuid="7493bf79-d68e-4fdf-a090-a234a99cfb2a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$F{amount}.setScale(4, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Opaque" x="0" y="20" width="555" height="1" forecolor="#E9E7E7" uuid="bef0d84c-1ce1-443d-9584-2d2df378e132"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<summary>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="414" y="2" width="100" height="20" uuid="4be2191b-5871-40d3-9a8f-2666692fb614"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$V{subtotal}.setScale(4, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="337" y="2" width="100" height="20" uuid="edf49dd3-b238-49d1-aa66-b564853eb0c6"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Sub Total:]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="337" y="20" width="185" height="1" forecolor="#000000" uuid="f145af02-8072-4c2c-b37d-f51ef37de03f"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

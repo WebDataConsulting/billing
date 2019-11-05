@@ -1,0 +1,100 @@
+Rate Cards are documents that contain various prices and descriptions for different products. A common type of rate card is one that is used by phone companies to indicate the prices for different locations for phone calls. For example, a call to Switzerland is going to be charged at a different different rate than a call to Dubai. Calls made to another state or province will have a different rate than local calls. 
+
+*j*Billing is able to handle these different rates by uploading a CSV file with the rate card information. When the mediation process runs, any time an event matches a product from the rate card, the customer will be charged for that product at the indicated rate. 
+
+To access the Rate Card area of the system, click on the Configuration tab. Then click on 'Rate Cards' located in the menu on the left hand side of the screen. 
+
+h2. Adding a Rate Card
+
+In order to add your rate card to *j*Billing, you need to click on the 'Add New' button.
+
+!addnewbutton.png!
+
+The New Rate Card pane will appear on the right hand side of the screen. Here is where you can upload your Rating CSV file, and give a name to your rate card. 
+
+{note}
+Please Note: it is very important to remember that the rate card file *must* be in a CSV file format. If it is not, the file will not work.
+{note}
+
+To give your rate card a name, enter text into the 'Name' field.
+
+!nameratecard.png!
+
+To upload you rate card CSV file, click on the 'Choose File' button located beside the 'Rating CSV File' field. 
+
+!ratingcsvfile.png!
+
+Once you have uploaded your rate card CSV file, the name of your file will appear beside the 'Choose File' button. 
+
+If you need an example of how to set up the CSV file, click on the 'example_rate_card.csv' link. Doing so will open a sample that contains rate card information.
+
+{note}
+Please Note: the four columns that you will see in this example are mandatory. You cannot create a rate card CSV file without them. If you want additional columns for your own tables, this is possible; however, id, match, comment, and rate *must* appear as the first four columns.
+{note}
+
+!exampleratecard.png!
+
+!csvratecardexample.png!
+
+To save your rate card, click on the 'Save Changes' button. To cancel uploading the rate card file, click on the 'Cancel' button.
+
+Once you save the rate card, it will appear in the list on the left hand side of the screen. 
+
+h2. Viewing a Rate Card
+
+In order to view the rate card CSV files that you have uploaded to *j*Billing, click on the rate card name on the left hand side of the screen. The details of the rate card will appear on the right hand side of the screen. 
+
+Beside the Name field, you will see an un-editable version of the name of your rate card. 
+
+!uneditablerate.png!
+
+The Table Name field displays the name of the table, created with the same name as the CSV file you uploaded. 
+
+!ratetable.png!
+
+By clicking on the Rating CSV File link, you will be able to download the CSV rate card file that you uploaded. If you simply want to view your rates, click on the 'View Rates' button. 
+
+!viewrates.png!
+
+To edit the rate card, click on the 'Edit' button. 
+
+!edit.png!
+
+To delete the rate card, click on the 'Delete' button. 
+
+!delete.png!
+
+{note}
+Please Note: when you save your rate card CSV file to *j*Billing, you don't need to keep a copy on your computer. If you need to update the rate card, all you need to do is pull back what the system has, make changes, and then reload the CSV file.
+{note}
+
+h2. How to Use the Rate Card
+
+The rate card that you have uploaded into the system is now ready to translate the events coming in from mediation data. In order for this data to be applied to products, you need to set a product up in *j*Billing using the rate card pricing model. 
+
+To create the rate card product, click on the 'Products' tab, and then on the category you want to create the rate card product under. Click on the 'Add Product' button. The screen will refresh to the 'New Product' page. 
+Enter the Description and Product Code as you normally would for any product. 
+
+Select the 'Rate Card' pricing model from the 'Pricing' drop down menu.
+
+!ratecardpricing.png!
+
+Now that you have selected the rate card pricing model, several fields will appear. The following is a brief description of each:
+
+A currency field will appear beneath the pricing model. Leave the currency as is, or select the one that applies to the rate card product.
+
+!ratecardcurrency.png!
+
+On the right hand side of the pricing pane, you will see the 'Rate Card' field. By clicking on the drop down menu you can view and select the rate card that the product belongs to.
+
+!internationalrates.png!
+
+The 'Lookup' field refers to the CDR mediation file column that you want the pricing strategy to try to match against in the 'Match' column of your CSV rate card. For example, if you set the 'Lookup' field to 'destination', every record in the CDR is going to try and match that value against every record in the rate card CSV file 'match' column, until it finds one.
+
+!lookupfield.png!
+
+'Match Type' can be one of two options. EXACT means that when the mediation process runs, the system will look for events that match the product exactly (letter for letter). BEST_MATCH means that the system will look for events that are the best match for the product. It will continue to shorten the letters it searches for until it finds a match in the table. 
+
+!matchtype.png!
+
+Once you save the Rate Card product, any events that apply to the rate card will be created in a one time purchase order with the rate provided on the rate card CSV file. 

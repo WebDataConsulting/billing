@@ -1,0 +1,129 @@
+Once the billing process has run, you will want to know what happened: how many invoices were generated? How many were paid automatically? Etc. In the future, you might also want to take a look at the results of previous billing processes.
+
+h3. The List of Billing Processes
+
+To view the list of all the billing processes generated for your company, click on Billing. Each record in this list represents a billing process cycle. By clicking on any of them you will get its details.
+
+!billingprocesslist.png!
+
+h3. Examining the Latest Billing Process
+
+The latest billing process will appear at the top of the list. To view the latest billing process, click on it. As you can see below, the billing screen contains many details related to your latest billing process.
+
+!billing.png!
+
+To help you better understand this information, the next section of this guide will review and provide a brief description of the fields you will see here.
+
+*ID* 
+
+This number is automatically assigned by the system to uniquely identify a particular billing process.
+
+!billingprocessid.png!
+
+*Billing Start / End Date*
+
+These dates refer to the *period of time* that has been billed, as opposed to *when* the billing took place.
+
+!billingstartend.png!
+
+*Number of runs*
+
+This field refers to the billing run that took place. Should this number be higher than '1', it indicates how many times *j*billing re-tried to process payments that failed at the first attempt.
+
+!numberruns.png!
+
+*Start / End Date*
+
+These fields reflect the length of time it took for the billing process to run.
+
+!startendrun.png!
+
+*Payment Processing Ended*
+
+This field displays the date and time that the payment processor finished receiving payments.
+
+!paymentprocessingended.png!
+
+*Result*
+
+This field displays whether or not the billing process ran successfully.
+
+!billingresult.png!
+
+*Users*
+
+This section will display the number of users whose invoices have succeeded, and failed.  
+
+!usersbilling.png!
+
+*Invoices*
+
+Displays the number of invoices, and orders the billing run generated. Click on the numbers to display the list of invoices or orders.
+
+!billinginvoices.png!
+
+*Total Invoiced*
+
+This field will list the total amount invoice for that particular billing run. 
+
+!totalinvoiced.png!
+
+*Total paid*
+
+Refers to the amount *j*billing successfully processed automatically, adding up all the runs, using a payment processor. These are payments that the processor has confirmed as 'good'.
+
+!totalpaid.png!
+
+*Total not paid*
+
+This total includes the payments that did not get paid. It could be that the payment was attempted using a payment processor, but it was rejected (for example, an expired or maxed out credit card). It could also be that the customer did not provide a payment method that allows for automatic processing, such as a credit card or ACH, and will pay by cheque instead.
+
+!totalnotpaid.png!
+
+*Currency*
+
+Will display the currency used in your billing process.
+
+!currencybilling.png!
+
+h3. Runs
+
+These sections detail what happened during the initial billing process, and then, if applicable, the subsequent runs that were, in fact 're-tries'. In the example illustrated in the screen shot, there is only one run: the initial billing process. If there are other runs, they can only be retries. Retries do not generate invoices. They only try to get the invoices still unpaid, paid through a payment processor.
+
+* The Total Invoiced represents the sum of all the invoices generated during the billing process. In our example, one invoice was generated.
+* Total Paid is the total in payments that *j*billing's automatic payment processing successfully cleared.
+* Total Not Paid is the money *j*billing was not able to collect through a payment processor.
+
+h3. The Process Review Report
+
+The Review Report is a *pretend* billing run. It normally runs a few days before the genuine billing process. You decide if the review report will be generated, and if so how many days before the real process, using the parameters in the billing process configuration.
+
+{note}
+Please Note: as the review report is *not* a real billing process, it does *not* send invoices to your customers, nor does it process payments. 
+{note}
+
+Should mistakes or inaccuracies be noticed, the administrator can then apply changes to purchase orders, edit customers' contact information, enter payments, modify the description of an item or its price, etc. Since the Review Report does not generate true invoices, the only way to view these simulated invoices is by clicking on Billing. Find and click on the Review Report. 
+
+!billingreview.png!
+
+The Review Report, once generated, can be in one of three states:
+
+* Neutral: The system has generated the Review Report and is waiting for the Billing Administrator of your company to either approve or disapprove it. If left ignored, your real billing process will *not* run. Your Billing Administrator will then receive an email on the day your Billing should be processed. It will warn them that the approval of the Review Report is required in order to allow the billing to run as planned.
+* Dis-approved: The Review Report was generated and dis-approved by your Billing Administrator. Whether changes to the purchase orders are applied or not, the system will automatically generate another Review Report within 24 hours. This report will once again need to either be approved or dis-approved. This allows you to verify that the system interpreted the changes you may have applied.
+* Approved: The Review Report was generated by the system and approved by your Billing Administrator. If the Review Report was approved before the date planned for your next billing run, your billing process will move forward as planned.
+
+{note}
+Please Note: if you approve the report by mistake, all you need to do is click the 'Disapprove' button. This will allow you to make any additional changes. When you are finished, approve the report again, and your billing will run as scheduled.
+{note}
+
+In short, once a Review Report is generated, *it needs to be approved before your billing will be allowed to run*. If left to Neutral, it will prevent the system from generating the real billing run (the one that will actually send invoices to your customers) from occurring.
+
+{note}
+Please Note: once the Review Report is generated and is waiting for a response, (and before it is approved) it is possible to apply changes to purchase orders or customers' files and then simply approve it. *This is not a recommended process*. If you have made changes that will affect the results of the billing process, you should disapprove the review so it runs again. Then, once the system has generated another Review Report, verify that the changes show up the way you expected. 
+{note}
+
+It is important to remember that *the real billing process is not based on the review report itself*. It is based on other documents: purchase orders, invoices, payment etc., and their status at the *moment that the billing process runs*. If you enter any data that would affect the billing process, for example, a new purchase order, then this will be considered by the billing process regardless of the status of the review report.
+
+Let's see an example of this: the review report runs, and shows that 10 invoices are going to be created for a total of $1000. You approve this report to allow the billing process to take place. After this approval but *before* the real billing process takes place, you enter a new order for $100. The review report that you approved will still show 10 invoices for $1000; yet, when the real billing process runs, you will get 11 invoices for $1100.
+
+The billing process can be the same as the review process only if *no* data has changed in between each run. This might not be realistic, depending on the size of your customer base. On one hand, *you want the review process to run right before the real process*, minimizing the time in between. This will prevent the situation described above. On the other hand, you need some time in between the review process and the real one to fix any issues found during the review process. The actual days in between these two processes depends very much on your business rules.

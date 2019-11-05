@@ -1,0 +1,25 @@
+We need to create the parent account first. To do this, click on Customers, and then on the 'Add New' button.
+
+Enter the new customer's information just as a normal new account, except for the field 'Allow sub-account'. Make sure that this check-box is checked. This will indicate that the new customer will be a parent account.
+
+!allowsubaccount.png!
+
+Click on the 'Submit' button.
+
+!newparent.png!
+
+Notice also, that the column 'Parent/Child' has an image of a large person with the number zero beside it. This confirms that our new customer is a parent account, and that it currently has no children.
+
+Let's skip the steps to enter this customer's contact and payment information. To learn more about this, consult Chapter 1: Users.
+
+The next step is to create a new child account. Make sure that the parent is selected. Scroll down to the bottom of the screen and click on the 'Add Sub-Account' button. 
+
+!addsubaccount.png!
+
+Enter the child account login information. Notice that the number of the parent account is automatically populated in the Parent ID field.
+
+!exampleparentid.png!
+
+Since children accounts cannot login to *j*billing, the login name, password and email are not going to be used. However, the system requires these fields so you will need to enter that information.
+
+For children accounts, it is *very important to enter the First Name and Last Name of the contact information*. These are the fields that will be used as a header in the invoice when the items belonging to the individual children are listed.

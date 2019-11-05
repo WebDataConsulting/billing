@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="main_template_design_subreport1" language="groovy" pageWidth="595" pageHeight="802" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cbaada55-d56f-4242-bd98-593ec54acb7c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="invoiceId" class="java.lang.Integer"/>
+	<parameter name="srcUsrId" class="java.lang.Integer"/>
+	<parameter name="currency_symbol" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT il.id, il.source_user_id, il.item_id,
+     it.description AS category,
+     il.amount,
+     il.quantity,
+     il.price,
+     il.description AS product
+FROM
+     invoice_line il, item i, item_type_map itm, item_type it
+WHERE il.item_id = i.id and i.id = itm.item_id and itm.type_id = it.id
+ AND invoice_id=$P{invoiceId} AND source_user_id = $P{srcUsrId}
+ORDER BY il.source_user_id, category]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="source_user_id" class="java.lang.Integer"/>
+	<field name="item_id" class="java.lang.Integer"/>
+	<field name="category" class="java.lang.String"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<field name="quantity" class="java.math.BigDecimal"/>
+	<field name="price" class="java.math.BigDecimal"/>
+	<field name="product" class="java.lang.String"/>
+	<variable name="variable1" class="java.math.BigDecimal" resetType="Group" resetGroup="item_group_header" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="variable2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<group name="item_group_header">
+		<groupExpression><![CDATA[$F{category}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement x="0" y="0" width="100" height="20" uuid="a8d7d8a0-cb4e-4d8b-93bf-ff3a727d5a40"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{category}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="27" width="595" height="1" forecolor="#F3BE55" uuid="91821b93-bc25-4f97-9010-fa8226a9b42d"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="24">
+				<textField>
+					<reportElement x="504" y="0" width="90" height="20" uuid="ae5c2d8e-eb97-4d7b-815a-b2f0a5eafaf2"/>
+					<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$V{variable1}.setScale(2, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="371" y="0" width="100" height="20" uuid="5cb4051a-a55d-4a1d-86c6-d86f027df72d"/>
+					<textElement>
+						<font fontName="Serif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Section Total]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="38" splitType="Stretch">
+			<textField>
+				<reportElement x="409" y="0" width="62" height="20" uuid="88b61fb4-0d16-4644-9bb8-be79620ff410"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{quantity} != null ? (new DecimalFormat("#,##0.##")).format($F{quantity}.doubleValue()): ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="505" y="0" width="89" height="20" uuid="18238e11-1b62-4a7e-b013-78933a88e96b"/>
+				<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$F{amount}.setScale(2, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="0" width="75" height="20" uuid="dea75829-250b-4628-a992-f2cecdadb92d"/>
+				<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$F{price}.setScale(2, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="37" width="595" height="1" forecolor="#E8E3E3" uuid="c204278a-5945-46e1-a294-fde8eb110b2f"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="46" y="0" width="111" height="37" uuid="da617f9a-84da-4afa-90d5-34e1a8dc8686"/>
+				<textFieldExpression><![CDATA[$F{product}.split("Period")[0].trim()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="157" y="1" width="1" height="37" forecolor="#E8E3E3" uuid="0678f8fa-66c4-4ea8-9f32-b138ad3f2e8a"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="476" y="0" width="1" height="37" forecolor="#E8E3E3" uuid="28189fc6-9dc5-4955-9f4b-c09696a1520b"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="393" y="0" width="1" height="37" forecolor="#E8E3E3" uuid="b4972cb3-0cc4-4ed0-8d76-e99e1aed3310"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="46" height="37" uuid="ecec2a10-cb8e-4ca6-9ba2-62c423d7d6e0"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="30" y="0" width="1" height="37" forecolor="#E8E3E3" uuid="5ac59475-725f-4676-8236-1abc44a9ef7d"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="294" y="1" width="1" height="37" forecolor="#E8E3E3" uuid="8d6aa7b5-93ca-42f3-a684-6233cdbd6e41"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="174" y="1" width="120" height="36" uuid="9e67e74a-b12c-4f9e-960d-5fd5d748ec8f">
+					<printWhenExpression><![CDATA[$F{product}.contains("Period")]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA["Period " + $F{product}.split("Period")[-1].trim()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="24">
+			<textField>
+				<reportElement x="504" y="0" width="90" height="20" uuid="adea67d2-3ab0-42bf-a08a-651a84e796b4"/>
+				<textFieldExpression><![CDATA[$P{currency_symbol}+" "+$V{variable2}.setScale(2, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="348" y="0" width="123" height="20" uuid="46df5bfc-e064-4e02-83a5-cb9a0d700e96"/>
+				<textElement>
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sub-Account Total]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,4 @@
+An invoice cannot be edited directly. For example: you cannot quickly change the total of a quantity. If you could do this, you would lose the traceability of the purchase order - invoice relationship.
+
+The only way to modify an invoice is by creating and applying a new purchase order that will either cancel out or correct the erroneous invoice. For more details, please refer to Chapter 3: Purchase Orders. 
+

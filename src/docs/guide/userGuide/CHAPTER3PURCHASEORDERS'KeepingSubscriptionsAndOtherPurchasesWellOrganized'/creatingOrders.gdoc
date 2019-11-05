@@ -1,0 +1,103 @@
+To begin creating a purchase order, you first need to select the customer that you are creating the purchase order for. Once you have selected your customer, scroll down to the bottom of the screen and click on the 'Create Order' button.
+
+!createorder.png!
+
+h2. The Details Tab
+
+The Purchase Order form will appear on your screen. First, you must set-up the information in the Details tab. 
+
+!detailstab.png!
+
+The fields you will see on this screen are defined below:
+
+*Period*
+
+The order's period determines how often the order will generate an invoice. A purchase order can reflect a one-time purchase or a periodic service invoiced for each period. The list of periods displayed in this dropdown menu corresponds to the order periods that have been configured for your company.
+
+{note}
+Please Note: it is possible to add or modify these periods. To learn more, please refer to Chapter 10: Configuration. 
+{note}
+
+!period.png!
+
+*A one-time purchase order is only going to be included in one invoice. These kinds of purchase orders are similar to a retail site, where there is no commitment from the customer to repeat the transaction. 
+*A Monthly purchase order indicates that the purchase will appear on an invoice once per month.
+*A Quarterly purchase order means that the purchase will appear on an invoice once every three months.
+*A Weekly purchase order indicates that the purchase will appear on an invoice once every seven days.
+
+{note}
+Please Note: to learn more about this, please see the Order Periods section of this chapter. 
+{note}
+
+*Type*
+
+Type indicates when the purchased services will be paid. This can be in advance (pre-paid), or after service (post-paid). 
+
+!ordertype.png!
+
+Pre-Paid example: *Trend* always bills its customer's in advance. Therefore, all its purchase orders are pre-paid: customers must pay *before* they can see their ads online. 
+
+Post-Paid Example: a landscape maintenance company would send an invoice to a customer once the job is *finished*, exemplifying a post-paid purchase order.
+
+*Active Since / Until*
+
+Here you can specify if this order applies to a limited period of time. The field 'Active Since' automatically populates today's date. This date is generated on the invoice and reflects the date the order was created. 
+
+!activesinceuntil.png!
+
+If the field 'Active Until' is left blank, it implies that this purchase order will be on-going, with no specific end date. 
+
+*Periodic or Recurring:*
+
+A periodic or recurring purchase order has a period of time assigned to it. This period of time determines how often the purchase order recurs. The periods available to a purchase order can be seen and modified by clicking on the dropdown Period field.
+
+For example: *Trend* only wants to allow recurring purchase orders every: 15 days, 1 month, or 3 months. A detailed explanation of how to configure *j*Billing to use these three periods can be found in the 'Order Periods' section. For now, let's examine a few combinations of values for periodic purchase orders:
+
+{table}
+ *Period*|*Active Since*|*Active Until*|*Result*
+ Monthly | Today's date | Blank | An invoice will be generated every month, starting on the date the order is created. This order is ongoing and will keep generating invoices until the customer decides to cancel their subscription.
+ 15 Days | Blank | July 1st, 2012 | An invoice will be generated every 15 days, starting the day the order is created. This will end on July 1st, 2012.
+ 3 Months | May 1st, 2012  | Blank | The customer will be billed for 3 months of services, starting on May 1st, even if the order was created before this date. This order is on-going and will keep generating invoices until the customer decides to cancel their subscription.
+ Monthly | May 1st, 2012 | June 30th, 2012 | This order will only generate two invoices, one for May and another one for June. 
+{table}
+
+*Due Date*
+
+The due date that will be applied to all your customers company wide, is found in the Billing Process Configuration section. In the Customer section, you can choose to specify a due date that will apply to a client in particular. Here, at the purchase order level, you can override the previous configurations and apply a due date to one particular purchase order, and therefore to one specific invoice. 
+
+!orderduedate.png!
+
+*Main Subscription*
+
+This field should be selected if the purchase order is being used with Mediation. Please refer to Chapter 6: Mediation for more detailed information.
+
+!mainsubscription.png!
+
+*Notify user when order expires*
+
+This field only applies when an 'Active Until' date has been specified. Should you check this box, *j*Billing will automatically send a notification to your customer, reminding them that the purchase order has expired. Up to three messages can be sent. When they are sent and what text is used is determined in Chapter 10: Configuration.
+
+!notifyexpire.png!
+
+*Notes*
+
+This field allows you and your staff members to write comments about a customer's purchase order without the customer having access to it. Please see the next section for more details.
+
+!notes.png!
+
+*Include Notes on Invoice*
+
+If this field is checked, *all* notes and comments made by you and your staff will appear on the customer's invoice. 
+
+!includeinvoice.png! 
+
+h2. Adding Products to a Purchase Order
+
+It is time to add items to the order with the services that have been purchased.
+
+The first step in adding a product to the purchase order is to click on the Products tab. A list of all products will appear. Select a product and it will appear in the Order # pane on the right hand side of the screen. Click on the  
+'Update' button. 
+
+!purchaseorder.png!
+
+The product will appear listed in the purchase order.

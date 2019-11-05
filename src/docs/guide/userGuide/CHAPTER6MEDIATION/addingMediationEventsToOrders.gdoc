@@ -1,0 +1,17 @@
+On the purchase order screen, the 'Main Subscription' field should be checked to let the system know how often a customer should be invoiced by the mediaton process.
+
+!mediationmainsubscription.png!
+
+The purchase order can be left blank, and can also include any recurring monthly subscription charges. The mediation process will create all events that fall under the 'Main Subscription' period a one time purchase order. The mediation process does not touch the 'Main Subscription. The 'Main Subscription' is only used to let the system know when to create a new one time order. 
+
+The following is an example of how the mediation process works with the 'Main Subscription' puchase order:
+
+A monthly recurring order is set as the main subscription for a customer. It bills an $80 subscription fee on the 1st of each month. The mediation process runs, and 'sees' several new events on the 1st of March. These are the first charges for this billing period. The system creates a new one time purchase order, which is called the 'Current Order'. The 'Current Order' is always the same length as the 'Main Subscription', so in this case, it would also have a monthly period.
+
+The mediation process 'sees' new charges on the 2nd, 9th 12th, 15th, 16th, 21st, and 24th. The 'Current Order' already exists. It adds the new charges to it. Charges are added until the end of the current order period. In this case, as the 'Main Subscription' is monthly, causing the 'Current Order' period to be monthly, the current order period would be the end of the month. 
+
+Events in April will cause the system to create a new 'Current Order'. This process will continue as long as the 'Main Subscription' order is active. 
+
+h2. Editing Medation Orders
+
+It is possible to edit orders created by the mediation process however, you should avoid doing this. If you do edit an order created by the mediation process, you will be combining manual charges with those created by the billing process. The result is that it is harder to track where the charges came from, and why. It is better to create a new one time order that has your changes and charges, which will be clearly seen when viewing orders for that customer. Keep in mind that the manual order and the one created by the mediation process will be billed together if you use the same due date and billing period. 

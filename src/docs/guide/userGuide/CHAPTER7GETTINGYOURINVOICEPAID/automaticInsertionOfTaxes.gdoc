@@ -1,0 +1,62 @@
+In most cases, taxes are required when billing goods and services. Through the configuration of a plug-in, it is possible for you to indicate which taxes you wish to generate automatically on your invoices. 
+
+In order for this fucntionality to work, you will still need to create a category 'tax' and all the products that you want to fall within that category, for example, VAT, HST, GST, etc. 
+
+!taxescategory.png!
+
+To set up the plug in, access the Configuration area of the system, and click on plug-ins from the links on the left hand side of your screen. Select Plug-In Category 4: Invoice Presentation. Click on the 'Add New' button. 
+
+!invoicepresentationplugin.png!
+
+From the drop down menu beneath 'Type', select the following plug-in: com.sapienter.jbilling.server.process.task.SimpleTaxCompositionTask.
+
+This plug-in has three Parameters. The following is the definition of each:
+
+h2. charge_carrying_item_id
+
+This is a mandatory parameter, which is used to indicate the ID of the tax product you want to automatically insert into the invoice. As you can see from the example below, this particular charge_carrying_item_id belongs to the VAT product:
+
+!changecarryingitem.png!
+
+!vatid.png!
+
+Because this field is set to 3407 (the VAT product ID number), when the system generates an invoice, it will automatically insert and calculate the VAT for all products. 
+
+!orderwithoutvat.png!
+
+In the screen shot above, you can see that when a purchase order is created, the VAT does not appear, however if you generate an invoice (in this case manually, however the same result will occur when the billing process generates invoices automatically), the VAT is automatically inserted.
+
+!vataddition.png!
+
+Let's do a quick manual calculation to prove that the VAT had been added correctly: $1779.82 + $127.00 = $1906.82 x 0.15 (VAT %) = $286.02.
+
+Take a look at the screen shot above. You can see that $286.02 is the amount charged for VAT.
+
+
+h2. customer_contact_field_id
+
+This is an optional field, and only applies if you have customers or users who are exempt from paying taxes. 
+
+If the customer_contact_field_id is set to 1, this means that a customer with a custom contact field that is also set to 1, will be exempt from the tax. This means that the customer does not receive the tax on their invoice.  
+
+!customcontactfieldid.png!
+
+
+h2. item_exempt_category_id
+
+This is an optional field, and only applies if you have a *category* with products that are exempt from taxes. It is important to note, that this field needs a *category* ID number, *not* a product ID number. If you enter a product ID number, this field will not work.
+
+If you have a category of products that need to be exempt from taxes, enter the category ID into this field. In this example, all products which are exempt from VAT tax, should be added to an exempt category. Remember, products can belong to more than one category. This means that if you require products to be grouped in particular order, this is still possible. 
+
+As you can see from the screen shot below, category 2700 needs to be exempt from VAT tax. When the invoice is generated, and this product appears, the system will not include any products included in this category in its calculation of VAT.
+
+!itemexemptcategoryid.png!
+
+Let's take a look at a purchase order with a product within category 2700:
+
+!exemptcategory.png!
+
+When you generate the invoice, notice that the VAT is automatically generated. Also take note of the fact that if you calculate the products that are not included in category 2700, the amount equals VAT ($127 + $63.57 = 190.57 x 0.15 (% of VAT) = $28.58).
+
+!invoiceinserttax.png!
+

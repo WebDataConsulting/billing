@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="simple_invoice_design_sr_payment" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="436a482f-75a5-4ad1-a863-17ec1bf07d33">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="invoiceId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     p.id,
+     p.method_id,
+     pi.payment_id,
+     pi.invoice_id,
+     pi.amount,
+     pi.create_datetime,
+     pmt.id,
+     pmt.method_name
+FROM
+     payment p, payment_invoice pi, payment_method_type pmt
+WHERE
+    pi.payment_id=p.id and pmt.id = p.method_id and
+    pi.invoice_id = $P{invoiceId}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="method_id" class="java.lang.Integer"/>
+	<field name="payment_id" class="java.lang.Integer"/>
+	<field name="invoice_id" class="java.lang.Integer"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<field name="create_datetime" class="java.sql.Timestamp"/>
+	<field name="method_name" class="java.lang.String"/>
+	<variable name="subtotal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="sub-var" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$V{subtotal}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="21">
+			<rectangle>
+				<reportElement x="0" y="0" width="514" height="20" forecolor="#0F0B0B" backcolor="#C0B9B9" uuid="a76b6c84-31d6-4aa8-b1a8-022156d4c185"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="95" height="20" backcolor="#FFFFFF" uuid="8e5c2eed-96f2-4f7b-8797-846aa1ebbba0"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Payment Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="95" y="0" width="177" height="20" backcolor="#FFFFFF" uuid="6b73943f-0502-4258-81d6-91b595824112"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Method Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="391" y="0" width="123" height="20" backcolor="#FFFFFF" uuid="ad8fd7a5-c8af-4eea-be35-305a36970c25"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="272" y="0" width="119" height="20" backcolor="#FFFFFF" uuid="c8612692-1721-4dee-80aa-06e8289ca660"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Payment Date]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="514" height="23" uuid="68abdce2-9b03-405b-9b41-50bda41b2d3f"/>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="0" width="95" height="20" uuid="eb59a4dd-737c-464a-8239-6e18c342534d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="0" width="177" height="20" uuid="38e2bbf5-7eb5-4dcb-b916-a0539379343a"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{method_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="272" y="0" width="119" height="20" uuid="da4b1c67-f2e9-4cf4-9271-87341f402ddc"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{create_datetime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="391" y="0" width="123" height="20" uuid="f77e77ba-0ca6-4f44-89df-3f53f233311b"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="32">
+			<rectangle radius="10">
+				<reportElement x="304" y="1" width="210" height="31" uuid="4320778d-3713-4177-b1c0-01a387958826"/>
+			</rectangle>
+			<textField>
+				<reportElement x="414" y="12" width="100" height="20" uuid="caf53646-48a9-4570-bc0c-d4db74ca9e83"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{subtotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="314" y="12" width="100" height="20" uuid="736b5645-9fd7-42c4-b133-f51abb1c6e16"/>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Sub Total:-]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

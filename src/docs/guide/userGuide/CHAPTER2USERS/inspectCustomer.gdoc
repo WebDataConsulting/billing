@@ -1,0 +1,63 @@
+Once a customer is created in *j*Billing, you have the ability to inspect their information. To inspect the customer, click on the magnifiying glass icon beside the User ID on the selected customer's details screen.
+
+!inspectcustomer.png!
+
+You will be redirected to the Inspect Customer screen, where you can quickly find and view: customer information, when their last payment was made, their last (most recent) invoice, subscriptions, prices and payment information.
+
+It is also possible to view all invoices, payments, and purchase orders by selecting the appropriate button. You can also edit the customer, make a payment, and create an order. 
+
+!inspectcustomerbuttons.png!
+
+h2. Special Prices for Customers
+
+You can add a special price for a customer by clicking on the plus sign beside 'Prices' at the bottom of the screen.
+
+!specialprices.png!
+
+The pane will open to reveal a list of products. 
+
+!specialpriceproducts.png!
+
+Selecting a product will allow you to change the price. Click on the 'Add Price' button to make the change. This price will take precedence over all other prices assigned to the customer. 
+
+!addpricespecial.png!
+
+h2. Audit Log
+
+It is possible to view all user activities in an audit log from the inspect customer screen. This allows a billing administrator to see all activities performed in the system that affects a particular customer.
+
+To access the audit log, click on the 'View Audit Log' button. 
+
+!viewauditlog.png!
+
+You will be redirected to the Audit log screen. This screen lists individual logs for every activity that the customer has been a part of since the date of their creation in the system. 
+
+For example: 
+
+* Customer, Terry Wilson has been created. 
+* A purchase order was created
+* An invoice was generated from the purchase order 
+
+Let's take a look at how this would be recorded in the Audit Logs:
+
+!auditlogs.png!
+
+This first log represents when the user twilson was created. It lists the User's ID number under ID.
+ 
+When you select a particular log, the Audit Log pane will appear to on the right hand side of your screen. This pane displays the Log ID that the system automatically generates and assigns to an individual log. It also displays the name of the user who completed the action. In this first example, customer twilson was created, or Done by, 1 admin.  
+
+The log also displays the time and date that the action occurred. In this example, Terry Wilson was created on August 22, 2011, at 05:57:34. You can also click on the links provided beside, 'Affected data' and 'User' to access and view those areas of the system. 
+
+As you can see from the Audit Log list above, after the system created customer Terry Wilson, a purchase order was created.
+
+!auditpurchaseorder.png!
+
+From that purchase order, an invoice was then generated. 
+
+!auditinvoice.png!
+
+The system will continue to add logs to the customer as events occur. 
+
+{note}
+Please Note: if the action is completed by *j*Billing, like the generation of an invoice when the billing process runs, the Done by field will display: System. 
+{note}

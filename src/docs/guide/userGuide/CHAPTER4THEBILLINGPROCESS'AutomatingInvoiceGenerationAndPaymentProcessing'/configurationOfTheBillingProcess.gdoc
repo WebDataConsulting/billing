@@ -1,0 +1,41 @@
+There are a few parameters that will determine how your billing process will run. To access your billing process configuration click on the Configuration tab and then the Billing Process link located on the left hand side of your screen. 
+
+!configbillingprocess.png!
+
+The Billing Process screen will appear.
+
+!billingprocessscreen.png!
+
+*Next Run Date*
+
+This is the date when the billing process is scheduled to run. Right after installing *j*billing, you'll need to enter a date in this field. This is the date at which the very first run of your billing process will take place.
+
+!nextrundate.png!
+
+You need to enter this date only once, to override the installation's default value. Once the first run has taken place, the date for the next run will be automatically updated by the system.
+
+{note}
+Please Note: It is possible to manually specify a date for the next billing run at any time. This should not be necessary under normal circumstances, but it is a feature that can come in handy if needed. Should you choose to manually change the date of the next billing run, the new date you enter will overrun the one that had been automatically selected by the system, in accordance with your last configuration. The system will thereon process the billing run according to this new date.
+
+For example: It is September 2011. *Trend*, for whom *j*billing has been automatically generating invoices on the first of every month, decides to change the 'Next Run Date' to September 15th 2011. From then on, *j*billing will automatically generate invoices on the 15th of every month (assuming a 'Billing Period' of 1 month).
+{note}
+
+*Generate Review Report*
+
+This flag indicates to the system that it needs to run a preview of the billing process before the real process takes place, and invoices are sent to your customers. The Review Report is like a 'pretend' run. It is a great tool to help identify any problems with the invoicing before the run actually happens. It allows the Billing Administrator, should mistakes or inaccuracies be noticed, to apply changes to purchase orders, edit customers' contact information, enter payments, modify the description of an item or its price, etc.
+
+!genreviewreport.png!
+
+It is recommended that you set this flag 'on', at least for the first few billing cycles if you do not wish to review reports continuously. The Review Report does not generate real invoices. To view them, click on Billing, and select the report you wish to review.
+
+!billinglink.png!
+
+*Days to View Report*
+
+How many days before the real billing process do you want the Review Report to be generated? In other words, how many days before the value in 'Next Run Date' do you want to review the process? 
+
+The greater the number of days, the less accurate the report will be. For example: if the Review Report runs 15 days before the billing process, there are likely to be payments or purchase orders created during that period of time, and you will not have had an opportunity to review how these transactions affect the invoices generated. A good number of days to start with is 5.
+
+!daysreviewreport.png!
+
+For example: *Trend* turns the flag 'on' for the system to generate a Review Report, and indicates it wants it done 5 days before the billing run. Considering that the next billing process will run on the 1st of July, the Review Report for the month of July will therefore be generated on June 25th.

@@ -1,0 +1,95 @@
+h1. jBilling Configuration
+
+Tomcat 6 comes with the AJP connector enabled out-of-the-box, which makes it easy to integrate with Apache 2. However, the connector is not configured for sticky session (session affinity) style load balancing.
+
+Because *j*Billing does not support session-state replication in a cluster, you'll need to configure Tomcat with a unique jvm route name so that Apache can enforce sticky sessions. Edit the tomcat @conf/server.xml@ file and add a unique @jvmRoute@ value to the Catalina Engine.
+
+!loadbalance1.png!
+
+In the above example environment, both *jb-web-0* and *jb-web-1* Tomcat instances have been configured with unique route names:
+
+* *jb-web-0* jvmRoute="web0"
+* *jb-web-1* jvmRoute="web1"
+
+Since you'll have multiple *j*Billing servers in a clustered environment it is necessary to disable the *j*Billing background services so that they are only running on a single machine. For example, you should dedicate a machine to running the billing process, and another to mediation; DO NOT ALLOW multiple machines to run billing, or multiple mediation machines.
+
+{note}
+Please Note: Allowing background services to run on multiple services can cause database corruption and produce inconsistent results.
+{note}
+
+To disable background services on a *j*Billing instance, edit the jbilling/jbilling.properties file and change the 'run' properties at the bottom of the file to: @false@
+
+!loadbalance2.png!
+
+h2. Apache 2 Configuration
+
+For simplicity, this guide follows a Debian style Apache2 installation. Similar commands should be available for RedHat servers, however the configuration file layout will be different so the instructions below cannot be followed command-for-command. Instead, the relevant snippets of configuration code should be added to the bottom of @apache2.conf@.
+
+This configuration puts Apache 2 in front of multiple jBilling servers (Tomcat 6). We use the mod_proxy connector with the AJP transport protocol to integrate Apache with Tomcat. mox_proxy and mod_ajp is a good solution as it has been written to allow for URL rewriting and load balancing. More information about available connectors can be found in the [Tomcat Connector FAQ.|http://wiki.apache.org/tomcat/FAQ/Connectors]
+
+Install the Apache 2 HTTP server using the operating systems package manager (apt-get).
+
+@sudo apt-get install apache2@
+
+Enable the Proxy, AJP Proxy, and Proxy Balancer modules:
+
+@sudo a2enmod proxy proxy_ajp proxy_balancer@
+
+Create a new site configuration in @/etc/apache2/sites-available/@ using a load-balanced proxy. In this example we've created a new site named 'jbilling':
+
+!loadbalance3.png!
+
+{note}
+Please Note: Each @BalanceMember@ has a route value that corresponds to the jvmRoute that we assigned to our Tomcat instance earlier. Make sure you properly identify all balance members with their route name or else, the sticky session will not work correctly.
+{note}
+
+Enable the site configuration:
+
+@sudo a2ensite jbilling@
+
+REFERENCES
+
+* http://httpd.apache.org/docs/2.2/mod/mod_proxy_ajp.html
+* http://httpd.apache.org/docs/2.2/mod/mod_proxy.html
+
+h1. *j*Billing Background Processes
+
+In larger *j*Billing installations you'll want to distribute your *j*Billing servers so that different machines serve different (yet distinct) roles. The two biggest roles are Billing and Mediation as both of these services can be very resource intensive. By moving these two roles onto separate machines you can ensure that the workload of the billing or mediation processes does not impact the user experience of people working with the *j*Billing UI (the load-balanced cluster). 
+
+Each individual *j*Billing machine contains a properties file that controls what process can be run. To dedicate a machine to billing, simply disable all of the services except the billing process.
+
+In our above virtual environment, the *jb-billing* machine uses the following configuration:
+
+!loadbalance4.png!
+
+{note}
+Please Note: *j*Billing cannot distribute a process across more than one machine. You can only ever have one machine running billing, one running ageing, one running mediation, etc.
+{note}
+
+We could also allow *jb-billing* to handle the rest of the processes as the machine will be idle between billing runs. A better use of hardware would be to allow the machine to handle everything except mediation. You can always add more dedicated machines later if you find that the other background processes are creating too high of a workload.
+
+h1. Background Processes & Schedules
+
+All background processes in *j*Billing are scheduled processes. That is, they do not run on-demand but periodically on a set schedule. In most cases these processes should be run once a day.
+
+Out-of-the-box you can configure a global schedule (per machine) for all processes to run at. The schedule is defined in the @jbilling.properies@ file as a start date and a frequency between runs, we usually recommend a 24 hour schedule with the processes running at midnight. 
+
+!loadbalance5.png!
+
+!loadbalance6.png!
+
+h1. PostgreSQL Configuration
+
+If you followed the Required Software Installation Guide, then you would have configured PostgreSQL to allow local connections. In a distributed environment with many servers accessing the database, you'll need to change your configuration to allow remote connections from the jBilling applications servers. 
+
+Edit the @pg_hba.conf@ file and add a new CIDR mask that includes your *j*Billing application servers. You may either allow an entire range of addresses, or add an entry for each individual server. 
+
+!loadbalance7.png!
+
+For a specific IP address, use a mask like 127.0.0.1/32
+
+For all 255 addresses of 192.168.1.*, use a mask like 192.168.1.1/24
+
+You can find more information about masks in the [Wikipedia CIDR notation|http://en.wikipedia.org/wiki/CIDR_notation] article. 
+
+

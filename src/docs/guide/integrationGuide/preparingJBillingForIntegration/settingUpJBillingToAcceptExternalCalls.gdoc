@@ -1,0 +1,41 @@
+As mentioned earlier, *j*Billing will not accept all external calls it gets, but will require the
+caller to identify itself with a user name and password in order to service the request.
+Otherwise, the request will receive an error in response. This is a simple but effective
+measure that improves overall security. Of course, this also means you (or the system
+administrator) will need to set up an account in *j*Billing that will be authorized to perform
+external calls.
+
+Once you've followed the *[Getting Started|http://www.jbilling.com/documentation/getting-started-with-jbilling]* 
+tutorial and created the initial billing entity, the user name and password you entered in the entity setup screen will represent the
+user name and password of *j*Billing's administrator account. You can grant access to this administrator account 
+(or any other account you create for this purpose) to connect remotely and perform service calls.
+
+In order to do so, you'll need to log-in as the administrator and give an account the "Web Service API access" permission
+to allow the account to be used to authenticate web-service access.
+
+You can do this from either the Roles configuration screen (*Configuration > Roles*) to grant access to an entire
+group of users, or by editing the individual user permissions (*Configuration > Users > Permissions*).
+
+
+h4. Authenticating a Web-Service client
+
+SOAP, Hessian and Burlap all use HTTP Basic authentication to gain access to the *j*Billing web-service endpoint. All
+web service clients must authenticate themselves so that *j*Billing can enforce restrictions on data access and prevent
+un-authorized access to integration services.
+
+The user name string must contain both the login name of the *j*Billing user attempting to access AND the company ID of the company you
+are trying to access. If you do not provide the company ID you will not be able to authenticate your web service client.
+
+Credentials must be provided in the format:
+
+* user name = "userName;companyId"
+* password = "user's password"
+
+For example, you can access the *Trend* web-service using the user name "admin;1" and the password "123qwe".
+
+If you are not sure of the ID of your company, look at the @ENTITY@ table in the jBilling database.
+
+{code}
+SELECT * FROM ENTITY;
+{code}
+

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jbilling" basedir=".">
+
+	<property file="jbilling-build.properties" />
+	<property environment="env" />
+
+	<condition property="grails.home" value="${env.GRAILS_HOME}">
+		<isset property="env.GRAILS_HOME" />
+	</condition>
+
+	<path id="compile.classpath">
+		<!-- jbilling libraries -->
+		<fileset dir="${source.lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+
+		<!-- grails libraries -->
+		<fileset dir="${env.GRAILS_HOME}/lib/">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="test.classpath">
+		<!-- test classes and junit -->
+		<pathelement location="${build.test.dir}" />
+		<pathelement location="${junit.dir}/junit.jar" />
+		<fileset dir="${easymock.dir}" includes="*.jar" />
+
+		<!-- required dependencies -->
+		<fileset dir="${digester.dir}" includes="*.jar" />
+		<!-- fileset dir="${drools.dir}" includes="*.jar"/ -->
+		<!-- fileset dir="${velocity.dir}" includes="*.jar"/ -->
+		<fileset dir="${quartz.dir}" includes="*.jar" />
+		<fileset dir="${spring.dir}" includes="*.jar" />
+		<fileset dir="${jodatime.dir}" includes="*.jar" />
+		<fileset dir="${hibernate.dir}" includes="*.jar" />
+		<fileset dir="${commons.dir}" includes="*.jar" />
+		<!-- compiled jbilling classes -->
+		<pathelement path="${build.classes.dir}" />
+	</path>
+
+	<path id="spring.classpath">
+		<pathelement location="${source.spring.descriptor.dir}" />
+	</path>
+
+	<!-- Testing targets -->
+
+	<target name="test" depends="suretax-tests" />
+
+	<target name="test.init">
+		<delete dir="${build.test.dir}" />
+		<delete dir="${build.test-results.dir}" />
+
+		<mkdir dir="${build.test.dir}" />
+		<mkdir dir="${build.test-results.dir}" />
+	</target>
+
+	<target name="suretax-tests" depends="test.init"
+		description="Run all North Power tests.">
+		<javac srcdir="${source.test.dir}/suretax:${source.test.dir}/util"
+			destdir="${build.test.dir}" debug="true" deprecation="false" nowarn="true"
+			fork="true" includeantruntime="false">
+			<classpath refid="compile.classpath" />
+			<classpath refid="test.classpath" />
+		</javac>
+
+		<copy file="${source.spring.descriptor.dir}/jbilling-remote-beans.xml"
+			todir="${build.test.dir}" />
+
+
+		<!-- run web service tests -->
+		<mkdir dir="${build.test-results.dir}/suretax/xml" />
+		<junit errorproperty="test.failed" failureproperty="test.failed"
+			haltonfailure="false">
+			<jvmarg value="-Djava.security.manager" />
+			<jvmarg
+				value="-Djava.security.policy=${source.resources.descriptor.dir}/app.policy" />
+			<jvmarg
+				value="-Djava.security.auth.login.config=${source.resources.descriptor.dir}/auth.conf" />
+			<classpath refid="compile.classpath" />
+			<classpath refid="test.classpath" />
+			<formatter type="brief" usefile="false" />
+			<formatter type="xml" />
+			<test
+				name="com.sapienter.jbilling.suretax.engine.test.SixtyDayOldInvoiceGenerationTest"
+				todir="${build.test-results.dir}/suretax/xml" />
+
+			<test
+				name="com.sapienter.jbilling.suretax.engine.test.SureTaxCompositionTaskTest"
+				todir="${build.test-results.dir}/suretax/xml" />
+			<test
+				name="com.sapienter.jbilling.suretax.engine.test.NegativeSuretaxTestOne"
+				todir="${build.test-results.dir}/suretax/xml" />
+			<test
+				name="com.sapienter.jbilling.suretax.engine.test.NegativeSuretaxTestTwo"
+				todir="${build.test-results.dir}/suretax/xml" />
+			<test
+				name="com.sapienter.jbilling.suretax.engine.test.SuretaxSuccessfulDeletionTest"
+				todir="${build.test-results.dir}/suretax/xml" />
+			<test
+				name="com.sapienter.jbilling.suretax.engine.test.RollbackOnErrorTest"
+				todir="${build.test-results.dir}/suretax/xml" />
+			<test
+				name="com.sapienter.jbilling.suretax.engine.test.SureTaxCancelRequestTest"
+				todir="${build.test-results.dir}/suretax/xml" />
+			
+		</junit>
+
+		<!-- generate testing reports -->
+		<mkdir dir="${build.test-results.dir}/suretax/html" />
+		<junitreport>
+			<fileset dir="${build.test-results.dir}/suretax/xml"
+				includes="TEST-*.xml" />
+			<report format="frames" todir="${build.test-results.dir}/suretax/html" />
+		</junitreport>
+
+		<fail if="test.failed" message="suretax tests failed! See log's for details." />
+
+	</target>
+
+</project>

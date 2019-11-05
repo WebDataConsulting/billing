@@ -1,0 +1,117 @@
+h2. What happens to unpaid invoices?
+ 
+In *j*Billing, invoices carry two important amounts: total and balance. Invoices also have two key dates: invoice date and due date. Customers are responsible for paying their invoices before the due date, to ensure that the balance gets paid, and goes down to a value of $0. 
+
+{note}
+Please Note: for more information on the status, total, and balance of an invoice, please refer to 1.6.4 Status and Balance of an Invoice.
+{note}
+
+What happens if a customer does not pay their invoice before the due date? 
+
+There are two options:
+
+1. The InvoiceFilterTask, a default plug-in, will trigger when the billing process runs. It will search for all invoices that have a *balance* that is greater than, or less than, $0. The invoice status is not considered. Any invoice that has a balance will be included on the next invoice as a line item, and will affect the total of that new invoice.
+
+{note}
+Please Note: this functionality is primarily used when you are using *j*Billing to sell to end users, not companies. If you do not want to use this functionality, see option 2.
+{note}
+
+2. Configure the NoInvoiceFIlterTask. If this plug in is configured, nothing will happen. The first invoice will remain 'Unpaid', when the due date is passed. Any invoices generated after that date will not carry the balance from any previous invoices. The invoices will need to have a payment applied to each. 
+
+To do this, you will need to complete the following steps:
+
+* Click on the 'Configuration' tab
+* Click on 'Plug-ins', located in the menu on the left hand side of the screen
+* Select category 3, any existing Plug-ins will appear on the right hand side of the screen.
+* Click on the 'Add New' button. The Add New Plug-in screen will appear. 
+* Select com.sapienter.jbilling.server.pluggableTask.NoInvoiceFilterTask from the drop down menu under 'Type'
+* Enter an order number
+* Save the plug-in
+
+The purpose of using option 1 (which is the primary focus of this section of the user guide), is that the customer will only need to pay for the latest invoice, because it is up to date. This means that there is no need to pay any previous invoice(s), because the latest contains *all* relevant information.
+ 
+h2. Carried Invoices
+
+We are going to take a look at a more specific example to help further illustrate how the invoice delgation, or 'carried balance' functionality works.
+
+On January 1, an invoice is generated for customer Brian Smith. This invoice has a due date of January 10th. The total of all products on Brian's invoice is $150. The balance is also $150, which means that Brian has not yet provided a payment. 
+
+!invoicea.png!
+
+Brian still does not provide a payment, and on February 1, another invoice is generated for him. Because the due date for invoice A has passed, and it's *balance* is greater than $0, instead of simply generating a regular invoice (option 2), invoice A and B are combined. 
+
+!invoiceb.png!
+
+Notice that in addition to the products that belong to invoice B, the *balance* from Invoice A has been carried over as a line item. 
+
+Take a look at the Total of invoice B. When you add all the products from invoice A and B together, this amount, $290 tells the customer (and the billing administrator) exactly how much is owed.
+ 
+The balance of invoice B on the other hand, is a different amount. The reason for this is because the balance of invoice B *only pertains to the items on invoice B*. If you subtract the amount owed for invoice A, $150 from the rest of the invoice lines, you get the balance for invoice B: $140. 
+
+Here is an example of what a carried invoice will look like in *j*Billing:
+
+!carriedinvoice.png!
+
+Notice that the Amount (or Total) equals the sum of all line items - $2360 + $1540 + $820 = $4720. 
+
+!amount.png!
+
+The Balance represents the total of all line items that pertain to the current invoice - $1540 + $820 = $2360.
+
+!balance.png!
+ 
+The Carried Balance represents the balance carried from Invoice 2056 - $2360.
+
+!carriedbalance2.png!
+
+h2. Unpaid and Carried: Invoices with a Negative Value
+
+Currently, the carried balance functionality will *not work* if an invoice balance is a negative value. 
+
+In *j*Billing, the plug-in that determines which invoices to include in the most recently generated invoice is the InvoiceFilterTask. Again, it is possible to avoid using the carried invoice functionality by configuring the NoInvoiceFilterTask (option 2).
+
+When the billing process runs, the InvoiceFilterTask looks for all invoices with a balance that is *greater* or *less than* zero dollars. This means that if the billing process runs and finds an invoice with a balance of -$45.00, it will carry the negative balance over onto the total of the new invoice. The plug-in ignores the status of the invoice. Therefore, regardless of the fact that the invoice with a negative balance has a status of 'Paid', the amount will still be carried over into the total of the next invoice. This is *not* good because when a payment is made, the system will be looking at an incorrect balance for the latest invoice.
+
+Due to this fact, the generation of a negative invoice should *always* be avoided. A typical scenario where a negative invoice might be generated is if a customer has a credit amount applied, which is greater than the total amount of the invoice.
+
+Let's take a look at an example to help clarify this scenario:
+
+Customer Brian Smith needs to recieve a $100 credit. In order to ensure Brain receives this credit, you would create a one-time purchase order for -$100. Typically, Brian recieves an invoice every month for $50. When the billing process runs, the one-time purchase order, along with his usual monthly purchase will be generated onto a single invoice. The total and balance of this invoice would be: -$50 (50 - 100 = -50).
+
+!negativeinvoice.png!
+
+When the billing process runs again the next month, the system considers the -$50 to be a carried balance. This amount is carried over onto the next invoice, and will appear as a line item. This means that -$50 will be deducted from the invoice, which alters the *total* of the invoice. If the invoice was $100, then subtracting the carried balance would give a *total* of: $50.  The total of this invoice would be: $50, which is correct. The problem lies with the balance, which would be $100 (addition of invoice lines that pertain to the current invoice). While the customer really only needs to pay $50, they would need to pay $100 in order for the system to consider the invoice to be paid (the balance needs to equal $0).
+
+!negativeinvoice2.png! 
+
+There are two ways to solve this potential problem. 
+
+1. Turn off the 'carry invoice balance' feature of *j*Billing. Doing so will prevent any invoice balance from being carried over to the next invoice.
+
+2. Avoid generating negative invoices. Ideally, when giving a customer a credit, you would create a one-time order with a negative value. If you suspect that this will bring the total of the next invoice to a negative value, you will need to create a recurring credit order, to spread the credit over several periods. 
+
+For Example:
+
+Brian Smith needs a credit for $50. However, on his next invoice, the balance will be $30. If a $50 credit is applied, the balance of the invoice would be, -$20 (30 - 50 = -20). In this situation, the result would be a negative invoice.  
+
+!negativecredit.png!
+
+Therefore, the billing administrator needs to do a little bit of math to break down the credit, and spread the amount over several invoices. In this example, the billing administrator has decided to give a $10 credit over 5 months, because they know all generated invoices for Brian will be greater than $10. Therefore, they would create a recurring order, with the credit product and set the active until date accordingly.
+
+It is important to remember that there is a difference between a negative invoice, and overpayments. An overpayment should *not* cause negative invoices. If you have a customer with an invoice for 100 and a payment for 200, then the invoice balance would be $0. The payment record would have $100 left in the balance, which can be applied to the next invoice. 
+
+{note}
+Please Note: if you will be running into many instances where a negative invoice is being generated, you might want to consider turning off the carried balance functionality to simplify your billing process.
+{note}
+
+h2. How to Handle a Negative Invoice: Write-Off
+
+What should you do if a customer is no longer purchasing any goods or services from your company, but their last invoice is a negative one? You need to know how to reconcile these invoices so that the balance does not distort your reports. The following options are also known as 'Write-Offs', and should be used when trying to get a customer's invoices to a status of 'Paid'.
+
+For example, the billing process
+
+1. Create a payment to bring the balance to $0 using the 'Cheque' section to *enter* a payment. In the 'Bank' field, or 'Payment Notes' field, indicate that the payment is a write-off. This is a quick way to bring the invoice up to date, however, it does not make it easy to identify this type of payment in a report, or reconcilliation.
+
+2. Create a one time order with a positive balance. You can change the description of the line item to something like, 'Positive Adjustment'. Apply this one time order to the invoice, using the 'Apply to Invoice' button. The positive total will bring the negative invoice back to a balance of $0. 
+
+3. Delete the invoice. With this option, you also have the ability to either regerate the invoice again by making corrections to the purchase orders, or leave the purchase orders as is. With this method however, you do lose the original invoice because you are deleting it. 

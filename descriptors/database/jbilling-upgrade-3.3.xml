@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="Oscar Bidabehere" context="base" id="#3173 - Create a New Payment Method 'Credit'">
+        <insert tableName="payment_method">
+            <column name="id" valueNumeric="15"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="35"/>
+            <column name="foreign_id" valueNumeric="15"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Credit"/>
+        </insert>
+
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueComputed="(select max(p.id)+1 from pluggable_task_type p)"/>
+            <column name="category_id" valueNumeric="17"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.invoice.task.ApplyNegativeInvoiceToPaymentTask"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(p.id) from pluggable_task_type p)"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Credit on negative invoice"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(p.id) from pluggable_task_type p)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This plug-in will set the balance and total of a negative invoice to 0 and create a 'credit' payment for the remaining amount."/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="(select max(p.id)+1 from pluggable_task_type p)"/>
+            <where>name='pluggable_task_type'</where>
+        </update>
+
+        <sql>
+            <![CDATA[
+               INSERT INTO pluggable_task (id, entity_id, type_id, processing_order, optlock)
+               select (select max(p.id)+1 from pluggable_task p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                      e1.id,
+                      (select max(p.id) from pluggable_task_type p),
+                      1,
+                      1
+               from entity e1
+               order by e1.id
+           ]]>
+        </sql>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="coalesce((select max(p.id)+1 from pluggable_task p), 1)"/>
+            <where>name='pluggable_task'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="Gerhard Maree" context="base" id="#4781 - Dynamic tab configuration">
+       <createTable tableName="tab">
+           <column name="id" type="java.sql.Types.INTEGER">
+               <constraints nullable="false" primaryKey="true" primaryKeyName="tab_pkey"/>
+           </column>
+           <column name="message_code" type="java.sql.Types.VARCHAR(50)"/>
+           <column name="controller_name" type="java.sql.Types.VARCHAR(50)"/>
+           <column name="access_url" type="java.sql.Types.VARCHAR(50)"/>
+           <column name="required_role" type="java.sql.Types.VARCHAR(50)"/>
+           <column name="version" type="java.sql.Types.INTEGER">
+               <constraints nullable="false"/>
+           </column>
+       </createTable>
+
+       <createTable tableName="tab_configuration">
+           <column name="id" type="java.sql.Types.INTEGER">
+               <constraints nullable="false" primaryKey="true" primaryKeyName="tab_configuration_pkey"/>
+           </column>
+           <column name="user_id" type="java.sql.Types.INTEGER"/>
+           <column name="version" type="java.sql.Types.INTEGER">
+               <constraints nullable="false"/>
+           </column>
+       </createTable>
+       <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="tab_configuration" constraintName="tab_configuration_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_user" referencesUniqueColumn="false"/>
+
+       <createTable tableName="tab_configuration_tab">
+           <column name="id" type="java.sql.Types.INTEGER">
+               <constraints nullable="false" primaryKey="true" primaryKeyName="tab_configuration_tab_pkey"/>
+           </column>
+           <column name="tab_id" type="java.sql.Types.INTEGER"/>
+           <column name="tab_configuration_id" type="java.sql.Types.INTEGER"/>
+           <column name="display_order" type="java.sql.Types.INTEGER"/>
+           <column name="visible" type="java.sql.Types.BOOLEAN"/>
+           <column name="version" type="java.sql.Types.INTEGER">
+               <constraints nullable="false"/>
+           </column>
+       </createTable>
+       <addForeignKeyConstraint baseColumnNames="tab_id" baseTableName="tab_configuration_tab" constraintName="tab_configuration_tab_fk_1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tab" referencesUniqueColumn="false"/>
+       <addForeignKeyConstraint baseColumnNames="tab_configuration_id" baseTableName="tab_configuration_tab" constraintName="tab_configuration_tab_fk_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tab_configuration" referencesUniqueColumn="false"/>
+
+       <insert tableName="tab">
+           <column name="id" valueNumeric="1"/>
+           <column name="message_code" value="menu.link.customers"/>
+           <column name="controller_name" value="customer"/>
+           <column name="access_url" value="/customer/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="2"/>
+           <column name="message_code" value="menu.link.partners"/>
+           <column name="controller_name" value="partner"/>
+           <column name="access_url" value="/partner/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="3"/>
+           <column name="message_code" value="menu.link.invoices"/>
+           <column name="controller_name" value="invoice"/>
+           <column name="access_url" value="/invoice/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="4"/>
+           <column name="message_code" value="menu.link.payments.refunds"/>
+           <column name="controller_name" value="payment"/>
+           <column name="access_url" value="/payment/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="5"/>
+           <column name="message_code" value="menu.link.orders"/>
+           <column name="controller_name" value="order"/>
+           <column name="access_url" value="/order/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="6"/>
+           <column name="message_code" value="menu.link.billing"/>
+           <column name="controller_name" value="billing"/>
+           <column name="access_url" value="/billing/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="8"/>
+           <column name="message_code" value="menu.link.reports"/>
+           <column name="controller_name" value="report"/>
+           <column name="access_url" value="/report/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="9"/>
+           <column name="message_code" value="menu.link.products"/>
+           <column name="controller_name" value="product"/>
+           <column name="access_url" value="/product/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="10"/>
+           <column name="message_code" value="menu.link.plans"/>
+           <column name="controller_name" value="plan"/>
+           <column name="access_url" value="/plan/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+       <insert tableName="tab">
+           <column name="id" valueNumeric="11"/>
+           <column name="message_code" value="menu.link.configuration"/>
+           <column name="controller_name" value="config"/>
+           <column name="access_url" value="/config/index"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+       </insert>
+   </changeSet>
+
+   <changeSet author="Gerhard Maree" context="base" id="#4781 - Dynamic tab configuration - Discounts menu item">
+       <addColumn tableName="tab">
+           <column name="default_order" type="java.sql.Types.INTEGER"/>
+       </addColumn>
+
+       <update tableName="tab">
+           <column name="default_order" valueComputed="id"/>
+           <where>(default_order = 0 OR default_order IS NULL) AND id &lt; 9 </where>
+       </update>
+       <update tableName="tab">
+           <column name="default_order" valueComputed="id+1"/>
+           <where>(default_order = 0 OR default_order IS NULL) AND id &gt;= 9 </where>
+       </update>
+
+       <insert tableName="tab">
+           <column name="id" valueNumeric="12"/>
+           <column name="message_code" value="menu.link.discounts"/>
+           <column name="controller_name" value="discount"/>
+           <column name="access_url" value="/discount/list"/>
+           <column name="required_role" value=""/>
+           <column name="version" value="1"/>
+           <column name="default_order" valueNumeric="9" />
+       </insert>
+   </changeSet>
+
+    <changeSet author="Oscar Bidabehere" context="base" id="#1905 - Reset password">
+        <createTable tableName="reset_password_code">
+            <column name="base_user_id" type="int">
+                <constraints unique="true"/>
+            </column>
+            <column name="date_created" type="datetime"/>
+            <column name="token" type="java.sql.Types.VARCHAR(32)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="new_password" type="java.sql.Types.VARCHAR(40)"/>
+        </createTable>
+
+        <comment>Default configuration</comment>
+
+        <comment>id = maxMessageId + count</comment>
+        <sql>
+            <![CDATA[
+                INSERT INTO notification_message (entity_id, id, language_id, notify_admin, notify_all_parents, notify_parent, notify_partner, optlock, type_id, use_flag)
+                select e1.id, (select coalesce(max(p.id), 0) +1 from notification_message p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id), 1, 0, 0, 0, 0, 1, 20, 1
+                from entity e1
+                order by e1.id
+            ]]>
+        </sql>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="coalesce((select max(p.id)+1 from notification_message p), 1)"/>
+            <where>name='notification_message'</where>
+        </update>
+
+        <comment>message_id = maxMessageId - count</comment>
+        <sql>
+            <![CDATA[
+                INSERT INTO notification_message_section (id, message_id, section, optlock)
+                select (select coalesce(max(p.id), 0) +1 from notification_message_section p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       (select coalesce(max(p.id), 0) from notification_message p) - (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       1,
+                       1
+                from entity e1
+                order by e1.id
+            ]]>
+        </sql>
+
+        <comment>message_id = maxMessageId - count</comment>
+        <sql>
+            <![CDATA[
+                INSERT INTO notification_message_section (id, message_id, section, optlock)
+                select (select coalesce(max(p.id), 0) +1 from notification_message_section p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       (select coalesce(max(p.id), 0) from notification_message p) - (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       2,
+                       1
+                from entity e1
+                order by e1.id
+            ]]>
+        </sql>
+
+        <comment>message_id = maxMessageId - count</comment>
+        <sql>
+            <![CDATA[
+                INSERT INTO notification_message_section (id, message_id, section, optlock)
+                select (select coalesce(max(p.id), 0) +1 from notification_message_section p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       (select coalesce(max(p.id), 0) from notification_message p) - (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       3,
+                       1
+                from entity e1
+                order by e1.id
+            ]]>
+        </sql>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="coalesce((select max(p.id)+1 from notification_message_section p), 1)"/>
+            <where>name='notification_message_section'</where>
+        </update>
+
+        <comment>message_section_id = (maxSectionId + 1 - (3 * entityCant)) + count</comment>
+        <sql>
+            <![CDATA[
+                INSERT INTO notification_message_line (id, message_section_id, content, optlock)
+                select (select coalesce(max(p.id), 0) +1 from notification_message_line p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       (select coalesce(max(p.id), 0) +1 from notification_message_section p) - (select count(*) * 3 from entity ecant) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       'Reset password request',
+                       1
+                from entity e1
+                order by e1.id
+            ]]>
+        </sql>
+
+        <comment>message_section_id = (maxSectionId + 1 - (2 * entityCant)) + count</comment>
+        <sql>
+            <![CDATA[
+                INSERT INTO notification_message_line (id, message_section_id, content, optlock)
+                select (select coalesce(max(p.id), 0) +1 from notification_message_line p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       (select coalesce(max(p.id), 0) +1 from notification_message_section p) - (select count(*) * 2 from entity ecant) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       'Hello  $first_name $last_name,\r\n\r\nYou (or someone pretending to be you) requested a password reset of your account.\r\n\r\nIf you access the following link your password will be changed to: $newPassword\r\n\r\n$newPasswordLink',
+                       1
+                from entity e1
+                order by e1.id
+            ]]>
+        </sql>
+
+        <comment>message_section_id = (maxSectionId + 1 - (1 * entityCant)) + count</comment>
+        <sql>
+            <![CDATA[
+                INSERT INTO notification_message_line (id, message_section_id, content, optlock)
+                select (select coalesce(max(p.id), 0) +1 from notification_message_line p) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       (select coalesce(max(p.id), 0) +1 from notification_message_section p) - (select count(*) * 1 from entity ecant) + (select count(*) from entity e2 where e1.id > e2.id and e2.id <> e1.id),
+                       '&lt;p&gt;Hello $first_name $last_name,&lt;/p&gt;&lt;p&gt;You (or someone pretending to be you) requested a password reset of your account.&lt;/p&gt;&lt;p&gt;If you access the following link your password will be changed to: &lt;strong&gt;$newPassword&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;$newPasswordLink&quot;&gt;$newPasswordLink&lt;/a&gt;&lt;/p&gt;',
+                       1
+                from entity e1
+                order by e1.id
+            ]]>
+        </sql>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="coalesce((select max(p.id)+1 from notification_message_line p), 1)"/>
+            <where>name='notification_message_line'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="Shweta Gupta" context="base" id="20121231-#2488,BalanceBelowThresholdNotificationTask-1">
+
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(id) from pluggable_task_type where class_name = 'com.sapienter.jbilling.server.user.tasks.BalanceThresholdNotificationTask'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueComputed="(select max(ptt.id)+1 from pluggable_task_type ptt)"/>
+            <column name="category_id" valueNumeric="17"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.user.tasks.BalanceThresholdNotificationTask"/>
+            <column name="min_parameters" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(ptt.id) from pluggable_task_type ptt)"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="User Balance threshold notification task"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(ptt.id) from pluggable_task_type ptt)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="A pluggable task of the type InternalEventsTask to monitor if users pre-paid balance is below a threshold level and send notifications."/>
+        </insert>
+
+        <insert tableName="notification_category">
+            <column name="id" valueComputed="(select max(nc.id)+1 from notification_category nc)"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="104"/>
+            <column name="foreign_id" valueComputed="(select max(id) from notification_category)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Custom Notifications"/>
+        </insert>
+
+        <insert tableName="notification_message_type">
+            <column name="id" valueComputed="(select max(nmt.id)+1 from notification_message_type nmt)"/>
+            <column name="category_id" valueComputed="(select max(id) from notification_category)"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="52"/>
+            <column name="foreign_id" valueComputed="(select max(nmt.id) from notification_message_type nmt)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Balance Below Threshold"/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="coalesce((select round(max(id)/100)+1 from notification_message_type), 1)"/>
+            <where>name = 'notification_message_type'</where>
+        </update>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="coalesce((select round(max(id)/10)+1 from notification_category), 1)"/>
+            <where>name = 'notification_category'</where>
+        </update>
+
+    </changeSet>
+
+    <changeSet author="Shweta Gupta" context="test" id="20121231-#2488,BalanceBelowThresholdNotificationTask-2">
+
+        <insert tableName="meta_field_name">
+            <column name="id" valueComputed="(select max(mfn.id)+1 from meta_field_name mfn)" />
+            <column name="name" value="Dynamic Balance Threshold" />
+            <column name="entity_type" value="CUSTOMER" />
+            <column name="data_type" value="STRING" />
+            <column name="is_disabled" valueBoolean="false " />
+            <column name="is_mandatory" valueBoolean="false" />
+            <column name="display_order" valueNumeric="4" />
+            <column name="entity_id" valueNumeric="1" />
+            <column name="optlock" valueNumeric="0" />
+        </insert>
+
+        <insert tableName="notification_message">
+            <column name="id" valueComputed="(select max(nm.id)+1 from notification_message nm)"/>
+            <column name="type_id" valueComputed="(select max(nmt.id) from notification_message_type nmt)"/>
+            <column name="entity_id" valueNumeric="1"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="use_flag" valueNumeric="1"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="notification_message_section">
+            <column name="id" valueComputed="(select max(nms.id)+1 from notification_message_section nms)"/>
+            <column name="message_id" valueComputed="(select max(id) from notification_message)"/>
+            <column name="section" valueNumeric="1"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="notification_message_line">
+            <column name="id" valueComputed="(select max(nml.id)+1 from notification_message_line nml)"/>
+            <column name="message_section_id" valueComputed="(select max(id) from notification_message_section)"/>
+            <column name="content" value="Your pre-paid balance is below Water mark."/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="notification_message_section">
+            <column name="id" valueComputed="(select max(nms.id)+1 from notification_message_section nms)"/>
+            <column name="message_id" valueComputed="(select max(id) from notification_message)"/>
+            <column name="section" valueNumeric="2"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="notification_message_line">
+            <column name="id" valueComputed="(select max(nml.id)+1 from notification_message_line nml)"/>
+            <column name="message_section_id" valueComputed="(select max(id) from notification_message_section)"/>
+            <column name="content" value="Dear $userSalutation,\r\n\r\nYour Pre-paid balance has reached below the threshold mark of $thresholdAmt. Your balance is currently at $dynamicBalance.\r\n\r\nTherefore, you are kindly advised to make sufficient payment into your account as early as possible.\r\n\r\nThanks."/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="notification_message_section">
+            <column name="id" valueComputed="(select max(nms.id)+1 from notification_message_section nms)"/>
+            <column name="message_id" valueComputed="(select max(id) from notification_message)"/>
+            <column name="section" valueNumeric="3"/>
+            <column name="optlock" valueNumeric="0"/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="coalesce((select round(max(id)/100)+1 from notification_message), 1)"/>
+            <where>name = 'notification_message'</where>
+        </update>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="coalesce((select round(max(id)/100)+1 from notification_message_section), 1)"/>
+            <where>name = 'notification_message_section'</where>
+        </update>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="coalesce((select round(max(id)/100)+1 from notification_message_line), 1)"/>
+            <where>name = 'notification_message_line'</where>
+        </update>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id"  valueComputed="coalesce((select max(id)+1 from meta_field_name), 1)"/>
+            <where>name = 'meta_field_name'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="Panche Isajeski" dbms="PostgreSQL,MySQL,Oracle,MS-SQL" context="base" id="#3374-Ageing improvements" runOnChange="false">
+        <comment>#3374-Separate auto payment retry from the billing process</comment>
+
+        <createTable tableName="user_status">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_status_pkey"/>
+            </column>
+            <column name="can_login" type="java.sql.Types.TINYINT" />
+        </createTable>
+
+        <insert tableName="user_status">
+            <column name="id" valueNumeric="1" />
+            <column name="can_login" valueNumeric="1"/>
+        </insert>
+
+        <!--<dropForeignKeyConstraint baseTableName="base_user" constraintName="base_user_fk_1"/>-->
+
+        <addColumn tableName="ageing_entity_step">
+            <column name="retry_payment" type="java.sql.Types.SMALLINT" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="suspend" type="java.sql.Types.SMALLINT" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="send_notification" type="java.sql.Types.SMALLINT" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <comment>Migration scripts</comment>
+        <sql>
+            insert into user_status
+            (select aes.id, gs.can_login from ageing_entity_step aes, generic_status gs
+                where aes.status_id > 1 and gs.dtype='user_status' and aes.status_id = gs.status_value);
+        </sql>
+
+        <update tableName="base_user">
+            <column name="status_id" valueComputed="(select us.id from user_status us, ageing_entity_step aes where aes.id=us.id and aes.status_id=base_user.status_id)"/>
+            <where>status_id &gt; 1</where>
+        </update>
+
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="base_user" constraintName="base_user_fk_6"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user_status"
+                                 referencesUniqueColumn="false"/>
+
+        <sql>create table ageing_entity_step_copy as (select * from ageing_entity_step)</sql>
+        <sql>
+            <![CDATA[
+                update ageing_entity_step us1
+                set days =
+                    (select sum(us2.days) from ageing_entity_step_copy us2
+                        where us2.id < us1.id and us2.entity_id = us1.entity_id)
+                where us1.status_id <> 1
+            ]]>
+        </sql>
+        <sql>drop table ageing_entity_step_copy</sql>
+
+        <sql>
+            CREATE TABLE international_description_statuses
+            AS (select * from international_description where table_id=9 and foreign_id > 1);
+        </sql>
+
+        <sql>
+            delete from international_description where table_id=9 and foreign_id > 1;
+        </sql>
+
+        <sql>
+            insert into international_description
+            select 9, aes.id, 'description', 1, id1.content
+            from international_description_statuses id1, ageing_entity_step aes
+            where id1.table_id=9
+            and id1.foreign_id=aes.status_id
+            and aes.status_id > 1;
+        </sql>
+
+        <sql>
+            DROP TABLE international_description_statuses;
+        </sql>
+
+        <delete tableName="ageing_entity_step">
+            <where>status_id=1</where>
+        </delete>
+
+        <update tableName="ageing_entity_step">
+            <column name="status_id" valueComputed="id" />
+        </update>
+
+        <update tableName="ageing_entity_step">
+            <column name="suspend" valueComputed="(select (1-can_login) from user_status where ageing_entity_step.status_id = user_status.id)" />
+        </update>
+
+        <delete tableName="generic_status">
+            <where>dtype='user_status'</where>
+        </delete>
+
+        <addUniqueConstraint tableName="ageing_entity_step"
+                             columnNames="entity_id,days"
+                             constraintName="entity_step_days"/>
+
+        <comment>New UserAgeingNotificationTask for mapping between notifications and user statuses</comment>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueComputed="(select max(p.id)+1 from pluggable_task_type p)"/>
+            <column name="category_id" valueNumeric="17"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.user.tasks.UserAgeingNotificationTask"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(p.id) from pluggable_task_type p)"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Custom user notifications per ageing steps"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(p.id) from pluggable_task_type p)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This plug-in provides mapping between the user status(ageing steps) and notifications that needs to be sent for each status"/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="(select max(p.id)+1 from pluggable_task_type p)"/>
+            <where>name='pluggable_task_type'</where>
+        </update>
+
+    </changeSet>
+
+	<changeSet author="Manisha Gupta" dbms="hsqldb,h2" context="base" id="#3374-Ageing improvements">
+        <comment>#3374-Separate auto payment retry from the billing process</comment>
+
+        <createTable tableName="user_status">
+            <column name="id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_status_pkey"/>
+            </column>
+            <column name="can_login" type="java.sql.Types.TINYINT" />
+        </createTable>
+
+        <insert tableName="user_status">
+            <column name="id" valueNumeric="1" />
+            <column name="can_login" valueNumeric="1"/>
+        </insert>
+
+        <!--<dropForeignKeyConstraint baseTableName="base_user" constraintName="base_user_fk_1"/>-->
+
+        <addColumn tableName="ageing_entity_step">
+            <column name="retry_payment" type="java.sql.Types.SMALLINT" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="suspend" type="java.sql.Types.SMALLINT" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="send_notification" type="java.sql.Types.SMALLINT" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <comment>Migration scripts</comment>
+       <!--  <sql>
+            insert into user_status
+            (select aes.id, gs.can_login from ageing_entity_step aes, generic_status gs
+                where aes.status_id > 1 and gs.dtype='user_status' and aes.status_id = gs.status_value);
+        </sql> -->
+
+		<update tableName="base_user">
+            <column name="status_id" valueNumeric="1"/>
+        </update>
+<!--  
+        <update tableName="base_user">
+            <column name="status_id" valueComputed="(select us.id from user_status us, ageing_entity_step aes where aes.id=us.id and aes.status_id=base_user.status_id)"/>
+            <where>status_id &gt; 1</where>
+        </update>
+-->
+
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="base_user" constraintName="base_user_fk_6"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user_status"
+                                 referencesUniqueColumn="false"/>
+
+        <sql>CREATE TABLE ageing_entity_step_copy 
+        	(id INTEGER NOT NULL, entity_id INTEGER, status_id INTEGER, 
+        		days INTEGER NOT NULL, optlock INTEGER NOT NULL, retry_payment SMALLINT NOT NULL, 
+        		suspend SMALLINT NOT NULL, send_notification SMALLINT, PRIMARY KEY (id), UNIQUE (entity_id, days), 
+        		FOREIGN KEY (entity_id) REFERENCES entity(id));
+   		</sql>
+   		<sql>INSERT INTO ageing_entity_step_copy ( SELECT * FROM ageing_entity_step );
+   		</sql>
+        <sql>
+            <![CDATA[
+                update ageing_entity_step us1
+                set days =
+                    (select sum(us2.days) from ageing_entity_step_copy us2
+                        where us2.id < us1.id and us2.entity_id = us1.entity_id)
+                where us1.status_id <> 1
+            ]]>
+        </sql>
+        <sql>drop table ageing_entity_step_copy</sql>
+<!-- 
+		<createTable tableName="international_description_statuses">
+            <column name="table_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="psudo_column" type="java.sql.Types.VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language_id" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="java.sql.Types.VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO international_description_statuses 
+        	(select * from international_description where table_id=9 and foreign_id > 1) ;
+        </sql>
+
+        <sql>
+            delete from international_description where table_id=9 and foreign_id > 1;
+        </sql>
+
+        <sql>
+            insert into international_description
+            select 9, aes.id, 'description', 1, id1.content
+            from international_description_statuses id1, ageing_entity_step aes
+            where id1.table_id=9
+            and id1.foreign_id=aes.status_id
+            and aes.status_id > 1;
+        </sql>
+
+        <sql>
+            DROP TABLE international_description_statuses;
+        </sql>
+
+        <delete tableName="ageing_entity_step">
+            <where>status_id=1</where>
+        </delete>
+
+		<sql>
+            update ageing_entity_step set status_id = id;
+        </sql>
+
+		<sql>
+            update ageing_entity_step set suspend = 0;
+        </sql>
+
+-->
+        <delete tableName="generic_status">
+            <where>dtype='user_status'</where>
+        </delete>
+
+        <addUniqueConstraint tableName="ageing_entity_step"
+                             columnNames="entity_id,days"
+                             constraintName="constraint_entity_step_days"/>
+
+        <comment>New UserAgeingNotificationTask for mapping between notifications and user statuses</comment>
+        <insert tableName="pluggable_task_type">
+            <column name="id" valueComputed="(select max(p.id)+1 from pluggable_task_type p)"/>
+            <column name="category_id" valueNumeric="17"/>
+            <column name="class_name" value="com.sapienter.jbilling.server.user.tasks.UserAgeingNotificationTask"/>
+            <column name="min_parameters" valueNumeric="0"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(p.id) from pluggable_task_type p)"/>
+            <column name="psudo_column" value="title"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Custom user notifications per ageing steps"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="24"/>
+            <column name="foreign_id" valueComputed="(select max(p.id) from pluggable_task_type p)"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="This plug-in provides mapping between the user status(ageing steps) and notifications that needs to be sent for each status"/>
+        </insert>
+
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="(select max(p.id)+1 from pluggable_task_type p)"/>
+            <where>name='pluggable_task_type'</where>
+        </update>
+
+    </changeSet>
+	
+    <changeSet author="Panche Isajeski" context="test" id="#3374-Ageing improvement-test data" runOnChange="false">
+
+		<dropForeignKeyConstraint baseTableName="base_user" constraintName="base_user_fk_6"/>
+
+        <delete tableName="international_description">
+            <where>table_id=9 and foreign_id &gt; 1</where>
+        </delete>
+
+        <delete tableName="ageing_entity_step" />
+
+        <update tableName="base_user">
+            <column name="status_id" valueNumeric="1"/>
+        </update>
+        <delete tableName="user_status" >
+            <where>id &lt;&gt; 1</where>
+        </delete>
+
+        <sql>
+            INSERT INTO user_status VALUES
+            (2,1),(3,1),(4,1),(5,1),(6,1),(7,1),(8,1),(9,1),
+            (10,1),(11,1),(12,1),(13,1),(14,1),(15,1),(16,1),
+            (17,1)
+        </sql>
+
+        <comment>
+            Ageing days...
+
+            Ageing Day 1     = 1     send ageing notification
+            Ageing Day 4     = 4     retry payment
+            Ageing Day 5     = 5     send ageing notification
+            Ageing Day 15    = 15    retry payment
+            Ageing Day 16    = 16    send ageing notification
+            Ageing Day 27    = 27    none
+            Ageing Day 30    = 30    none
+            Ageing Day 31    = 31    retry payment
+            Ageing Day 32    = 32    none
+            Ageing Day 40    = 40    retry payment
+            Ageing Day 45    = 45    send ageing notification
+            Ageing Day 50    = 50    retry payment
+            Ageing Day 55    = 55    retry payment, send ageing notification
+            Ageing Day 65    = 65    retry payment
+            Ageing Day 90    = 90    retry payment
+            Ageing Day 180   = 180   suspend, send ageing notification
+        </comment>
+
+        <sql>
+            INSERT INTO ageing_entity_step VALUES
+            (2,1,2,1,1,0,0,1),
+            (3,1,3,4,1,1,0,0),
+            (4,1,4,5,1,0,0,1),
+            (5,1,5,15,1,1,0,0),
+            (6,1,6,16,1,0,0,1),
+            (7,1,7,27,1,0,0,0),
+            (8,1,8,30,1,0,0,0),
+            (9,1,9,31,1,1,0,0),
+            (10,1,10,32,1,0,0,0),
+            (11,1,11,40,1,1,0,0),
+            (12,1,12,45,1,0,0,1),
+            (13,1,13,50,1,1,0,0),
+            (14,1,14,55,1,1,0,1),
+            (15,1,15,65,1,1,0,0),
+            (16,1,16,90,1,1,0,0),
+            (17,1,17,180,1,0,1,1)
+        </sql>
+
+        <sql>
+            INSERT INTO international_description VALUES
+            (9,2,'description',1,'Ageing Day 1'),
+            (9,3,'description',1,'Ageing Day 4'),
+            (9,4,'description',1,'Ageing Day 5'),
+            (9,5,'description',1,'Ageing Day 15'),
+            (9,6,'description',1,'Ageing Day 16'),
+            (9,7,'description',1,'Ageing Day 27'),
+            (9,8,'description',1,'Ageing Day 30'),
+            (9,9,'description',1,'Ageing Day 31'),
+            (9,10,'description',1,'Ageing Day 32'),
+            (9,11,'description',1,'Ageing Day 40'),
+            (9,12,'description',1,'Ageing Day 45'),
+            (9,13,'description',1,'Ageing Day 50'),
+            (9,14,'description',1,'Ageing Day 55'),
+            (9,15,'description',1,'Ageing Day 65'),
+            (9,16,'description',1,'Ageing Day 90'),
+            (9,17,'description',1,'Ageing Day 180')
+        </sql>
+
+		<addForeignKeyConstraint baseColumnNames="status_id" baseTableName="base_user" constraintName="base_user_fk_6"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user_status"
+                                 referencesUniqueColumn="false"/>
+
+    </changeSet>
+
+    <changeSet author="Shweta Gupta " context="base" id="20130305 - #3307">
+        <comment>Add New Preference - Unique Product Code</comment>
+
+        <insert tableName="preference_type">
+            <column name="id" valueNumeric="55"/>
+            <column name="def_value" value="0"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="55"/>
+            <column name="psudo_column" value="description"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Unique product code"/>
+        </insert>
+
+        <insert tableName="international_description">
+            <column name="table_id" valueNumeric="50"/>
+            <column name="foreign_id" valueNumeric="55"/>
+            <column name="psudo_column" value="instruction"/>
+            <column name="language_id" valueNumeric="1"/>
+            <column name="content" value="Allows unique product code, If set the product code or internal number of a product/item would be enforced to be unique"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Vladimir Carevski" context="base" id="20121207-#4042-add-parent-item-type-column">
+        <comment>Dec 07, 2012 - #4042, Adds column for parent item type id</comment>
+
+        <addColumn tableName="item_type">
+            <column name="parent_id" type="java.sql.Types.INTEGER"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseColumnNames="parent_id"
+                baseTableName="item_type"
+                constraintName="parent_id_fk"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="NO ACTION"
+                onUpdate="NO ACTION"
+                referencedColumnNames="id"
+                referencedTableName="item_type"
+                referencesUniqueColumn="false"
+                />
+    </changeSet>
+
+    <changeSet author="Nitesh Kumar Jangid" context="test" id="#7220- update for meta_field_name and enumeration_values">
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="coalesce((select max(mfn.id)+1 from meta_field_name mfn), 1)"/>
+            <where>name='meta_field_name'</where>
+        </update>
+        
+        <update tableName="jbilling_seqs">
+            <column name="next_id" valueComputed="coalesce((select max(ev.id)+1 from enumeration_values ev), 1)"/>
+            <where>name='enumeration_values'</where>
+        </update>
+        
+    </changeSet>
+
+	<changeSet id="#7623, Configure password rules" author="Rohit" context="base">
+         <addColumn tableName="base_user">
+             <column name="change_password_date" type="java.sql.Types.DATE"/>
+         </addColumn>
+    </changeSet>
+    
+    <changeSet id="#8043, add column in item table" author="Rohit" context="base">
+         <addColumn tableName="item">
+             <column name="price_manual" type="java.sql.Types.INTEGER"/>
+         </addColumn>
+    </changeSet>
+
+	<changeSet id="20141112-correcting sequences" context="base" author="Manisha Gupta">
+	    <update tableName="jbilling_seqs">
+	        <column name="next_id" valueComputed="(select coalesce(max(p.id), 0) +1 from pluggable_task_parameter p)"/>
+	        <where>name='pluggable_task_parameter'</where>
+	    </update>
+	</changeSet>
+	
+</databaseChangeLog>

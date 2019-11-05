@@ -1,0 +1,56 @@
+The dynamic balance feature allows customers to pay in advance for their purchases through either a pre-paid balance or a credit limit.
+
+!dynamicbalance.png!
+
+Customers with a pre-paid balance pay upfront before they receive any product or service. As usage occurs, the cost is deducted from the user's pre-paid balance until none remains.
+
+Users with a credit limit are allowed to accrue 'debt' until a set credit limit is reached. All usage by the customer is paid on credit, and the user is responsible for paying off the credit they have used.
+
+{note}
+Please Note: a customer will only be prevented from exceeding their configured limit (going over the credit limit, or spending more than their pre-paid balance allows), when using the @'validatePurchase'@ API call. Additional orders may still be created manually through the UI, or through the standard @'createOrder'@ API.
+{note}
+
+Management of dynamic balances is provided by a plug-in, and it must be configured for either pre-paid balance, or credit limit balance types to be used.
+
+*Customer Configuration*
+
+A customer's dynamic balance configuration can be set or changed by editing an existing customer. 
+
+*Balance Type*
+
+Balance type allows you to change how a user's dynamic balance is to be handled, or if the dynamic balance feature is to be used at all. 
+
+!balancetype.png!
+
+# None: The user's account will not hold a balance. Instead, all charges accrued will be included in the next invoice.
+# Credit Limit: The user's account may accrue charges up to the set credit limit value. Charges will automatically be paid from the user's credit pool until the set limit is reached. Users are responsible for paying their credit debt as well as any overages.
+# Pre-Paid balance: The user must pay into their account to offset future charges. Charges will automatically be paid from the user's pre-paid balance until the balance reaches zero. Users are responsible for maintaining their pre-paid balance.  
+
+*Credit Limit*
+
+This field is only available when the Balance Type is set to 'Credit Limit'. This field contains the user's current credit limit as a dollar amount.
+ 
+!creditlimit.png!
+
+*Auto-Recharge Threshold*
+
+This field is only available when the Balance Type is set to 'Pre-Paid', and an Automatic Recharge Plug-In has been configured. This field contains a dollar amount that will be automatically charged to the users credit card when their  
+balance drops below the company wide threshold. If this field is set to zero or left blank, no automatic charges will be made for the user.
+ 
+!autorecharge.png!
+
+*Invoice Delivery Method*
+
+This field gives you the option to choose how this customer will receive his/her invoices.
+
+!invoicedelivery.png!
+
+# Email: The system sends the invoices as an email only.
+# Paper: The system will not send an email to the customer. Instead, the invoice will be included in a file with all the other paper invoices. This file is in PDF format and will be emailed as an attachment to the billing administrator or to the system administrator depending on your selection in notification preferences (please refer to Chapter 9 for more details). Printing the invoices is simplified by the fact that all of them are in one single file. 
+# Email + Paper: Both methods are used: an email and a paper invoice as described above. 
+
+*Due Date*
+
+Here, you can choose to specify a due date for a particular client, which will override your company's default date.
+
+!duedate.png!

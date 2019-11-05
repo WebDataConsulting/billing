@@ -1,0 +1,7 @@
+The blacklist is a list of customer and/or payment information that is used to filter payment requests, which are expected to fail, before they reach a payment processor gateway. There are currently six filters implemented: user id, name, phone number, address, credit card and IP address. Different filter types can be enabled or disabled without affecting the data in the blacklist.
+
+Administrators and clerks have the ability to add or remove individual customers to/from the blacklist through the GUI. The GUI also shows any matches the customer has in the blacklist.
+
+When the aging process takes a customer status to 'Suspended' or higher, all their available details, such as used id, credit card, address, etc., are added to the blacklist. The idea is that this customer tries to re-subscribe later with any of the same details, they automatically blacklisted.
+
+Batch upload of a comma-separated values (CSV) blacklist file through the GUI is also possible. It can either add to or replace existing uploaded blacklist entries.
