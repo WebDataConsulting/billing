@@ -166,7 +166,7 @@ grails.project.dependency.resolution = {
 
         runtime 'xerces:xercesImpl:2.11.0'  // for paypal payment
 
-        runtime 'org.postgresql:postgresql:9.3-1102-jdbc41'
+	runtime 'org.postgresql:postgresql:9.4.1212'
         runtime 'mysql:mysql-connector-java:5.1.26'
         runtime 'org.hsqldb:hsqldb:2.3.2'
 

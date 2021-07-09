@@ -13168,10 +13168,6 @@ INSERT INTO international_description (table_id, foreign_id, psudo_column, langu
             <column name="dtype" value="date"/>
             <column name="name" value="end_date"/>
         </insert>
-        <insert tableName="entity_report_map">
-            <column name="report_id" valueComputed="(select id from report r where r.name = 'product_revenue')"/>
-            <column name="entity_id" valueComputed="1"/>
-        </insert>
     </changeSet>
 
 </databaseChangeLog>
