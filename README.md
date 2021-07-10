@@ -84,6 +84,15 @@ grails prepare-test
 
 *The grails compile target may halt with a compiler error on some environments, running compile a second time usually resolves the issue.*
 
+For starting with a blank database (i.e. no test companies), you can use the scripts below:
+
+<pre><code>
+grails compile
+grails prepare-test-db -init
+</pre></code>
+
+Once, done, you start jBilling using instructions below and then go to http://localhost:8080/webdata/signup to signup your own company.
+
 Running from Source
 -------------------
 
@@ -99,7 +108,7 @@ Browse to
 
 
 <pre><code>
-http://localhost:8080
+http://localhost:8080/webdata
 </pre></code>
 
 
