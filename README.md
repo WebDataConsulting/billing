@@ -4,10 +4,10 @@ jBilling
 **Requirements:**
 
 * Java 8+
-* Grails 2.4.3
+* Grails 2.4.4
 * PostgreSQL 8+ *(required for testing, other runtime databases are supported)*
 
-To run jBilling from source you will need to have Java 8+ and Grails 2.4.3 installed. To install grails, download version 2.4.3 from the [Grails Archive](http://www.grails.org/download/) and follow the installation instructions for your operating system. 
+To run jBilling from source you will need to have Java 8+ and Grails 2.4.4 installed. To install grails, download version 2.4.4 from the [Grails Archive](http://www.grails.org/download/) and follow the installation instructions for your operating system. 
 
 [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and [PostgreSQL](http://www.postgresql.org/) can be downloaded an installed by visiting the vendor's websites, or in linux environments by using the package manager (apt-get or yum).
 
@@ -64,7 +64,7 @@ Setup
 
 JAVA_HOME -> /opt/lib/jdk1.8.0_60 or an equivalent.
 
-GRAILS_HOME -> /opt/lib/grails-2.4.3 or equivalent.
+GRAILS_HOME -> /opt/lib/grails-2.4.4 or equivalent.
 
 Java and grails executables should be in your classpath.
 
